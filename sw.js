@@ -1,6 +1,6 @@
 /* Service worker d'Alive : le jeu reste jouable hors ligne.
    Pour publier une nouvelle version, change VERSION : l'ancien cache est supprimé. */
-const VERSION = 'alive-v0.1.0';
+const VERSION = 'alive-v0.2.0';
 const SHELL = [
   './',
   './index.html',

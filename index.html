@@ -41,6 +41,13 @@ body{background:var(--meadow);color:var(--ink);font-family:var(--font);overflow:
 .ph{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
 .eyebrow{margin:0;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--moss-deep)}
 h1{margin:2px 0 0;font-size:21px;font-weight:900;line-height:1.1;color:var(--ink)}
+.ptools{display:flex;align-items:center;gap:6px;flex:none}
+.pmin{flex:none;width:28px;height:28px;border-radius:999px;border:1.5px solid rgba(78,59,44,.28);background:#fff;cursor:pointer;display:grid;place-items:center;padding:0;color:var(--ink-soft)}
+.pmin::before{content:"";width:10px;height:2px;background:currentColor;border-radius:2px}
+.pmin:hover{background:#f4efe6}
+.panel.mini{width:auto;padding:6px 6px 6px 12px;border-radius:999px}
+.panel.mini .ph > div:first-child,.panel.mini .bstat,.panel.mini details{display:none}
+.panel.mini .pmin::before{width:10px;height:10px;background:none;border:2px solid currentColor;border-radius:3px;box-sizing:border-box}
 .bstat{margin:6px 0 0;font-size:13px;font-weight:700;color:var(--ink-soft);line-height:1.35}
 .chip{flex:none;margin-top:2px;background:#ece6f6;color:var(--moss-deep);border:1.5px solid #d4c9ea;border-radius:999px;padding:2px 10px;font-size:13px;font-weight:700;white-space:nowrap}
 details{margin-top:8px}
@@ -78,6 +85,13 @@ input[type=range]{width:100%;accent-color:var(--moss)}
 
 .tbtns{position:fixed;z-index:2;right:max(16px,calc(14px + env(safe-area-inset-right,0px)));bottom:calc(18px + env(safe-area-inset-bottom,0px));display:none;flex-direction:column;gap:10px}
 body.touch .tbtns{display:flex}
+.inv{position:fixed;z-index:2;left:max(70px,calc(66px + env(safe-area-inset-left,0px)));bottom:calc(20px + env(safe-area-inset-bottom,0px));display:none;gap:8px}
+.inv.on{display:flex}
+.islot{width:46px;height:46px;padding:0;border:0;border-radius:12px;background:transparent;cursor:pointer;touch-action:manipulation}
+.islot:focus-visible{outline:2px solid #e8556b;outline-offset:2px}
+.tbtn.off{opacity:.45}
+.tbtn .ico{display:block;width:26px;height:26px;margin:0 auto 1px}
+.tbtn span{display:block;line-height:1.1}
 .tbtn{width:74px;height:74px;border-radius:50%;font-size:14px;background:rgba(252,250,241,.92);box-shadow:0 4px 12px rgba(60,84,40,.18);touch-action:manipulation}
 .install{width:100%;font-family:var(--font);font-weight:700;font-size:14px;color:#fff;background:var(--moss);border:1.5px solid var(--moss-deep);border-bottom-width:3px;border-radius:12px;padding:8px;cursor:pointer}
 .install:active{transform:translateY(2px);border-bottom-width:1.5px}
@@ -85,7 +99,7 @@ body.touch .tbtns{display:flex}
 </style>
 </head>
 <body>
-<canvas id="cv" aria-label="Le cimetière, le petit zombie, sa cabane et l'Aveugle"></canvas>
+<canvas id="cv" aria-label="Le cimetière, le petit zombie, son jardin aux crayons et l'Aveugle"></canvas>
 
 <div class="panel">
   <div class="ph">
@@ -93,7 +107,7 @@ body.touch .tbtns{display:flex}
       <p class="eyebrow">Alive · première Terreur</p>
       <h1>L'Aveugle</h1>
     </div>
-    <span class="chip" id="chip" aria-live="polite">repos</span>
+    <div class="ptools"><span class="chip" id="chip" aria-live="polite">repos</span><button type="button" class="pmin" id="pmin" aria-expanded="true" aria-label="Réduire le menu" title="Réduire le menu"></button></div>
   </div>
   <p class="bstat" id="bstat" aria-live="polite">L'Aveugle tend l'oreille</p>
   <details id="det">
@@ -103,10 +117,11 @@ body.touch .tbtns{display:flex}
         <li><kbd>Z</kbd><kbd>Q</kbd><kbd>S</kbd><kbd>D</kbd> ou flèches : marcher (peu de bruit)</li>
         <li><kbd>Maj</kbd> maintenue : courir (très bruyant)</li>
         <li><kbd>F</kbd> : faire le mort, encore <kbd>F</kbd> pour se relever</li>
-        <li><kbd>G</kbd> : grogner · <kbd>E</kbd> : manger</li>
-        <li>Rapporte les reliques dans la cabane : arrête-toi devant l'ouverture pour t'y glisser, recule pour sortir</li>
+        <li><kbd>G</kbd> : grogner · <kbd>E</kbd> : manger · <kbd>M</kbd> : réduire ce menu</li>
+        <li>Un bébé yak farouche erre dans son coin et s'enfuit si tu approches. Trouve le ballon, approche doucement et lance-le près de lui (<kbd>R</kbd>) : il le rapporte et devient ton ami. Il porte alors ton sac à dos : la barre en bas à gauche montre ce qu'il contient (<kbd>1</kbd>-<kbd>4</kbd>, la molette ou un clic pour choisir, <kbd>R</kbd> pour utiliser, seulement quand le yak est à côté). Ballon : il sort du sac, tu le lances, le yak grogne de joie là-bas (diversion) et le range. Quand l'Aveugle approche, ses poils rougeoient : <kbd>C</kbd> pour le calmer, sinon il grogne.</li>
+        <li>Rapporte les reliques dans sa tente : entre dans le jardin par les deux gros crayons, arrête-toi devant la tente pour t'y glisser (il s'y endort), recule pour sortir</li>
       </ul>
-      <p class="touchonly">Glisse le doigt pour marcher, plus loin pour courir (bruyant). Rapporte les reliques dans la cabane : arrête-toi devant l'ouverture pour t'y glisser.</p>
+      <p class="touchonly">Glisse le doigt pour marcher, plus loin pour courir (bruyant). Rapporte les reliques dans sa tente : entre par les deux gros crayons et arrête-toi devant la tente. Ballon puis Action : utilise l'objet choisi dans le sac du yak (touche une case pour choisir). La première fois, lance le ballon près du yak pour en faire ton ami. Calmer : quand ses poils rougeoient.</p>
       <label class="row" for="pataud"><span>Pataud</span><input type="range" id="pataud" min="0" max="1.6" step="0.1" value="0.7"><output id="pataudV" for="pataud">0,7</output></label>
       <div hidden>
       <div class="faces">
@@ -154,7 +169,8 @@ body.touch .tbtns{display:flex}
   </details>
 </div>
 
-<div class="tbtns"><button type="button" class="tbtn" id="tDead">Mort</button><button type="button" class="tbtn" id="tJump">Sauter</button></div>
+<div class="inv" id="inv" aria-label="Sac à dos du yak"><button type="button" class="islot" aria-label="Case 1"></button><button type="button" class="islot" aria-label="Case 2"></button><button type="button" class="islot" aria-label="Case 3"></button><button type="button" class="islot" aria-label="Case 4"></button></div>
+<div class="tbtns"><button type="button" class="tbtn" id="tCalm">Calmer</button><button type="button" class="tbtn" id="tApple">Ballon</button><button type="button" class="tbtn" id="tDead">Mort</button><button type="button" class="tbtn" id="tJump">Sauter</button></div>
 
 <script>
 (() => {
@@ -245,7 +261,9 @@ const snd = (() => {
     drone() { tone(55, 45, 2.0, 'sine', 0.12); tone(82, 70, 1.8, 'triangle', 0.035, 0.2); },
     tinkle() { tone(1568, 1560, 0.25, 'sine', 0.03); tone(2093, 2090, 0.3, 'sine', 0.025, 0.14); },
     lullaby() { [1047, 1319, 1175, 1568].forEach((f, i) => tone(f, f * 0.998, 0.45, 'sine', 0.022, i * 0.32)); },
-    buzz() { tone(230, 210, 0.12, 'sawtooth', 0.008); }
+    buzz() { tone(230, 210, 0.12, 'sawtooth', 0.008); },
+    yakGrunt() { tone(120, 82, 0.45, 'sawtooth', 0.03); tone(96, 70, 0.5, 'triangle', 0.05, 0.05); noise(0.3, 0.03, 300, 0, 0.8); },
+    yakHappy() { tone(150, 210, 0.18, 'triangle', 0.05); tone(170, 120, 0.3, 'triangle', 0.04, 0.16); }
   };
 })();
 
@@ -261,10 +279,10 @@ function layout(first) {
   const prx = clamp(WW * 0.17, 88, 190);
   pond = { x: WW * 0.32, y: WH * 0.85, rx: prx * 0.85, ry: prx * 0.85 * 0.58, seed: 3 };
   // la cabane (le refuge) à droite ; l'Aveugle fait sa ronde au milieu ; les reliques sont de l'autre côté
-  cab.x = clamp(WW * 0.86, WW - 260, WW - 110); cab.y = clamp(WH * 0.48, 150, WH - 120);
+  cab.x = clamp(WW * 0.8, Math.min(330, WW - 205), WW - 205); cab.y = clamp(WH * 0.5, 205, WH - 105);
   rocks = [
     { k: 'r', x: WW * 0.5, y: WH * 0.24, r: 18, s: 1.1, e: 'cross' },
-    { k: 'r', x: WW * 0.74, y: WH * 0.72, r: 16, s: 1, e: 'rip' },
+    { k: 'r', x: Math.min(WW * 0.74, cab.x - 300), y: Math.min(WH - 40, cab.y + 200), r: 16, s: 1, e: 'rip' },   // pas devant l'entrée du jardin
     { k: 'r', x: WW * 0.12, y: WH * 0.66, r: 16, s: 1, e: 'none' },
     { k: 'r', x: WW * 0.94, y: WH * 0.13, r: 14, s: 0.85, e: 'cross' }
   ];
@@ -290,7 +308,7 @@ function layout(first) {
     for (let i = 0; i < 7; i++) { const x = cx2 + (R() - 0.5) * 70, y = cy2 + (R() - 0.5) * 50; if (inPond(x, y, 1.2)) continue; flowers.push({ x, y, col, s: 0.8 + R() * 0.4 }); }
   }
   // ronde de l'Aveugle (hors de la lumière du refuge, même quand elle a grandi)
-  const pmax = cab.x - (SAFE_BASE + 3 * SAFE_STEP + 95);
+  const pmax = cab.x - (isYard() ? safeR() + 175 : SAFE_BASE + 3 * SAFE_STEP + 95);
   PATROL = [[0.6, 0.36], [0.42, 0.32], [0.36, 0.64], [0.58, 0.74]].map(([fx, fy]) => ({ x: clamp(WW * fx, 90, Math.max(90, pmax)), y: clamp(WH * fy, 215, WH - 30) }));
   if (first || !relics.length) {
     if (!relics.length) for (const R0 of RELICS) relics.push({ key: R0.key, state: 'ground', ph: Math.random() * 6, x: 0, y: 0, hx: 0, hy: 0 });
@@ -529,7 +547,7 @@ function splash(entering) {
 function collide() {
   let hit = false;
   const r = 20;
-  for (const o of rocks.concat(bushes, [{ k: 'h', x: cab.x, y: cab.y - 26, r: 48 }, { k: 'h', x: cab.x - 58, y: cab.y - 12, r: 24 }, { k: 'h', x: cab.x + 58, y: cab.y - 12, r: 24 }])) {
+  for (const o of rocks.concat(bushes, (isYard() ? [{ k: 'h', x: cab.x, y: cab.y - 34, r: 46 }, { k: 'h', x: cab.x - 54, y: cab.y - 26, r: 24 }, { k: 'h', x: cab.x + 54, y: cab.y - 26, r: 24 }, { k: 'h', x: cab.x + 134, y: cab.y - 46, r: 12 }, { k: 'h', x: cab.x + 112, y: cab.y + 16, r: 15 }, { k: 'h', x: cab.x + 154, y: cab.y - 2, r: 12 }] : [{ k: 'h', x: cab.x, y: cab.y - 26, r: 48 }, { k: 'h', x: cab.x - 58, y: cab.y - 12, r: 24 }, { k: 'h', x: cab.x + 58, y: cab.y - 12, r: 24 }]))) {
     const dx = c.x - o.x, dy = (c.y - o.y) * 1.35, d = Math.hypot(dx, dy), rr = o.r + r;
     if (d < rr && d > 0.001) { const q = (rr - d) / d; c.x += dx * q; c.y += dy * q / 1.35; hit = true; if (o.k === 'b') o.shake = Math.max(o.shake, 0.25); }
   }
@@ -661,7 +679,7 @@ function update(dt) {
 
   // repos → assis → endormi
   if (free() && sp < 8 && c.z <= 0 && !c.inWater && !c.inHut) c.idle += dt; else if (c.state !== 'sit' && c.state !== 'sleep') c.idle = 0;
-  if (free() && c.idle > 6) { setState('sit'); }
+  if (free() && c.idle > 6 && !zHoldBall()) { setState('sit'); }
   if (c.state === 'sit' && c.idle > 15) { setState('sleep'); snd.yawn(); }
   if (c.state === 'sit' || c.state === 'sleep') c.idle += 0;
   const sitTarget = (c.state === 'sit' || c.state === 'sleep') ? 1 : 0;
@@ -702,6 +720,7 @@ function update(dt) {
       case 'eat': inT = 1; out = -1.05; fL = fR = 0; break;
       case 'sit': case 'sleep': inT = 1; out = -0.6; break;
     }
+    if (zHoldBall()) { inT = 1; out = -1.05; fL = fR = 0; }
     const tL = out - fL * c.face, tR = -out - fR * c.face;
     c.aLv += ((tL - c.aL) * 120 - c.aLv * 11) * dt; c.aL += c.aLv * dt;
     c.aRv += ((tR - c.aR) * 120 - c.aRv * 11) * dt; c.aR += c.aRv * dt;
@@ -928,7 +947,7 @@ function update(dt) {
   for (const f of fireflies) { f.ph += dt; f.x += Math.cos(f.ph * 0.6 + f.o) * 12 * dt; f.y += Math.sin(f.ph * 0.8 + f.o * 1.3) * 9 * dt; if (f.x < 0) f.x += WW; if (f.x > WW) f.x -= WW; if (f.y < 0) f.y += WH; if (f.y > WH) f.y -= WH; }
 
   // Aveugle, reliques, ondes de bruit, capture
-  updateBlind(dt); updateRelics(dt); updateWipe(dt);
+  yardFence(); updateBlind(dt); updateRelics(dt); updateWipe(dt); updateYak(dt);
   for (let i = noises.length - 1; i >= 0; i--) { noises[i].life -= dt; if (noises[i].life <= 0) noises.splice(i, 1); }
   updateChip(sp); updateBstat();
 }
@@ -950,7 +969,7 @@ function updateChip(sp) {
   }
   if (c.state === 'eat') l = c.food === 'slug' ? 'gobe une limace' : 'croque une cervelle';
   if (carried && c.state === 'free' && !c.inHut) l = 'porte ' + RELICS.find((q) => q.key === carried.key).name;
-  if (c.inHut) l = 'dans sa cabane';
+  if (c.inHut) l = isYard() ? (cab.sleep ? 'dort sous sa tente' : 'caché sous sa tente') : 'dans sa cabane';
   if (c.memT > 0) l = 'un souvenir…';
   if (c.surpT > 0 && c.state === 'free') l = 'boing !';
   if (l !== lastChip) { lastChip = l; $('chip').textContent = l; }
@@ -1017,7 +1036,8 @@ function anim() {
   A.fL.dx += c.sitK * 4; A.fR.dx += c.sitK * 4;
   // bras (angles suivis par des ressorts dans update)
   A.armL = c.aL; A.armR = c.aR;
-  A.armsFront = c.armIn > 0.3; A.reachOver = (c.reach > 0.5 && c.armIn < 0.3) || c.state === 'eat';
+  A.holdBall = zHoldBall();
+  A.armsFront = c.armIn > 0.3; A.reachOver = (c.reach > 0.5 && c.armIn < 0.3) || c.state === 'eat' || A.holdBall;
   const nib = c.state === 'eat' ? Math.sin(t * 17) * 1.2 : 0;
   A.armDX = 0; A.armDY = 0; A.bendF = c.bf; A.bendIn = c.bi; A.reach = c.reach;
   // tissu : décalage de l'ourlet (adouci pour rester léger) + petites ondulations des pointes
@@ -2212,6 +2232,7 @@ function drawChar(A) {
   else if (A.berry) drawHeldBrain(A, mX);
   if (A.armsFront && !c.armOff) backArmOver();
   frontArm();
+  if (A.holdBall) drawHeldBall(A, mX);
   ctx.restore();
   };
   // bras proche : par-dessus le torse ; s'il tend les bras en marchant, il passe aussi devant la tête
@@ -2641,10 +2662,11 @@ function render() {
     .concat(slugs.filter((g) => g.alive).map((g) => ({ y: g.y, d: () => drawSlug(g) })))
     .concat(heartPiece.alive ? [{ y: heartPiece.y, d: () => drawHeartPiece(heartPiece) }] : [])
     .concat(relics.filter((r) => r.state === 'ground').map((r) => ({ y: r.y, d: () => drawRelicGround(r) })))
-    .concat([{ y: cab.y, d: drawHut }])
+    .concat(refugeLayers())
+    .concat(yakLayers())
     .concat([{ y: B.state === 'grab' ? c.y - 1 : B.y, d: () => drawBlind(false) }])
     .concat(fly ? [{ y: fly.mode === 'scout' ? c.foodY + 1 : c.y + (fly.front ? 0.2 : -0.2), d: () => drawFly(fly) }] : [])
-    .concat(c.inHut ? [] : [{ y: c.y, d: () => { drawChar(A); drawCarried(A); } }])
+    .concat(c.inHut ? [] : [{ y: c.y, d: () => { if (c.spawnK !== undefined && c.spawnK < 1) { ctx.save(); ctx.beginPath(); ctx.rect(-1e4, -1e4, 2e4, c.y + 1 + 1e4); ctx.clip(); drawChar(A); ctx.restore(); } else { drawChar(A); drawCarried(A); } } }])
     .concat(B.state === 'grab' ? [{ y: c.y + 0.5, d: () => drawBlind(true) }] : []);
   list.sort((a, b) => a.y - b.y);
   for (const o of list) o.d();
@@ -2680,6 +2702,7 @@ function render() {
       ctx.fillStyle = '#e59fb8'; ctx.fill(); ctx.lineWidth = 1.4; ctx.strokeStyle = C.line; ctx.stroke(); ctx.restore(); ctx.globalAlpha = 1;
     }
   }
+  drawYardMood();
   // indice de départ
   if (!c.moved || (!document.body.classList.contains('touch') && !document.hasFocus())) {
     const msg = document.body.classList.contains('touch') ? 'Chut… il entend tout. Glisse le doigt' : !document.hasFocus() ? 'Clique dans le décor pour jouer au clavier' : 'Chut… il entend tout (ZQSD)';
@@ -2713,6 +2736,7 @@ function render() {
   if (gallery) drawGallery();
   drawWipe();
   ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  drawInv();
   // joystick
   if (joy.on) {
     ctx.fillStyle = 'rgba(255,255,255,.28)'; ctx.strokeStyle = 'rgba(61,51,71,.35)'; ctx.lineWidth = 2;
@@ -2733,18 +2757,61 @@ const RELICS = [
 ];
 const relics = [];
 let carried = null;
-const cab = { x: 0, y: 0, lvl: 0, lvlK: 0, flap: 0, fv: 0, peek: 0, hideK: 0, pulse: 0, noteT: 0, tinkT: 0, inT: 0 };
+const cab = { x: 0, y: 0, lvl: 0, lvlK: 0, flap: 0, fv: 0, peek: 0, hideK: 0, pulse: 0, noteT: 0, tinkT: 0, inT: 0, sleep: false, night: false };
 const SAFE_BASE = 95, SAFE_STEP = 36;
-const safeR = () => SAFE_BASE + SAFE_STEP * cab.lvlK;
-const safeD = (x, y) => Math.hypot(x - cab.x, (y - cab.y) * 1.35);
+// le jardin aux crayons : la palissade est la limite de la zone sûre (une ellipse de 188 × 88)
+const isYard = () => typeof refugeVariant !== 'undefined' && refugeVariant === 4;
+const YARD_RX = 188, YARD_RY = 88;
+const yk = () => isYard() ? YARD_RX / YARD_RY : 1.35;
+const safeR = () => isYard() ? YARD_RX : SAFE_BASE + SAFE_STEP * cab.lvlK;
+const safeD = (x, y) => Math.hypot(x - cab.x, (y - cab.y) * yk());
 const inSafe = (x, y, m) => safeD(x, y) < safeR() + (m || 0);
 const doorX = () => cab.x, doorY = () => cab.y + 24;
 const has = (k) => relics.some((r) => r.key === k && r.state === 'placed');
 let hutStill = 0;
 
+let yardSide = null, yardLX = null, yardLY = 0;   // de quel côté de la palissade il est, et sa dernière position valide
+// La palissade : on ne la traverse pas, on passe par l'entrée (entre les deux crayons géants, en bas).
+// Le zombie est large : on vérifie tous les crayons sur sa largeur (±28) pour qu'il soit franchement devant
+// ou franchement derrière eux, jamais « mélangé » à la palissade (sinon le tri en profondeur se voit).
+const YARD_HW = 28, YARD_PAD = 6;
+const fenceY = (x) => (Math.abs(x) >= YARD_RX ? -1 : YARD_RY * Math.sqrt(1 - (x / YARD_RX) * (x / YARD_RX)));
+function yardOk(x, y, side) {
+  const dx = x - cab.x, dy = y - cab.y;
+  let mn = 1e9, mx = -1, any = false;
+  for (let k = -4; k <= 4; k++) { const f = fenceY(dx + k * YARD_HW / 4); if (f >= 0) { any = true; mx = Math.max(mx, f); } mn = Math.min(mn, Math.max(f, 0)); }
+  if (side === 'in') return any && Math.abs(dy) < mn - YARD_PAD;
+  return !any || dy > mx + YARD_PAD || dy < -mx - YARD_PAD;
+}
+const yardGate = (x, y) => Math.abs(x - cab.x) < 22 && y > cab.y + 20;
+function yardFence() {
+  if (!isYard() || c.inHut || c.state === 'caught' || wipe.on) { yardSide = null; yardLX = null; return; }
+  const dx = c.x - cab.x, dy = c.y - cab.y;
+  if (!yardSide) { yardSide = Math.hypot(dx / YARD_RX, dy / YARD_RY) < 1 ? 'in' : 'out'; yardLX = null; }
+  if (yardGate(c.x, c.y)) { yardSide = dy < fenceY(dx) ? 'in' : 'out'; yardLX = c.x; yardLY = c.y; return; }
+  if (yardOk(c.x, c.y, yardSide)) { yardLX = c.x; yardLY = c.y; return; }
+  // bloqué : on glisse le long de la palissade si possible, sinon on revient à la dernière position valide
+  if (yardLX !== null && Math.hypot(c.x - yardLX, c.y - yardLY) < 40) {
+    if (yardOk(c.x, yardLY, yardSide)) { c.y = yardLY; c.vy = 0; }
+    else if (yardOk(yardLX, c.y, yardSide)) { c.x = yardLX; c.vx = 0; }
+    else { c.x = yardLX; c.y = yardLY; c.vx = c.vy = 0; }
+  } else {
+    // téléporté au mauvais endroit : on le pousse du bon côté
+    const k0 = Math.hypot(dx / YARD_RX, dy / YARD_RY) || 1;
+    for (let n = 1; n < 60; n++) {
+      const f = (yardSide === 'in' ? k0 - n * 0.02 : k0 + n * 0.02) / k0, x = cab.x + dx * f, y = cab.y + dy * f;
+      if (yardOk(x, y, yardSide)) { c.x = x; c.y = y; break; }
+    }
+    c.vx = c.vy = 0;
+  }
+  yardLX = c.x; yardLY = c.y;
+}
 function hutUpdate(dt, ix, iy, wants) {
+  yardFence();
   if (c.inHut) {
     c.vx = 0; c.vy = 0; c.x = doorX(); c.y = doorY(); c.idle = 0;
+    // il s'endort au bout d'un moment : le drap se ferme (dormir = sauvegarder, plus tard)
+    if (isYard() && !cab.sleep && cab.inT > 4) { cab.sleep = true; parts.push({ k: 'label', x: cab.x, y: cab.y - 140, vy: -9, life: 2.2, max: 2.2, s: 'Dodo…' }); }
     if (wants && c.state === 'free' && cab.inT > 0.35 && (iy > 0.3 || Math.abs(ix) > 0.5)) exitHut(ix);
     return;
   }
@@ -2762,7 +2829,7 @@ function enterHut() {
   if (carried) placeRelic();
 }
 function exitHut(ix) {
-  c.inHut = false; c.x = doorX() + ix * 8; c.y = doorY() + 8; c.vy = 45; c.vx = ix * 30; c.jv += 1.2 * k;
+  c.inHut = false; cab.sleep = false; yardSide = 'in'; c.x = doorX() + ix * 8; c.y = doorY() + 8; c.vy = 45; c.vx = ix * 30; c.jv += 1.2 * k;
   cab.fv -= 4; snd.swish(); hutStill = -0.8;
 }
 function placeRelic() {
@@ -2781,7 +2848,7 @@ function dropRelic(home) {
 function updateRelics(dt) {
   for (const r of relics) {
     r.ph += dt;
-    if (r.state === 'ground' && !carried && !c.inHut && c.z < 14 && (free() || c.state === 'air') && Math.hypot(r.x - c.x, (r.y - c.y) * 1.35) < 28) {
+    if (r.state === 'ground' && !carried && !c.inHut && c.z < 14 && (free() || c.state === 'air') && Math.hypot(r.x - c.x, (r.y - c.y) * 1.35) < 38) {
       carried = r; r.state = 'carried'; c.jv += 1.2; c.joyT = 0.8;
       // la bulle de rêve : un souvenir flou de sa vie d'avant, dès qu'il ramasse la relique
       c.memN++; c.memT = 2.8;
@@ -2805,7 +2872,9 @@ function updateRelics(dt) {
   cab.fv += (-cab.flap * 70 - cab.fv * 5) * dt; cab.flap += cab.fv * dt;
   cab.inT += dt;
   // il se cache plus bas (on ne voit que ses yeux) quand l'Aveugle rôde près de la cabane
-  const near = Math.hypot(B.x - cab.x, (B.y - cab.y) * 1.35) < safeR() + 200 ? 1 : 0;
+  const near = safeD(B.x, B.y) < safeR() + (isYard() ? 150 : 200) ? 1 : 0;
+  // le rêve se dérègle quand une Terreur approche du jardin (un peu d'hystérésis pour ne pas clignoter)
+  if (isYard()) { const bd = safeD(B.x, B.y) - safeR(); if (bd < 150) cab.night = true; else if (bd > 185) cab.night = false; }
   cab.hideK += (near - cab.hideK) * (1 - Math.exp(-dt * 4));
   cab.peek += ((c.inHut && cab.inT > 0.2 ? 1 : 0) - cab.peek) * (1 - Math.exp(-dt * (c.inHut ? 6 : 25)));
 }
@@ -2841,7 +2910,7 @@ function blindHear(x, y, r) {
   let tx = x, ty = y; B.edge = false;
   // (il garde ses distances : sa tête et ses bras dépassent loin devant lui)
   const lim = safeR() + 125;
-  if (safeD(x, y) < lim) { const a = Math.atan2((B.y - cab.y) * 1.35, B.x - cab.x); tx = cab.x + Math.cos(a) * lim; ty = cab.y + Math.sin(a) * lim / 1.35; B.edge = true; }
+  if (safeD(x, y) < lim) { const a = Math.atan2((B.y - cab.y) * yk(), B.x - cab.x); tx = cab.x + Math.cos(a) * lim; ty = cab.y + Math.sin(a) * lim / yk(); B.edge = true; }
   B.tx = tx; B.ty = ty;
   if (B.state === 'investigate' || B.state === 'hunt') { if (loud && B.state !== 'hunt') { setB('hunt'); snd.growl(blindVol()); } }
   else if (B.state === 'listen') B.loud = B.loud || loud;
@@ -2926,8 +2995,23 @@ function updateBlind(dt) {
   if (B.state === 'edge' || B.state === 'recoil') B.face = cab.x >= B.x ? 1 : -1;
   else if (B.state === 'feel' || B.state === 'grab') B.face = c.x >= B.x ? 1 : -1;
   else if (B.state === 'listen' || B.state === 'search' || B.state === 'pause') { if (B.heardT > 0 && Math.abs(B.earX - B.x) > 30) B.face = B.earX >= B.x ? 1 : -1; }
-  else if (Math.abs(B.vx) > 6) B.face = B.vx > 0 ? 1 : -1;
-  B.faceS += (B.face - B.faceS) * (1 - Math.exp(-dt * 5));
+  else if (Math.abs(B.vx) > 10) B.face = B.vx > 0 ? 1 : -1;
+  // demi-tour INSTANTANÉ (comme un dessin qu'on retourne) : tête, cou, bras et mains basculent ensemble,
+  // les mains gardent leur place par rapport à lui (miroir) ; petit délai pour ne pas trembler entre deux sens
+  B.flipCD = Math.max(0, (B.flipCD || 0) - dt);
+  const fsNow = B.faceS >= 0 ? 1 : -1;
+  if (B.face !== fsNow) {
+    if (B.flipCD <= 0 || B.state === 'grab' || B.state === 'feel' || B.state === 'edge' || B.state === 'recoil') {
+      if (B.hNw !== undefined) { B.hNw = 2 * B.x - B.hNw; B.hFw = 2 * B.x - B.hFw; }
+      B.hem = -(B.hem || 0) * 0.3; B.hemV = 0;
+      B.faceS = B.face; B.flipCD = 0.35;
+    } else B.face = fsNow;
+  } else B.faceS = B.face;
+  // rotation visuelle de la masse (comme le bébé yak) : le corps garde son volume, le cou et la tête passent par l'avant
+  // (une transition douce de 0,32 s, lente au départ et à l'arrivée)
+  if (B.rot === undefined) { B.rot = B.faceS; B.rotTo = B.faceS; B.rotU = 1; }
+  if (B.rotTo !== B.faceS) { B.rotFrom = B.rot; B.rotTo = B.faceS; B.rotU = 0; }
+  if (B.rotU < 1) { B.rotU = Math.min(1, B.rotU + dt / 0.32); const e = B.rotU * B.rotU * (3 - 2 * B.rotU); B.rot = B.rotFrom + (B.rotTo - B.rotFrom) * e; }
   // pas lourds
   const sp = Math.hypot(B.vx, B.vy);
   if (sp > 4) B.ph += dt * TAU * sp / (2 * 36);
@@ -2987,13 +3071,21 @@ function updateBlind(dt) {
   switch (B.state) {
     case 'listen': case 'pause': hN = { x: -42, y: -5 }; hF = { x: -60, y: -5 }; break;
     case 'search': { const s1 = Math.sin(B.st * 2.4); hN = { x: 108 + 34 * s1, y: -7 - Math.abs(Math.cos(B.st * 2.4)) * 6 }; hF = { x: 86 - 30 * s1, y: -8 }; break; }
-    case 'hunt': hN = { x: -78 + Math.sin(t * 9) * 4, y: -9 }; hF = { x: -94, y: -11 + Math.sin(t * 9 + 1) * 3 }; break;
+    case 'hunt': { const ahead = clamp((B.tx - B.x) * Math.sign(f), 70, 210); hN = { x: ahead + Math.sin(t * 9) * 6, y: -16 + Math.sin(t * 7) * 4 }; hF = { x: ahead - 22, y: -22 + Math.sin(t * 9 + 1) * 5 }; break; }
     case 'edge': hN = { x: -40, y: -5 }; hF = { x: -58, y: -5 }; break;
     case 'recoil': hN = { x: 98, y: -112 }; hF = { x: 86, y: -128 }; break;
     case 'feel': { const p = toLocal(c.x, c.y - 18); hN = { x: p.x, y: p.y + Math.sin(t * 14) * 4 }; break; }
     case 'grab': { const p = toLocal(c.x, c.y - c.z - 38); hN = { x: lerp(hN.x, p.x, B.grabK), y: lerp(hN.y, p.y, B.grabK) }; break; }
   }
   hN.y = Math.min(hN.y, -5); hF.y = Math.min(hF.y, -5);
+  // mains qui traînent (1) ou tendues (0) : chaque main passe de l'un à l'autre en douceur
+  { const ds = ['patrol', 'pause', 'listen', 'investigate', 'return', 'edge'].includes(B.state), kd = 1 - Math.exp(-dt * 6);
+    B.dragN = (B.dragN ?? 1) + ((ds ? 1 : 0) - (B.dragN ?? 1)) * kd;
+    B.dragF = (B.dragF ?? 1) + ((ds ? 1 : 0) - (B.dragF ?? 1)) * kd; }
+  { const rT = (B.state === 'recoil' ? -0.1 : 0) + (B.state === 'hunt' ? 0.08 : 0) + (B.state === 'listen' ? -0.03 : 0) + (B.state === 'search' || B.state === 'feel' ? 0.05 : 0);
+    B.rollS = (B.rollS || 0) + (rT - (B.rollS || 0)) * (1 - Math.exp(-dt * 6)); }
+  // bras qui s'allongent pour poursuivre (ressort, ils s'étirent puis se rétractent)
+  B.reachK = (B.reachK || 0) + ((B.state === 'hunt' ? 1 : 0) - (B.reachK || 0)) * (1 - Math.exp(-dt * (B.state === 'hunt' ? 5 : 3)));
   const ka = 1 - Math.exp(-dt * (B.state === 'grab' || B.state === 'feel' ? 18 : B.state === 'hunt' || B.state === 'recoil' ? 7 : 3.2));
   // poussière soulevée par les mains qui traînent
   B.dragT = (B.dragT || 0) - dt;
@@ -3002,7 +3094,14 @@ function updateBlind(dt) {
   {
     const fs0 = Math.sign(f);
     if (B.hNw === undefined || Math.abs(B.hNw - B.x) > 260 || Math.abs(B.hFw - B.x) > 260) { B.hNw = B.x + fs0 * B.hN.x; B.hFw = B.x + fs0 * B.hF.x; }
-    B.hNw += (B.x + fs0 * hN.x - B.hNw) * ka; B.hFw += (B.x + fs0 * hF.x - B.hFw) * ka;
+    const vmax = (B.state === 'grab' || B.state === 'feel' ? 620 : B.state === 'hunt' ? 430 : 300) * dt;
+    const pN = B.hNw, pF = B.hFw;
+    B.hNw += clamp((B.x + fs0 * hN.x - B.hNw) * ka, -vmax, vmax); B.hFw += clamp((B.x + fs0 * hF.x - B.hFw) * ka, -vmax, vmax);
+    // les doigts qui traînent pointent à l'opposé du mouvement de la main (dans le monde) : rien ne bascule au demi-tour
+    const vN = (B.hNw - pN) / Math.max(dt, 1e-4), vF = (B.hFw - pF) / Math.max(dt, 1e-4), kr = 1 - Math.exp(-dt * 4);
+    if (B.trailN === undefined) { B.trailN = -fs0; B.trailF = -fs0; }
+    if (Math.abs(vN) > 6) B.trailN += (-Math.sign(vN) - B.trailN) * kr;
+    if (Math.abs(vF) > 6) B.trailF += (-Math.sign(vF) - B.trailF) * kr;
     B.hN.x = (B.hNw - B.x) * fs0; B.hF.x = (B.hFw - B.x) * fs0;
     B.hN.y += (hN.y - B.hN.y) * ka; B.hF.y += (hF.y - B.hF.y) * ka;
   }
@@ -3011,7 +3110,7 @@ function updateBlind(dt) {
     const fs = Math.sign(f);
     let rx = B.x + fs * 50, rr = 42;
     if (B.state === 'search') { rx = B.x + fs * (84 + 34 * Math.abs(Math.sin(B.st * 2.4))); rr = 48; }
-    if (B.state === 'hunt') { rx = B.x + fs * 66; rr = 44; }
+    if (B.state === 'hunt') { rx = B.x + fs * 66; rr = 44; } // (les mains tendues attrapent aussi : dHand)
     const dh = Math.hypot(c.x - rx, (c.y - B.y) * 1.35), db = Math.hypot(c.x - B.x, (c.y - B.y) * 1.35);
     const dHand = Math.min(...[B.hN, B.hF].map((hh) => Math.hypot(c.x - (B.x + fs * hh.x), (c.y - B.y) * 1.35)));
     if (dh < rr || db < 50 || dHand < 30) {
@@ -3025,12 +3124,12 @@ function updateBlind(dt) {
 const wipe = { on: false, ph: 'close', t: 0 };
 function startWipe() { wipe.on = true; wipe.ph = 'close'; wipe.t = 0; }
 function respawn() {
-  setState('free'); c.fall = 0; c.z = 0; c.vx = c.vy = 0; c.inHut = true; c.x = doorX(); c.y = doorY(); cab.inT = 0; cab.peek = 0; c.armOff = false;
+  setState('free'); c.fall = 0; c.z = 0; c.vx = c.vy = 0; c.inHut = true; c.x = doorX(); c.y = doorY(); cab.inT = 0; cab.peek = 0; cab.sleep = false; c.armOff = false;
   eye.target = 0; eye.timer = 3;
   // l'Aveugle repart de l'autre bout de sa ronde
   let bi = 0, bd = -1;
   PATROL.forEach((p, i) => { const d = Math.hypot(p.x - cab.x, p.y - cab.y); if (d > bd) { bd = d; bi = i; } });
-  B.x = PATROL[bi].x; B.y = PATROL[bi].y; B.vx = B.vy = 0; B.wp = bi; setB('pause'); B.heardT = 0; B.hNw = undefined;
+  B.x = PATROL[bi].x; B.y = PATROL[bi].y; B.vx = B.vy = 0; B.wp = bi; setB('pause'); B.heardT = 0; B.hNw = undefined; B.trailN = undefined; B.rot = undefined;
   noises.length = 0; caughtN++;
 }
 function updateWipe(dt) {
@@ -3055,7 +3154,7 @@ function drawWipe() {
     const a = clamp(wipe.t / 0.4, 0, 1) * clamp((1.7 - wipe.t) / 0.35, 0, 1);
     ctx.globalAlpha = a; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillStyle = '#e9e1f5';
     ctx.font = '700 17px "Zen Maru Gothic", sans-serif';
-    ctx.fillText('… il se réveille dans sa cabane', W / 2, H / 2);
+    ctx.fillText(isYard() ? '… il se réveille sous sa tente' : '… il se réveille dans sa cabane', W / 2, H / 2);
     ctx.globalAlpha = 1;
   }
 }
@@ -3072,6 +3171,7 @@ function drawNoises() {
   }
 }
 function drawSafeGround() {
+  if (typeof refugeVariant !== 'undefined' && refugeVariant) return;
   const r = safeR(), L = 0.65 + 0.35 * clamp(cab.lvlK / 3, 0, 1) + cab.pulse * 0.3;
   const flick = 1 + Math.sin(t * 7.3) * (cab.lvlK < 1.5 ? 0.025 : 0.008) + Math.sin(t * 11.1) * 0.012;
   ctx.save(); ctx.translate(cab.x, cab.y + 4); ctx.scale(1, 1 / 1.35);
@@ -3145,18 +3245,19 @@ function drawRelicIcon(key, x, y, sc, rot) {
   ctx.restore();
 }
 function drawRelicGround(r) {
-  const bob = Math.sin(r.ph * 2.2) * 2.5;
-  ctx.fillStyle = 'rgba(30,26,40,.2)'; ctx.beginPath(); ctx.ellipse(r.x, r.y, 10, 3, 0, 0, TAU); ctx.fill();
-  softSpot(r.x, r.y - 15 + bob, 25, 22, 0, '255,222,136', 0.32 + 0.12 * Math.sin(r.ph * 4));
-  drawRelicIcon(r.key, r.x, r.y + (r.key === 'doudou' ? -15 : -5) + bob, 1, Math.sin(r.ph * 1.5) * 0.12);
-  for (let i = 0; i < 3; i++) { const a = r.ph * 1.4 + i * 2.1; ctx.globalAlpha = 0.5 + 0.5 * Math.sin(r.ph * 4 + i); star(r.x + Math.cos(a) * 17, r.y - 17 + Math.sin(a) * 10 + bob, 2.2, '#f3d27a'); ctx.globalAlpha = 1; }
+  // reliques plus grosses (×1,9) : on les repère de loin
+  const K = 1.9, bob = Math.sin(r.ph * 2.2) * 3.5;
+  ctx.fillStyle = 'rgba(30,26,40,.22)'; ctx.beginPath(); ctx.ellipse(r.x, r.y, 10 * K, 3 * K, 0, 0, TAU); ctx.fill();
+  softSpot(r.x, r.y - 15 * K + bob, 25 * K, 22 * K, 0, '255,222,136', 0.32 + 0.12 * Math.sin(r.ph * 4));
+  drawRelicIcon(r.key, r.x, r.y + (r.key === 'doudou' ? -15 : -5) * K + bob, K, Math.sin(r.ph * 1.5) * 0.12);
+  for (let i = 0; i < 4; i++) { const a = r.ph * 1.4 + i * 1.57; ctx.globalAlpha = 0.5 + 0.5 * Math.sin(r.ph * 4 + i); star(r.x + Math.cos(a) * 17 * K, r.y - 17 * K + Math.sin(a) * 10 * K + bob, 3.2, '#f3d27a'); ctx.globalAlpha = 1; }
 }
 // la relique qu'il rapporte, posée sur sa tête
 function drawCarried(A) {
   const r = carried; if (!r) return;
   const hx = c.x + A.sway + Math.sin(A.lean || 0) * 80 + Math.sin(c.head) * 50, hy = c.y - c.z - A.bob - 103 + c.sitK * 6;
-  softSpot(hx, hy - 8, 18, 15, 0, '255,222,136', 0.3);
-  drawRelicIcon(r.key, hx, hy + (r.key === 'doudou' ? -9 : 1), 0.9, c.head * 0.8 + Math.sin(t * 3.1) * 0.08);
+  softSpot(hx, hy - 14, 28, 24, 0, '255,222,136', 0.32);
+  drawRelicIcon(r.key, hx, hy + (r.key === 'doudou' ? -15 : 1), 1.5, c.head * 0.8 + Math.sin(t * 3.1) * 0.08);
 }
 
 /* ---------- Dessin : la cabane ---------- */
@@ -3371,8 +3472,16 @@ function strand(x, y, len, ang, w, col, seed) {
 // bras : épaule cachée sous une touffe de poils, bras long et osseux qui s'affine, coude noueux.
 // drag : le bras traîne en arrière, la main retournée posée sur le dos (paume vers le ciel),
 // les doigts traînent derrière et se recourbent vers le haut.
-function blindArm(sh, h, near, grab, drag) {
-  const j = ikArm(sh.x, sh.y, h.x, h.y, 72, 80, drag ? -1 : 1);
+function blindArm(sh, h, near, grab, dragK, lenK, trail) {
+  // les bras ne s'allongent que juste assez pour atteindre leur cible (ils ne se replient jamais en accordéon)
+  const L = clamp(Math.hypot(h.x - sh.x, h.y - sh.y) / (152 * 0.93), 1, lenK || 1), dk = clamp(dragK || 0, 0, 1), drag = dk > 0.5;
+  // coude : mélange continu entre « bras qui traîne » (coude affaissé) et « bras tendu » (coude en arrière)
+  const ja = ikArm(sh.x, sh.y, h.x, h.y, 72 * L, 80 * L, 1), jb = ikArm(sh.x, sh.y, h.x, h.y, 72 * L, 80 * L, -1);
+  const j = { ex: lerp(ja.ex, jb.ex, dk), ey: lerp(ja.ey, jb.ey, dk), hx: ja.hx, hy: ja.hy };
+  // (3) demi-tour : le bras se redresse (coude sur la ligne épaule–main), sinon le coude changerait de côté d'un coup
+  { const k2 = clamp(blindK() / 0.6, 0, 1), ks = k2 * k2 * (3 - 2 * k2);
+    j.ex = lerp((sh.x + j.hx) / 2, j.ex, ks); j.ey = lerp((sh.y + j.hy) / 2, j.ey, ks); }
+  B.dbg = B.dbg || {}; B.dbg[near ? 'N' : 'F'] = { sx: sh.x, sy: sh.y, ex: j.ex, ey: j.ey, hx: j.hx, hy: j.hy };
   const k = near ? 1 : 0.88;
   const fa = Math.atan2(j.hy - j.ey, j.hx - j.ex);
   const wr = [j.hx - Math.cos(fa) * 4, j.hy - Math.sin(fa) * 4];
@@ -3385,44 +3494,62 @@ function blindArm(sh, h, near, grab, drag) {
   { const ua = Math.atan2(j.ey - sh.y, j.ex - sh.x), nx = -Math.sin(ua), ny = Math.cos(ua);
     for (let i = 0; i < 5; i++) { const o = (i - 2) * 4.2 * k; strand(sh.x + nx * o, sh.y + ny * o, (14 + (i % 3) * 4) * k, ua + (i - 2) * 0.08, 3.2 * k, near ? BC.fur : BC.furD, i); } }
   const bone = near ? [BC.bone, BC.boneM, BC.boneD] : ['#b9b1a1', '#9c937f', '#6f6858'];
+  // griffes : quatre très longs doigts osseux à trois phalanges, articulations noueuses,
+  // terminés par une longue griffe sombre et crochue
+  const claw = (base, a0, curls, lens, w0) => {
+    const pts = [base]; let a = a0, p = base;
+    const cs0 = clamp(Math.cos(a0) * 4, -1, 1) * (drag ? -1 : 1);   // + = vers le sol, quel que soit le côté
+    curls = curls.map((cv) => cv * cs0);
+    for (let n = 0; n < 3; n++) { a += curls[n]; p = [p[0] + Math.cos(a) * lens[n], p[1] + Math.sin(a) * lens[n]]; pts.push(p); }
+    taper(pts, [w0, w0 * 0.8, w0 * 0.62, w0 * 0.45], bone[0], bone[1], bone[2], 1.2);
+    for (let n = 1; n < 3; n++) ell(pts[n][0], pts[n][1], w0 * 0.42, w0 * 0.36, 0, bone[1], 1);
+    // griffe : un croc effilé qui prolonge le doigt et se recourbe
+    const tip = pts[3], ac = a + curls[2] * 0.6, L = lens[2] * 0.95, ah = ac + 0.55;
+    const ex = tip[0] + Math.cos(ac) * L * 0.55 + Math.cos(ah) * L * 0.5, ey = tip[1] + Math.sin(ac) * L * 0.55 + Math.sin(ah) * L * 0.5;
+    const nx = -Math.sin(a) * w0 * 0.3, ny = Math.cos(a) * w0 * 0.3;
+    const cl = new Path2D();
+    cl.moveTo(tip[0] + nx, tip[1] + ny);
+    cl.quadraticCurveTo(tip[0] + Math.cos(ac) * L * 0.6 + nx * 0.4, tip[1] + Math.sin(ac) * L * 0.6 + ny * 0.4, ex, ey);
+    cl.quadraticCurveTo(tip[0] + Math.cos(ac) * L * 0.5 - nx * 0.9, tip[1] + Math.sin(ac) * L * 0.5 - ny * 0.9, tip[0] - nx, tip[1] - ny);
+    cl.closePath();
+    ctx.fillStyle = '#2a2131'; ctx.fill(cl); ctx.lineWidth = 1; ctx.strokeStyle = BC.ink; ctx.stroke(cl);
+    ctx.beginPath(); ctx.moveTo(tip[0] + Math.cos(ac) * 1.5, tip[1] + Math.sin(ac) * 1.5); ctx.quadraticCurveTo(tip[0] + Math.cos(ac) * L * 0.5, tip[1] + Math.sin(ac) * L * 0.5, (tip[0] + ex) / 2 + Math.cos(ah) * 1.5, (tip[1] + ey) / 2 + Math.sin(ah) * 1.5);
+    ctx.lineWidth = 0.8; ctx.strokeStyle = 'rgba(200,190,215,.5)'; ctx.stroke();   // reflet sur la griffe
+  };
   if (drag) {
-    // doigts retournés : ils traînent à plat derrière la main puis se recourbent vers le ciel
+    // main retournée, posée sur le dos : les longs doigts traînent à plat derrière, puis se recourbent vers le ciel
     for (let i = 3; i >= 0; i--) {
-      const bx = j.hx - 5.5 * k, by = j.hy + 1.6 + (i - 1.5) * 1.1 * k;
-      const l1 = (i === 0 || i === 3 ? 8 : 10.5) * k, l2 = (i === 0 || i === 3 ? 7 : 9) * k;
-      const a1 = Math.PI + (i - 1.5) * 0.09 + 0.05;
-      const k1 = [bx + Math.cos(a1) * l1, by + Math.sin(a1) * l1];
-      const a2 = a1 + 0.7 + 0.16 * Math.sin(t * 2.6 + i * 1.4);
-      const tip = [k1[0] + Math.cos(a2) * l2, k1[1] + Math.sin(a2) * l2];
-      taper([[bx, by], k1, tip], [4.4 * k, 3.5 * k, 1.8 * k], bone[0], bone[1], bone[2], 1.3);
-      ctx.beginPath(); ctx.moveTo(tip[0] - Math.sin(a2) * 1.1, tip[1] + Math.cos(a2) * 1.1); ctx.lineTo(tip[0] + Math.cos(a2) * 3.2, tip[1] + Math.sin(a2) * 3.2); ctx.lineTo(tip[0] + Math.sin(a2) * 1.1, tip[1] - Math.cos(a2) * 1.1);
-      ctx.closePath(); ctx.fillStyle = '#2b2333'; ctx.fill();
-      ell(k1[0], k1[1], 1.8 * k, 1.5 * k, 0, bone[1], 1);
+      const base = [0, j.hy + 1.2 + (i - 1.5) * 1.2 * k];
+      const long = i === 1 || i === 2;
+      const wob = 0.12 * Math.sin(t * 2.6 + i * 1.4);
+      // les doigts prolongent le bras : ils pointent à l'opposé de l'épaule (géométrie, donc stable tant qu'il ne se retourne pas)
+      const tl = clamp((j.hx - sh.x) / 30, -1, 1), ta = Math.atan2(-0.12, tl);
+      if (i === 0) B.dbg[near ? 'N' : 'F'].ta = ta;
+      const bx = j.hx + Math.cos(ta) * 5 * k;
+      claw([bx, base[1]], ta + (i - 1.5) * 0.08, [0, 0.32 + wob, 0.5 + wob], [(long ? 14 : 11) * k, (long ? 12 : 10) * k, (long ? 10 : 8) * k], 4.2 * k);
     }
-    // paume vers le ciel, dos de la main qui racle le sol
-    const palm = new Path2D(); palm.ellipse(j.hx, j.hy, 8.2 * k, 4.4 * k, 0, 0, TAU);
+    const palm = new Path2D(); palm.ellipse(j.hx, j.hy, 7.6 * k, 4.2 * k, 0, 0, TAU);
     ctx.fillStyle = radial(j.hx - 2, j.hy - 2.5, 0.5, j.hx, j.hy, 9, [[0, '#f3ede2'], [0.55, bone[1]], [1, bone[2]]]); ctx.fill(palm);
     ctx.lineWidth = 1.6; ctx.strokeStyle = BC.ink; ctx.stroke(palm);
-    ctx.beginPath(); ctx.moveTo(j.hx - 5 * k, j.hy + 2.6 * k); ctx.quadraticCurveTo(j.hx, j.hy + 4.6 * k, j.hx + 5 * k, j.hy + 2.6 * k); ctx.lineWidth = 2.6; ctx.strokeStyle = BC.ink; ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(j.hx - 4 * k, j.hy - 0.8); ctx.quadraticCurveTo(j.hx, j.hy + 0.8, j.hx + 3.5 * k, j.hy - 1.4); ctx.moveTo(j.hx - 3 * k, j.hy - 2.6); ctx.quadraticCurveTo(j.hx + 0.5, j.hy - 1.6, j.hx + 4 * k, j.hy - 3); ctx.lineWidth = 0.9; ctx.strokeStyle = 'rgba(21,17,28,.45)'; ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(j.hx - 5 * k, j.hy + 2.6 * k); ctx.quadraticCurveTo(j.hx, j.hy + 4.4 * k, j.hx + 5 * k, j.hy + 2.6 * k); ctx.lineWidth = 2.6; ctx.strokeStyle = BC.ink; ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(j.hx - 4 * k, j.hy - 0.8); ctx.quadraticCurveTo(j.hx, j.hy + 0.8, j.hx + 3.5 * k, j.hy - 1.4); ctx.lineWidth = 0.9; ctx.strokeStyle = 'rgba(21,17,28,.45)'; ctx.stroke();
     return;
   }
-  const tap = B.state === 'search' || B.state === 'feel';
+  // main ouverte : longs doigts écartés qui s'agitent (fouille, poursuite), ou qui se referment (attraper)
+  const tap = B.state === 'search' || B.state === 'feel' || B.state === 'hunt';
   for (let i = 3; i >= 0; i--) {
-    const spread = (i - 1.5) * (grab ? 0.24 : 0.34) * k + (grab ? -0.5 : 0);
-    const a1 = fa + spread, base = [j.hx + Math.cos(a1) * 5, j.hy + Math.sin(a1) * 5];
-    const l1 = (i === 0 || i === 3 ? 9 : 11) * k, l2 = (i === 0 || i === 3 ? 8 : 10) * k;
-    const k1 = [base[0] + Math.cos(a1) * l1, base[1] + Math.sin(a1) * l1];
-    const a2 = a1 + (grab ? 1.3 : 0.6) + (tap ? Math.sin(t * 7 + i * 1.3) * 0.3 : 0);
-    const tip = [k1[0] + Math.cos(a2) * l2, k1[1] + Math.sin(a2) * l2];
-    taper([base, k1, tip], [4.6 * k, 3.6 * k, 1.8 * k], bone[0], bone[1], bone[2], 1.3);
-    ctx.beginPath(); ctx.moveTo(tip[0] - Math.sin(a2) * 1.1, tip[1] + Math.cos(a2) * 1.1); ctx.lineTo(tip[0] + Math.cos(a2) * 3.4, tip[1] + Math.sin(a2) * 3.4); ctx.lineTo(tip[0] + Math.sin(a2) * 1.1, tip[1] - Math.cos(a2) * 1.1);
-    ctx.closePath(); ctx.fillStyle = '#2b2333'; ctx.fill();
-    ell(k1[0], k1[1], 1.9 * k, 1.6 * k, 0, bone[1], 1);
+    const long = i === 1 || i === 2;
+    const spread = (i - 1.5) * (grab ? 0.22 : 0.36) * k + (grab ? -0.45 : 0);
+    const a0 = fa + spread, base = [j.hx + Math.cos(a0) * 4, j.hy + Math.sin(a0) * 4];
+    const wig = tap ? Math.sin(t * 8 + i * 1.3) * 0.22 : 0;
+    const c1 = grab ? 0.55 : 0.12 + wig, c2 = grab ? 0.75 : 0.32 + wig * 0.6;
+    claw(base, a0, [0, c1, c2], [(long ? 15 : 12) * k, (long ? 13 : 10) * k, (long ? 10 : 8) * k], 4.4 * k);
   }
-  const palm = new Path2D(); palm.ellipse(j.hx, j.hy, 7.4 * k, 5.6 * k, fa, 0, TAU);
+  const palm = new Path2D(); palm.ellipse(j.hx, j.hy, 6.6 * k, 5.2 * k, fa, 0, TAU);
   ctx.fillStyle = radial(j.hx - 2.5, j.hy - 2.5, 0.5, j.hx, j.hy, 8, [[0, bone[0]], [0.6, bone[1]], [1, bone[2]]]); ctx.fill(palm);
   ctx.lineWidth = 1.6; ctx.strokeStyle = BC.ink; ctx.stroke(palm);
+  // jointures saillantes
+  for (let i = 0; i < 4; i++) { const a0 = fa + (i - 1.5) * 0.36 * k; ell(j.hx + Math.cos(a0) * 4.5, j.hy + Math.sin(a0) * 4.5, 1.7 * k, 1.5 * k, 0, bone[0], 1); }
 }
 // jambe massive : cuisse cachée dans la fourrure, genou qui avance quand le pied se lève,
 // grand pied plat (comme ceux du zombie) qui se déroule : talon qui décolle, pointe qui se relève avant de reposer
@@ -3454,29 +3581,36 @@ const qbz = (a, b2, c2, u) => (1 - u) * (1 - u) * a + 2 * u * (1 - u) * b2 + u *
 function drawBlind(handOnly) {
   const fs = B.faceS >= 0 ? 1 : -1, kt = blindK();
   // pendant un demi-tour : le corps garde son volume ; tête, bras et pieds passent par l'avant
-  const kx = 0.3 + 0.7 * kt;
+  // (1) épaules, pieds et tête passent par le centre au moment exact du demi-tour : aucun saut
+  const kx = kt;
   const sp = Math.hypot(B.vx, B.vy), mm = Math.min(1, sp / 30), s = Math.sin(B.ph), contact = 1 - Math.abs(s);
   // marche lourde : le corps monte quand la jambe passe, retombe d'un coup au contact,
   // bascule vers l'avant à chaque pas et s'écrase un peu sous son poids
   const bob = (Math.abs(s) * 5 - contact * contact * 3) * mm;
   const lurch = contact * contact * 0.06 * mm + s * 0.015 * mm;
-  const roll = lurch + (B.state === 'recoil' ? -0.1 : 0) + (B.state === 'hunt' ? 0.08 : 0) + (B.state === 'listen' ? -0.03 : 0) + (B.state === 'search' || B.state === 'feel' ? 0.05 : 0);
+  const roll = lurch + (B.rollS || 0);
   const sqz = Math.pow(contact, 4) * 0.045 * mm;
   const br = Math.sin(t * 1.3) * 0.018, bsx = (1 - br * 0.6) * (1 + sqz * 0.7), bsy = (1 + br) * (1 - sqz);
   const LIFT = 6;
   const cr = Math.cos(roll), sr = Math.sin(roll);
   const bodyPt = (x, y) => { const xx = x * bsx, yy = (y + 30) * bsy; return { x: xx * cr - yy * sr, y: xx * sr + yy * cr - 30 - bob - LIFT }; };
   const shN0 = bodyPt(32, -118), shF0 = bodyPt(16, -130);
-  const shN = { x: shN0.x * kx, y: shN0.y }, shF = { x: shF0.x * kx, y: shF0.y };
-  const hN = { x: B.hN.x * kx, y: B.hN.y }, hF = { x: B.hF.x * kx, y: B.hF.y };
-  const drag = ['patrol', 'pause', 'listen', 'investigate', 'return', 'hunt', 'edge'].includes(B.state) && B.hN.x < 0;
+  // au milieu du demi-tour (vu de face), les épaules s'écartent de part et d'autre de la tête :
+  // le bras proche du côté où il se tourne, le bras lointain de l'autre (les bras ne passent pas devant le visage)
+  const latK = (1 - kt) * B.face * fs;
+  const shN = { x: shN0.x * kx + 36 * latK, y: shN0.y }, shF = { x: shF0.x * kx - 36 * latK, y: shF0.y };
+  // (2) les mains restent là où elles sont dans le monde (pas de glissade pendant le demi-tour)
+  const hN = { x: B.hN.x, y: B.hN.y }, hF = { x: B.hF.x, y: B.hF.y };
+  const trN = (B.trailN ?? -fs) * fs, trF = (B.trailF ?? -fs) * fs;
+  const dragN = B.dragN ?? 1, dragF = B.dragF ?? 1;
+  const lenK = 1 + 0.65 * (B.reachK || 0);
   ctx.save(); ctx.translate(B.x, B.y);
   ctx.lineJoin = 'round'; ctx.lineCap = 'round';
-  if (handOnly) { ctx.scale(fs, 1); blindArm(shN, hN, true, true, false); ctx.restore(); return; }
+  if (handOnly) { ctx.scale(fs, 1); blindArm(shN, hN, true, true, 0, lenK, trN); ctx.restore(); return; }
   ctx.fillStyle = 'rgba(25,20,35,.24)'; ctx.beginPath(); ctx.ellipse(fs * -4, 2, 108, 15, 0, 0, TAU); ctx.fill();
   ctx.fillStyle = 'rgba(20,16,30,.3)'; ctx.beginPath(); ctx.ellipse(fs * 4, 1, 66, 8, 0, 0, TAU); ctx.fill();
   ctx.scale(fs, 1);
-  blindArm(shF, hF, false, false, drag && B.hF.x < 0);
+  blindArm(shF, hF, false, false, dragF, lenK, trF);
   const stride = 36;
   const footOff = (ph) => {
     const u = (((ph / TAU) % 1) + 1) % 1;
@@ -3491,10 +3625,38 @@ function drawBlind(handOnly) {
   // ordre de dessin (comme pour le zombie) : jambe du fond, puis le bras proche quand il traîne
   // (il sort de sous la fourrure), puis la jambe de devant, toujours au premier plan
   blindLeg(-22 * kx, -54 - bob, (-22 + fF.x) * kx, fF.lift, fF.sq, false, fF.tilt);
-  if (drag) blindArm(shN, hN, true, false, true);
-  blindLeg(10 * kx, -48 - bob, (14 + fN.x) * kx, fN.lift, fN.sq, true, fN.tilt);
-  // le corps
-  ctx.save(); ctx.translate(0, -30 - bob - LIFT); ctx.rotate(roll); ctx.scale(bsx * (0.9 + 0.1 * kt), bsy); ctx.translate(0, 30);
+  const nearLeg = () => blindLeg(10 * kx, -48 - bob, (14 + fN.x) * kx, fN.lift, fN.sq, true, fN.tilt);
+  nearLeg();
+  const hd0 = B.hd || { x: 0, y: 0 }, hd = { x: hd0.x * kt, y: hd0.y }, tx0 = 0;
+  // rotation : k va de -1 (on voit encore l'ancien côté) à 1, en passant par 0 (vu de face)
+  const kR = clamp((B.rot === undefined ? fs : B.rot) * fs, -1, 1), aR = Math.abs(kR), sgR = kR >= 0 ? 1 : -1;
+  const wB = 0.82 + 0.18 * aR, hsx = sgR * (0.8 + 0.2 * aR), Hx = (62 + hd.x) * kR + 18 * (kR - hsx);   // le centre du crâne (62 + 18) glisse sans saut
+  // le corps, le cou et la tête (une « masse ») : pendant le demi-tour, l'autre côté apparaît en fondu
+  // le corps, le cou et la tête : le corps garde son volume (il se recentre et s'affine un peu de face),
+  // le cou et la tête glissent d'un côté à l'autre en passant devant (comme le visage du bébé yak)
+  const massFrame = () => { ctx.save(); ctx.translate(0, -30 - bob - LIFT); ctx.rotate(roll); ctx.scale(bsx, bsy); ctx.translate(0, 30); };
+  let nP = null;
+  const drawNeck = () => {
+  massFrame();
+  // cou souple, dessiné AVANT le corps : sa base disparaît dans la fourrure ;
+  // il est couvert de la même fourrure, avec une collerette de mèches là où il sort du dos
+  const nbx = 26 * kR, nby = -150;
+  const nax = Hx, nay = -126 + hd.y;
+  const ncx = (50 + hd.x * 0.45) * kR, ncy = -162 + hd.y * 0.3 - Math.max(0, hd.x) * 0.4;
+  nP = (u) => [qbz(nbx, ncx, nax, u), qbz(nby, ncy, nay, u)];
+  const npts = []; for (let i = 0; i <= 4; i++) npts.push(nP(i / 4));
+  taper(npts, [34, 29, 24, 20, 17], '#6a6286', '#433b57', '#221d2e', 2);
+  // mèches de fourrure le long du cou (formes fixes)
+  for (let i = 0; i < 7; i++) {
+    const u = 0.3 + i * 0.09, p0 = nP(u), p1 = nP(Math.min(1, u + 0.05));
+    const a = Math.atan2(p1[1] - p0[1], p1[0] - p0[0]);
+    strand(p0[0] - Math.sin(a) * (i % 2 ? 5 : -4) * sgR, p0[1] + Math.cos(a) * (i % 2 ? 5 : -4) * sgR, 12 - i * 0.8, a + (i % 2 ? 0.35 : -0.25), 2.4, i % 2 ? 'rgba(14,10,22,.35)' : 'rgba(170,160,210,.28)', i);
+  }
+  ctx.restore();
+  };
+  const drawBody = () => {
+  massFrame();
+  ctx.translate(12 * (1 - aR) * sgR, 0); ctx.scale(sgR * wB, 1);
   const hemO = B.hem || 0;
   const body = new Path2D();
   body.moveTo(-58 + hemO * 0.5, -32);
@@ -3524,40 +3686,56 @@ function drawBlind(handOnly) {
     ctx.fillStyle = radial(x - 1.5, y - 1.5, 0.5, x, y, 6 * sz, [[0, '#f0eadd'], [0.6, BC.boneM], [1, BC.boneD]]); ctx.fill();
     ctx.lineWidth = 1.7; ctx.strokeStyle = BC.ink; ctx.stroke();
   }
-  // cou souple : il part du haut du corps et suit la tête (il s'étire, se courbe, se rentre)
-  const hd = B.hd || { x: 0, y: 0 }, tx0 = -44 * (1 - kx) * 0.9;
-  const nax = 62 + hd.x + tx0, nay = -126 + hd.y;
-  const ncx = 50 + hd.x * 0.45 + tx0 * 0.6, ncy = -162 + hd.y * 0.3 - Math.max(0, hd.x) * 0.4;
-  const npts = []; for (let i = 0; i <= 4; i++) { const u = i / 4; npts.push([qbz(30 + tx0 * 0.3, ncx, nax, u), qbz(-150, ncy, nay, u)]); }
-  taper(npts, [30, 27, 23, 20, 18], '#5f5778', '#3f3851', '#231e2e', 2);
-  // plis du cou (rides d'encre en travers)
-  for (const u of [0.42, 0.6, 0.76]) {
-    const x = qbz(30 + tx0 * 0.3, ncx, nax, u), y = qbz(-150, ncy, nay, u);
-    const dx = qbz(30 + tx0 * 0.3, ncx, nax, u + 0.02) - x, dy = qbz(-150, ncy, nay, u + 0.02) - y, dl = Math.hypot(dx, dy) || 1;
-    const nx = -dy / dl, ny = dx / dl, w = 8 - u * 3;
-    ctx.beginPath(); ctx.moveTo(x - nx * w, y - ny * w); ctx.quadraticCurveTo(x + dx / dl * 2.5, y + dy / dl * 2.5, x + nx * w, y + ny * w);
-    ctx.lineWidth = 1.1; ctx.strokeStyle = 'rgba(21,17,28,.5)'; ctx.stroke();
+  ctx.restore();
+  };
+  const drawCollar = () => {
+  massFrame();
+  // collerette : mèches du dos qui retombent sur la base du cou
+  for (let i = 0; i < 6; i++) {
+    const u = 0.22 + i * 0.03, p0 = nP(u), p1 = nP(u + 0.05), a = Math.atan2(p1[1] - p0[1], p1[0] - p0[0]);
+    const off = (i - 2.5) * 4.2;
+    strand(p0[0] - Math.sin(a) * off * sgR, p0[1] + Math.cos(a) * off * sgR, 15 + (i % 3) * 3, a + (i - 2.5) * 0.12, 3.4, i % 2 ? '#3d3650' : '#4d4566', i + 3);
   }
-  // tête : petit crâne pâle au bout du cou, qui pivote vers les bruits
-  ctx.save(); ctx.translate(hd.x + tx0, hd.y);
-  ctx.translate(62, -126); ctx.rotate(B.head); ctx.translate(-62, 126);
-  ctx.save(); ctx.translate(80, -114); ctx.scale(0.86 + 0.14 * kt, 1); ctx.translate(-80, 114);
-  const skull = new Path2D(); skull.ellipse(80, -114, 23, 29, -0.55, 0, TAU);
-  ctx.fillStyle = radial(71, -133, 2, 80, -112, 34, [[0, '#f6f1e6'], [0.5, '#ddd5c5'], [0.85, '#aea594'], [1, '#8a8171']]); ctx.fill(skull);
+  ctx.restore();
+  };
+  const drawHead = () => {
+  massFrame();
+  // tête : petit crâne pâle au bout du cou, qui pivote vers les bruits.
+  // Pendant le demi-tour, il nous regarde : le visage passe progressivement du profil à la face (symétrique),
+  // puis repart en profil de l'autre côté. Vu de face, le retournement du dessin est invisible (visage symétrique).
+  const q0 = clamp((1 - aR) / 0.85, 0, 1), F = q0 * q0 * (3 - 2 * q0);       // 0 = profil, 1 = de face
+  const L = (a, b) => a + (b - a) * F;
+  ctx.save(); ctx.translate(Hx, hd.y); ctx.scale(hsx, 1); ctx.translate(-62, 0);
+  ctx.translate(62, -126); ctx.rotate(B.head * (1 - F * 0.7)); ctx.translate(-62, 126);
+  const cx = 80, cy = -114;
+  const skull = new Path2D(); skull.ellipse(cx, cy, L(23, 25), L(29, 27.5), L(-0.55, 0), 0, TAU);
+  ctx.fillStyle = radial(L(71, 72), L(-133, -132), 2, cx, -112, 34, [[0, '#f6f1e6'], [0.5, '#ddd5c5'], [0.85, '#aea594'], [1, '#8a8171']]); ctx.fill(skull);
+  // oreilles : une seule de profil (derrière le visage) ; de face, une de chaque côté
+  const earAt = (x, y, rot, k) => {
+    if (k < 0.05) return;
+    ctx.save(); ctx.translate(x, y); ctx.scale(k, k);
+    const ear = new Path2D(); ear.ellipse(0, 0, 3.4, 6, rot, 0, TAU);
+    ctx.fillStyle = radial(-2, -4, 0.5, -1, -2, 8, [[0, '#ddd5c5'], [1, '#a59c8a']]); ctx.fill(ear); ctx.lineWidth = 1.6; ctx.strokeStyle = BC.ink; ctx.stroke(ear);
+    ctx.restore();
+  };
+  if (F > 0.3) { earAt(L(66, 55.5), L(-106, -113), L(0.5, 0.25), 1); earAt(104.5, -113, -0.25, (F - 0.3) / 0.7); }
+  ctx.fill(skull);
   ctx.save(); ctx.clip(skull);
-  softSpot(92, -92, 20, 11, -0.5, '50,36,52', 0.4);           // ombre sous la mâchoire
-  softSpot(70, -134, 10, 6, -0.6, '255,255,255', 0.55);        // reflet
-  hatch(84, -92, 100, -98, 6, 1.9, 7, 0.3);
+  softSpot(L(92, 80), L(-92, -89), L(20, 22), 11, L(-0.5, 0), '50,36,52', 0.4);      // ombre sous la mâchoire
+  softSpot(L(70, 71), L(-134, -133), 10, 6, L(-0.6, -0.3), '255,255,255', 0.55);     // reflet
+  hatch(L(84, 88), L(-92, -90), L(100, 100), L(-98, -95), 6, 1.9, 7, 0.3);
   ctx.restore();
   inkStroke(skull, 2.2, 2.4, [70, -112, 50, 40]);
   // fêlure
-  ctx.beginPath(); ctx.moveTo(70, -139); ctx.lineTo(75, -131); ctx.lineTo(72, -125); ctx.lineWidth = 1.1; ctx.strokeStyle = 'rgba(70,56,62,.75)'; ctx.stroke();
-  // grande oreille plate collée au crâne
-  const ear = new Path2D(); ear.ellipse(66, -106, 3.4, 6, 0.5, 0, TAU);
-  ctx.fillStyle = radial(63, -120, 0.5, 64.5, -116, 8, [[0, '#ddd5c5'], [1, '#a59c8a']]); ctx.fill(ear); ctx.lineWidth = 1.6; ctx.strokeStyle = BC.ink; ctx.stroke(ear);
-  ctx.beginPath(); ctx.moveTo(67.5, -110.5); ctx.quadraticCurveTo(64, -106, 66.5, -101.5); ctx.lineWidth = 1; ctx.strokeStyle = 'rgba(80,66,70,.7)'; ctx.stroke();
-  // paupières cousues : creux sombre, fente, gros points de fil
-  for (const [ex, ey, w] of [[87.5, -121, 7.5], [99, -116.5, 4.2 * (0.6 + 0.4 * kt)]]) {
+  ctx.beginPath(); ctx.moveTo(L(70, 69), L(-139, -138)); ctx.lineTo(L(75, 73), L(-131, -131)); ctx.lineTo(L(72, 70), L(-125, -126)); ctx.lineWidth = 1.1; ctx.strokeStyle = 'rgba(70,56,62,.75)'; ctx.stroke();
+  // oreille de profil, collée au crâne
+  if (F <= 0.3) {
+    const ear = new Path2D(); ear.ellipse(L(66, 55.5), L(-106, -113), 3.4, 6, 0.5, 0, TAU);
+    ctx.fillStyle = radial(63, -120, 0.5, 64.5, -116, 8, [[0, '#ddd5c5'], [1, '#a59c8a']]); ctx.fill(ear); ctx.lineWidth = 1.6; ctx.strokeStyle = BC.ink; ctx.stroke(ear);
+    ctx.beginPath(); ctx.moveTo(67.5, -110.5); ctx.quadraticCurveTo(64, -106, 66.5, -101.5); ctx.lineWidth = 1; ctx.strokeStyle = 'rgba(80,66,70,.7)'; ctx.stroke();
+  }
+  // paupières cousues : creux sombre, fente, gros points de fil ; de face, deux yeux pareils
+  for (const [ex, ey, w] of [[L(87.5, 70.5), L(-121, -119), L(7.5, 6.6)], [L(99, 89.5), L(-116.5, -119), L(4.2, 6.6)]]) {
     softSpot(ex, ey + 0.3, w + 3.5, 5.5, 0, '55,40,58', 0.45);
     ctx.beginPath(); ctx.moveTo(ex - w, ey - 1); ctx.quadraticCurveTo(ex, ey + 3, ex + w, ey - 1); ctx.lineWidth = 2; ctx.strokeStyle = BC.ink; ctx.stroke();
     const n = w > 5 ? 4 : 2;
@@ -3566,33 +3744,43 @@ function drawBlind(handOnly) {
     ctx.lineWidth = 2.6; ctx.strokeStyle = BC.ink; ctx.stroke(); ctx.lineWidth = 1.5; ctx.strokeStyle = BC.thread; ctx.stroke();
   }
   // narines
-  ctx.beginPath(); ctx.moveTo(98, -107); ctx.lineTo(99.5, -104.5); ctx.moveTo(101.5, -108); ctx.lineTo(102.6, -105.8); ctx.lineWidth = 1.4; ctx.strokeStyle = BC.ink; ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(L(98, 77.5), L(-107, -108)); ctx.lineTo(L(99.5, 76.5), L(-104.5, -105.5)); ctx.moveTo(L(101.5, 82.5), L(-108, -108)); ctx.lineTo(L(102.6, 83.5), L(-105.8, -105.5)); ctx.lineWidth = 1.4; ctx.strokeStyle = BC.ink; ctx.stroke();
   // bouche : une fente qui s'ouvre (petites dents, pas de sang)
   const jw = B.jaw;
+  const m0x = L(79, 69.5), m0y = L(-99, -98.5), m1x = L(89, 80), m1y = L(-95.5, -95), m2x = L(99.5, 90.5), m2y = L(-100.5, -98.5);
   const mouth = new Path2D();
-  mouth.moveTo(79, -99); mouth.quadraticCurveTo(89, -95.5, 99.5, -100.5);
-  mouth.quadraticCurveTo(91, -96 + jw * 11, 80, -98 + jw * 6); mouth.closePath();
+  mouth.moveTo(m0x, m0y); mouth.quadraticCurveTo(m1x, m1y, m2x, m2y);
+  mouth.quadraticCurveTo(L(91, 80), m1y - 0.5 + jw * 11, m0x + 1, m0y + 1 + jw * 6 * (1 - F * 0.4)); mouth.closePath();
   ctx.fillStyle = '#211827'; ctx.fill(mouth); ctx.lineWidth = 1.7; ctx.strokeStyle = BC.ink; ctx.stroke(mouth);
   ctx.fillStyle = '#f2ecdc'; ctx.strokeStyle = BC.ink; ctx.lineWidth = 0.7;
   const qb = (a, b2, c2, u) => (1 - u) * (1 - u) * a + 2 * u * (1 - u) * b2 + u * u * c2;
   for (let i = 0; i < 6; i++) {
-    const u = 0.1 + i * 0.16, x = qb(79, 89, 99.5, u), y = qb(-99, -95.5, -100.5, u);
+    const u = 0.1 + i * 0.16, x = qb(m0x, m1x, m2x, u), y = qb(m0y, m1y, m2y, u);
     ctx.beginPath(); ctx.moveTo(x - 1.4, y); ctx.lineTo(x, y + 2.6); ctx.lineTo(x + 1.4, y); ctx.closePath(); ctx.fill(); ctx.stroke();
   }
   if (jw > 0.3) for (let i = 0; i < 5; i++) {
-    const u = 0.18 + i * 0.16, x = qb(99.5, 91, 80, u), y = qb(-100.5, -96 + jw * 11, -98 + jw * 6, u);
+    const u = 0.18 + i * 0.16, x = qb(m2x, L(91, 80), m0x + 1, u), y = qb(m2y, m1y - 0.5 + jw * 11, m0y + 1 + jw * 6, u);
     ctx.beginPath(); ctx.moveTo(x - 1.3, y); ctx.lineTo(x, y - 2.4); ctx.lineTo(x + 1.3, y); ctx.closePath(); ctx.fill(); ctx.stroke();
   }
   ctx.restore();
   ctx.restore();
-  ctx.restore();
-  if (!drag) blindArm(shN, hN, true, B.state === 'grab', false);
+  };
+  // vu de profil : cou derrière le corps, le bras proche passe devant la tête ;
+  // pendant la rotation (vu de face) : le cou et la tête pendent devant le corps et les bras
+  const turning = aR < 0.55;
+  if (!turning) { drawNeck(); drawBody(); drawCollar(); drawHead(); } else drawBody();
+  // bras proche : toujours visible, par-dessus le corps
+  blindArm(shN, hN, true, B.state === 'grab', dragN, lenK, trN);
+  // la jambe de devant repasse devant le bras (sous la fourrure seulement)
+  ctx.save(); ctx.beginPath(); ctx.rect(-300, -32 - bob, 600, 60); ctx.clip(); nearLeg(); ctx.restore();
+  if (turning) { drawNeck(); drawCollar(); drawHead(); }
   // positions utiles (bouche et oreille, dans le monde) pour la brume et les ondes d'écoute
   const hp = (lx, ly) => {
-    const h = B.head, x = 62 + (lx - 62) * Math.cos(h) - (ly + 126) * Math.sin(h) + hd.x + tx0, y = -126 + (lx - 62) * Math.sin(h) + (ly + 126) * Math.cos(h) + hd.y;
+    const h = B.head, rx = 62 + (lx - 62) * Math.cos(h) - (ly + 126) * Math.sin(h), x = Hx + (rx - 62) * hsx, y = -126 + (lx - 62) * Math.sin(h) + (ly + 126) * Math.cos(h) + hd.y;
     const q = bodyPt(x, y); return { x: B.x + q.x * fs, y: B.y + q.y };
   };
-  const mp = hp(92, -97), ep = hp(66, -106);
+  const mp = hp(92, -97), ep = hp(66, -106), hc = hp(80, -114);
+  B.dbg = B.dbg || {}; B.dbg.head = { x: hc.x, y: hc.y }; B.dbg.fs = fs;
   B.mouthX = mp.x; B.mouthY = mp.y; B.earWX = ep.x; B.earWY = ep.y;
   ctx.restore();
   if (B.heardT > 0) {
@@ -3612,11 +3800,1720 @@ function updateBstat() {
 }
 function resetWorld() {
   for (const r of relics) { r.state = 'ground'; r.x = r.hx; r.y = r.hy; }
-  carried = null; cab.lvl = 0; cab.lvlK = 0; caughtN = 0; noises.length = 0; wipe.on = false;
+  carried = null; yardSide = null; cab.lvl = 0; cab.lvlK = 0; caughtN = 0; noises.length = 0; wipe.on = false;
   setState('free'); c.fall = 0; c.z = 0; c.vx = c.vy = 0; c.inHut = false; c.armOff = false;
   c.x = cab.x - 80; c.y = cab.y + 110;
-  B.x = PATROL[0].x; B.y = PATROL[0].y; B.vx = B.vy = 0; B.wp = 0; setB('pause'); B.heardT = 0; B.hNw = undefined;
+  B.x = PATROL[0].x; B.y = PATROL[0].y; B.vx = B.vy = 0; B.wp = 0; setB('pause'); B.heardT = 0; B.hNw = undefined; B.trailN = undefined; B.rot = undefined;
+  if (typeof yakReset === 'function') yakReset();
 }
+
+/* ---------- Refuge : le petit cimetière des rêves (variantes pour les planches) ---------- */
+// 0 = cabane (prototype) ; 1 = jardin aux crayons ; 2 = lit-tombe ; 3 = chambre à ciel ouvert ; 4 = le jardin retenu (crayons + tente de draps).
+// refugeNight : 0 = rêve, 1 = cauchemar (une Terreur rôde au bord). spawnHole : la tombe est ouverte (il vient d'en sortir).
+let refugeVariant = 4, refugeNight = 0, spawnHole = 0;
+// refugeBoard : mode « planche » (les états sont imposés de l'extérieur) ; sinon tout suit le jeu
+let refugeBoard = false;
+// variante combinée (4) : palissade de crayons (1 serrée, 2 gros poteaux + fanions, 3 bouts usés) et nombre de reliques rapportées (0 à 3)
+let refugeFence = 1, refugeRelics = 3;
+// une relique est-elle installée ? (en planche : selon le nombre imposé, dans l'ordre doudou, veilleuse, boîte)
+const rel = (key, n) => refugeBoard ? refugeRelics >= n : has(key);
+function refugeLayers() {
+  if (!refugeBoard) { refugeRelics = Math.min(3, cab.lvl); refugeSleep = cab.sleep ? 1 : 0; refugeNight = cab.night ? 1 : 0; }
+  if (!refugeVariant) return [{ y: cab.y, d: drawHut }];
+  if (refugeVariant === 4) return yardLayers();
+  return [{ y: cab.y - 70, d: () => drawYard(refugeVariant, 'back') }, { y: cab.y + 80, d: () => drawYard(refugeVariant, 'front') }];
+}
+// couleurs : en cauchemar, tout pâlit et tire vers le gris violet
+const hexRgb = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
+function nm(hex, extra) {
+  // sans reliques, le rêve est encore terne ; chaque relique lui rend ses couleurs
+  const dull = refugeVariant === 4 ? (3 - refugeRelics) / 3 * 0.42 : 0;
+  const N = clamp(refugeNight * (extra === undefined ? 1 : extra) + dull, 0, 1);
+  const a = hexRgb(hex), g = [104, 98, 120], l = 0.62 * N, d = 1 - 0.28 * N;
+  return 'rgb(' + a.map((v, i) => Math.round((v + (g[i] - v) * l) * d)).join(',') + ')';
+}
+// petite graine déterministe (positions fixes d'une image à l'autre)
+const yrand = (i, k) => { const x = Math.sin(i * 127.1 + (k || 0) * 311.7) * 43758.5453; return x - Math.floor(x); };
+
+// ---------- pièces communes ----------
+function dreamGround(rx, ry) {
+  const N = refugeNight;
+  ctx.save(); ctx.scale(1, ry / rx);
+  const g = ctx.createRadialGradient(0, 0, rx * 0.15, 0, 0, rx);
+  g.addColorStop(0, N ? 'rgba(92,84,110,.55)' : 'rgba(196,226,170,.75)');
+  g.addColorStop(0.75, N ? 'rgba(70,62,88,.45)' : 'rgba(176,214,158,.55)');
+  g.addColorStop(1, 'rgba(150,170,140,0)');
+  ctx.fillStyle = g; ctx.beginPath(); ctx.arc(0, 0, rx, 0, TAU); ctx.fill();
+  ctx.restore();
+  // fleurs pastel et petites étoiles semées (fanées en cauchemar)
+  for (let i = 0; i < 46; i++) {
+    const a = yrand(i, 1) * TAU, r = Math.sqrt(yrand(i, 2)) * 0.9, x = Math.cos(a) * rx * r, y = Math.sin(a) * ry * r;
+    if (Math.abs(x) < 46 && y > -30 && y < 26) continue;   // pas sur la tombe
+    if (i % 3 === 0) { ctx.globalAlpha = N ? 0.25 : 0.8; star(x, y, 2.6, N ? '#8a8496' : '#fff4c2'); ctx.globalAlpha = 1; }
+    else {
+      const col = ['#f6b8cf', '#c9b3ef', '#fff1a8', '#a9d8f2'][i % 4];
+      for (let p = 0; p < 5; p++) { const pa = p / 5 * TAU; ell(x + Math.cos(pa) * 1.9, y + Math.sin(pa) * 1.3 - (N ? -1 : 0), 1.5, N ? 0.9 : 1.2, 0, nm(col), N ? 0.55 : 1); }
+      ell(x, y, 0.9, 0.8, 0, N ? '#6f6a5c' : '#f2c94c', 1);
+    }
+  }
+}
+// trait de craie (un peu irrégulier, poudreux)
+function chalk(path, w, al) {
+  ctx.save(); ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+  ctx.strokeStyle = refugeNight ? 'rgba(220,214,235,' + (al * 0.75) + ')' : 'rgba(255,255,250,' + al + ')';
+  ctx.lineWidth = w + 1.6; ctx.globalAlpha = 0.25; ctx.stroke(path);
+  ctx.globalAlpha = 1; ctx.lineWidth = w; ctx.stroke(path); ctx.restore();
+}
+// texte d'enfant au crayon (lettres un peu de travers)
+function scribble(txt, x, y, size, col, shaky) {
+  ctx.save(); ctx.font = '900 ' + size + 'px "Zen Maru Gothic", sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  const w = ctx.measureText(txt).width; let cx = x - w / 2;
+  for (let i = 0; i < txt.length; i++) {
+    const ch = txt[i], cw = ctx.measureText(ch).width;
+    ctx.save(); ctx.translate(cx + cw / 2, y + Math.sin(i * 1.9) * size * 0.06 + (shaky ? Math.sin(i * 5.3 + t * 9) * 0.8 : 0)); ctx.rotate(Math.sin(i * 2.7) * 0.12 + (shaky ? Math.sin(i * 3.1) * 0.15 : 0));
+    ctx.fillStyle = col; ctx.fillText(ch, 0, 0); ctx.restore();
+    cx += cw;
+  }
+  ctx.restore();
+}
+// le prénom effacé : des tirets, et (en rêve) quelques lettres qui reviennent, encore illisibles
+function lostName(x, y, size, col, found) {
+  const n = 5, gap = size * 0.95;
+  for (let i = 0; i < n; i++) {
+    const lx = x + (i - (n - 1) / 2) * gap;
+    ctx.beginPath(); ctx.moveTo(lx - size * 0.32, y + size * 0.42); ctx.lineTo(lx + size * 0.32, y + size * 0.42);
+    ctx.lineWidth = 1.6; ctx.strokeStyle = col; ctx.stroke();
+    if (i < found) {
+      // une lettre qui revient : un gribouillis encore flou
+      ctx.save(); ctx.globalAlpha = 0.85; ctx.beginPath();
+      for (let k = 0; k <= 10; k++) { const u = k / 10, a = u * TAU * 1.3 + i; const px = lx + Math.cos(a) * size * 0.22 + (u - 0.5) * size * 0.2, py = y + Math.sin(a * 1.4) * size * 0.26 - u * 1.5; k ? ctx.lineTo(px, py) : ctx.moveTo(px, py); }
+      ctx.lineWidth = 1.5; ctx.strokeStyle = col; ctx.stroke(); ctx.restore();
+    }
+  }
+}
+// la butte de terre de sa tombe (ouverte quand il vient d'en sortir)
+function graveMound(rx, ry, cover) {
+  const N = refugeNight;
+  ctx.beginPath(); ctx.ellipse(0, 4, rx + 6, ry + 4, 0, 0, TAU); ctx.fillStyle = 'rgba(30,24,36,.22)'; ctx.fill();
+  const p = new Path2D(); p.ellipse(0, 0, rx, ry, 0, Math.PI, 0); p.quadraticCurveTo(rx, ry * 0.9, 0, ry * 1.05); p.quadraticCurveTo(-rx, ry * 0.9, -rx, 0); p.closePath();
+  ctx.fillStyle = radial(-rx * 0.3, -ry * 0.6, 1, 0, 0, rx, [[0, nm('#9a7b62')], [0.6, nm('#7a5d48')], [1, nm('#5a4334')]]); ctx.fill(p);
+  ctx.lineWidth = 1.8; ctx.strokeStyle = C.line; ctx.stroke(p);
+  if (spawnHole) {
+    ctx.beginPath(); ctx.ellipse(0, -1, rx * 0.55, ry * 0.5, 0, 0, TAU); ctx.fillStyle = '#2a1f26'; ctx.fill(); ctx.lineWidth = 1.4; ctx.stroke();
+    for (let i = 0; i < 9; i++) { const a = i / 9 * TAU; ell(Math.cos(a) * rx * 0.75, Math.sin(a) * ry * 0.7 - 2, 3.4, 2.4, a, nm('#8a6b52'), 1); }
+  }
+  if (cover) cover();
+}
+
+// ---------- A : le jardin aux crayons ----------
+// teinte plus claire (k > 0) ou plus sombre (k < 0) d'une couleur hex
+function tint(hex, k) {
+  const a = hexRgb(hex), to = k > 0 ? 255 : 24, kk = Math.abs(k);
+  return '#' + a.map((v) => Math.round(v + (to - v) * kk).toString(16).padStart(2, '0')).join('');
+}
+// un crayon de couleur planté : corps en trois pans (clair, moyen, ombre), bois taillé en festons, mine colorée,
+// contour d'encre plus appuyé côté ombre (à droite) et au pied
+function crayon(x, y, h, col, tilt, i, ww, keep) {
+  const N = refugeNight, broken = N && i % 3 === 0 && !keep;
+  ctx.save(); ctx.translate(x, y); ctx.rotate(tilt + (N ? Math.sin(i * 2.1) * 0.12 : 0));
+  // un peu abîmés : certains ont la pointe usée (plus courte, émoussée)
+  const blunt = yrand(i, 21) < 0.38;
+  const w = ww || 9, body = broken ? h * 0.72 : h, th = w * (blunt ? 0.85 : 1.35), hw = w / 2, ink = C.line;
+  const lw = clamp(w * 0.13, 1.1, 2.2);
+  // ombre de contact au sol
+  ctx.beginPath(); ctx.ellipse(w * 0.15, 0, w * 0.8, w * 0.28, 0, 0, TAU); ctx.fillStyle = 'rgba(30,24,36,.28)'; ctx.fill();
+  // corps : trois pans verticaux
+  const f1 = -hw + w * 0.3, f2 = hw - w * 0.28;
+  const cL = nm(tint(col, 0.32), 0.9), cM = nm(col, 0.9), cD = nm(tint(col, -0.3), 0.9);
+  ctx.fillStyle = cM; ctx.fillRect(-hw, -body, w, body);
+  ctx.fillStyle = cL; ctx.fillRect(-hw, -body, f1 + hw, body);
+  ctx.fillStyle = cD; ctx.fillRect(f2, -body, hw - f2, body);
+  // reflet fin sur le pan clair, et un peu d'ombre portée par la pointe
+  ctx.fillStyle = 'rgba(255,255,255,.45)'; ctx.fillRect(-hw + w * 0.1, -body + 2, Math.max(1, w * 0.09), body - 5);
+  ctx.fillStyle = 'rgba(30,22,40,.14)'; ctx.fillRect(-hw, -body, w, Math.min(5, body * 0.12));
+  // arêtes entre les pans
+  ctx.beginPath(); ctx.moveTo(f1, -body); ctx.lineTo(f1, 0); ctx.moveTo(f2, -body); ctx.lineTo(f2, 0);
+  ctx.lineWidth = 0.8; ctx.strokeStyle = 'rgba(40,30,50,.28)'; ctx.stroke();
+  // l'usure : terre au pied, éraflures, peinture écaillée sur les arêtes
+  const gd = ctx.createLinearGradient(0, 0, 0, -Math.min(body * 0.3, 16));
+  gd.addColorStop(0, 'rgba(92,70,52,.5)'); gd.addColorStop(1, 'rgba(92,70,52,0)');
+  ctx.fillStyle = gd; ctx.fillRect(-hw, -Math.min(body * 0.3, 16), w, Math.min(body * 0.3, 16));
+  ctx.beginPath();
+  for (let k = 0; k < 2; k++) { const sx = -hw + w * (0.25 + 0.5 * yrand(i, 30 + k)), sy = -body * (0.3 + 0.5 * yrand(i, 32 + k)); ctx.moveTo(sx, sy); ctx.lineTo(sx + w * 0.22, sy - 3 - yrand(i, 34 + k) * 3); }
+  ctx.lineWidth = 0.7; ctx.strokeStyle = 'rgba(255,250,240,.55)'; ctx.stroke();
+  const nChip = yrand(i, 22) < 0.65 ? (yrand(i, 23) < 0.3 ? 2 : 1) : 0;
+  for (let k = 0; k < nChip; k++) {
+    const side = yrand(i, 24 + k) < 0.5 ? -1 : 1, cy = -body * (0.22 + 0.6 * yrand(i, 26 + k)), cs = Math.max(2, w * (0.22 + 0.15 * yrand(i, 28 + k)));
+    ctx.beginPath(); ctx.moveTo(side * hw, cy - cs); ctx.lineTo(side * (hw - cs * 0.75), cy - cs * 0.3); ctx.lineTo(side * (hw - cs * 0.4), cy + cs * 0.5); ctx.lineTo(side * hw, cy + cs * 0.8); ctx.closePath();
+    ctx.fillStyle = nm('#ecd0a2'); ctx.fill(); ctx.lineWidth = 0.7; ctx.strokeStyle = 'rgba(40,30,50,.55)'; ctx.stroke();
+  }
+  // petites hachures d'encre dans l'ombre, en bas
+  if (w > 8) { ctx.beginPath(); for (let k = 0; k < 3; k++) { const yy = -3 - k * 3.2; ctx.moveTo(f2 + 0.6, yy); ctx.lineTo(hw - 0.4, yy - 2.2); } ctx.lineWidth = 0.7; ctx.strokeStyle = 'rgba(21,17,28,.35)'; ctx.stroke(); }
+  if (broken) {
+    // cassé : bord en dents, éclats de bois
+    const p = new Path2D(); p.moveTo(-hw, 0); p.lineTo(-hw, -body); p.lineTo(-hw * 0.3, -body - 4); p.lineTo(hw * 0.2, -body + 1); p.lineTo(hw * 0.6, -body - 3); p.lineTo(hw, -body); p.lineTo(hw, 0); p.closePath();
+    ctx.beginPath(); ctx.moveTo(-hw * 0.3, -body - 4); ctx.lineTo(hw * 0.2, -body + 1); ctx.lineTo(hw * 0.6, -body - 3); ctx.lineTo(hw * 0.2, -body - 1.5); ctx.closePath(); ctx.fillStyle = nm('#efd3a8'); ctx.fill();
+    ctx.lineWidth = lw; ctx.strokeStyle = ink; ctx.stroke(p);
+  } else {
+    // le bois taillé, raccordé au corps par des festons
+    const cone = new Path2D(); cone.moveTo(-hw, -body);
+    const nS = w > 11 ? 3 : 2;
+    for (let k = 0; k < nS; k++) { const xa = -hw + w * k / nS, xb = -hw + w * (k + 1) / nS; cone.quadraticCurveTo((xa + xb) / 2, -body - th * 0.22, xb, -body); }
+    cone.lineTo(0, -body - th); cone.closePath();
+    const sides = new Path2D(); sides.moveTo(-hw, -body); sides.lineTo(0, -body - th); sides.lineTo(hw, -body);
+    const gw = ctx.createLinearGradient(-hw, 0, hw, 0);
+    gw.addColorStop(0, nm('#f8e4c0')); gw.addColorStop(0.55, nm('#e8c895')); gw.addColorStop(1, nm('#b88d5c'));
+    const wood = new Path2D(); wood.moveTo(-hw, -body); wood.lineTo(0, -body - th); wood.lineTo(hw, -body);
+    for (let k = nS - 1; k >= 0; k--) { const xa = -hw + w * k / nS, xb = -hw + w * (k + 1) / nS; wood.quadraticCurveTo((xa + xb) / 2, -body - th * 0.22, xa, -body); }
+    wood.closePath();
+    ctx.fillStyle = gw; ctx.fill(wood);
+    // la mine
+    const tip = new Path2D(), tf = blunt ? 0.5 : 0.38; tip.moveTo(-hw * tf, -body - th * (1 - tf)); if (blunt) tip.quadraticCurveTo(0, -body - th * 1.12, hw * tf, -body - th * (1 - tf)); else { tip.lineTo(0, -body - th); tip.lineTo(hw * tf, -body - th * (1 - tf)); } tip.closePath();
+    const gt = ctx.createLinearGradient(-hw * tf, 0, hw * tf, 0); gt.addColorStop(0, cL); gt.addColorStop(1, cD);
+    ctx.fillStyle = gt; ctx.fill(tip);
+    ctx.lineWidth = lw * 0.8; ctx.strokeStyle = ink; ctx.stroke(wood);
+    ctx.lineWidth = lw * 0.6; ctx.stroke(tip);
+    // le contour du corps
+    ctx.beginPath(); ctx.moveTo(-hw, -body); ctx.lineTo(-hw, 0); ctx.lineTo(hw, 0); ctx.lineTo(hw, -body);
+    ctx.lineWidth = lw; ctx.stroke();
+  }
+  // encre appuyée côté ombre et au pied
+  ctx.beginPath(); ctx.moveTo(hw, -body + 1); ctx.lineTo(hw, 0); ctx.lineTo(-hw * 0.4, 0);
+  ctx.lineWidth = lw + 1.1; ctx.strokeStyle = ink; ctx.stroke();
+  ctx.restore();
+}
+function popsicleCross(x, y, s, i) {
+  const N = refugeNight;
+  ctx.save(); ctx.translate(x, y); ctx.rotate(N ? 0.22 * (i % 2 ? 1 : -1) : 0.05 * (i % 2 ? 1 : -1)); ctx.scale(s, s);
+  const stick = (x0, y0, w, h) => { ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(x0, y0, w, h, Math.min(w, h) / 2); else ctx.rect(x0, y0, w, h); ctx.fillStyle = nm('#ecd6a8'); ctx.fill(); ctx.lineWidth = 1.4; ctx.strokeStyle = C.line; ctx.stroke(); };
+  stick(-3.5, -40, 7, 40); stick(-13, -30, 26, 7);
+  ctx.beginPath(); ctx.moveTo(-4, -30); ctx.lineTo(4, -23); ctx.moveTo(4, -30); ctx.lineTo(-4, -23); ctx.lineWidth = 2.2; ctx.strokeStyle = nm('#e0707f'); ctx.stroke();
+  if (N) { ctx.beginPath(); ctx.moveTo(-1, -40); ctx.lineTo(1.5, -33); ctx.lineTo(-0.5, -28); ctx.lineWidth = 1; ctx.strokeStyle = C.line; ctx.stroke(); }
+  ctx.restore();
+}
+function toyBlock(x, y, s, letter, col) {
+  const N = refugeNight;
+  ctx.save(); ctx.translate(x, y); ctx.scale(s, s); ctx.rotate(N ? -0.08 : 0);
+  const w = 26, h = 24, d = 9;
+  ctx.beginPath(); ctx.moveTo(-w / 2, -h); ctx.lineTo(-w / 2 + d, -h - d * 0.7); ctx.lineTo(w / 2 + d, -h - d * 0.7); ctx.lineTo(w / 2, -h); ctx.closePath(); ctx.fillStyle = nm('#fff3dd'); ctx.fill(); ctx.lineWidth = 1.4; ctx.strokeStyle = C.line; ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(w / 2, -h); ctx.lineTo(w / 2 + d, -h - d * 0.7); ctx.lineTo(w / 2 + d, -d * 0.7); ctx.lineTo(w / 2, 0); ctx.closePath(); ctx.fillStyle = nm('#d9c7a8'); ctx.fill(); ctx.stroke();
+  ctx.beginPath(); ctx.rect(-w / 2, -h, w, h); ctx.fillStyle = nm('#f5e6c8'); ctx.fill(); ctx.stroke();
+  ctx.beginPath(); ctx.rect(-w / 2 + 3, -h + 3, w - 6, h - 6); ctx.lineWidth = 2; ctx.strokeStyle = nm(col); ctx.stroke();
+  ctx.font = '900 15px "Zen Maru Gothic", sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillStyle = nm(col); ctx.fillText(letter, 0, -h / 2 + 1);
+  if (N) { ctx.beginPath(); ctx.moveTo(w / 2 - 2, -h + 2); ctx.lineTo(w / 2 - 7, -h + 9); ctx.lineTo(w / 2 - 4, -h + 13); ctx.lineWidth = 1; ctx.strokeStyle = C.line; ctx.stroke(); }
+  ctx.restore();
+}
+function chalkHopscotch(x, y) {
+  const N = refugeNight;
+  ctx.save(); ctx.translate(x, y); ctx.scale(1, 0.55); ctx.rotate(-0.15);
+  const p = new Path2D();
+  p.rect(-12, 0, 24, 24); p.rect(-24, -24, 24, 24); p.rect(0, -24, 24, 24); p.rect(-12, -48, 24, 24);
+  chalk(p, 1.8, 0.85);
+  ctx.font = '700 13px "Zen Maru Gothic", sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillStyle = N ? 'rgba(220,214,235,.7)' : 'rgba(255,255,250,.85)';
+  ctx.fillText('1', 0, 13); ctx.fillText('2', -12, -11); ctx.fillText('3', 12, -11); ctx.fillText(N ? '' : '4', 0, -35);
+  if (N) { const e = new Path2D(); e.ellipse(0, -36, 8, 5, 0, 0, TAU); chalk(e, 1.6, 0.8); ctx.beginPath(); ctx.arc(0, -36, 2.4, 0, TAU); ctx.fillStyle = 'rgba(220,214,235,.8)'; ctx.fill(); }
+  ctx.restore();
+}
+function chalkSun(x, y) {
+  const N = refugeNight;
+  ctx.save(); ctx.translate(x, y); ctx.scale(1, 0.6);
+  const p = new Path2D(); p.arc(0, 0, 13, 0, TAU);
+  for (let i = 0; i < 10; i++) { const a = i / 10 * TAU; p.moveTo(Math.cos(a) * 17, Math.sin(a) * 17); p.lineTo(Math.cos(a) * (N ? 27 + (i % 2) * 6 : 24), Math.sin(a) * (N ? 27 + (i % 2) * 6 : 24)); }
+  if (N) { p.moveTo(-7, 4); for (let i = 0; i <= 6; i++) p.lineTo(-7 + i * 2.33, 4 + (i % 2 ? 3.5 : 0)); p.moveTo(-6, -6); p.lineTo(-2, -2); p.moveTo(-2, -6); p.lineTo(-6, -2); p.moveTo(2, -6); p.lineTo(6, -2); p.moveTo(6, -6); p.lineTo(2, -2); }
+  else { p.moveTo(-6, 3); p.quadraticCurveTo(0, 9, 6, 3); p.moveTo(-4.5, -4); p.arc(-4.5, -4, 0.8, 0, TAU); p.moveTo(4.5, -4); p.arc(4.5, -4, 0.8, 0, TAU); }
+  chalk(p, 1.8, 0.85);
+  ctx.restore();
+}
+// arbre mort avec la veilleuse-lune et des étoiles en papier (des yeux, en cauchemar)
+function dreamTree(x, y, s, flip, hangs) {
+  const N = refugeNight;
+  ctx.save(); ctx.translate(x, y); ctx.scale(s * (flip ? -1 : 1), s);
+  ctx.lineCap = 'round';
+  const br = (x0, y0, len, a, w, d) => { const x1 = x0 + Math.cos(a) * len, y1 = y0 + Math.sin(a) * len; ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1, y1); ctx.lineWidth = w + 2.4; ctx.strokeStyle = C.line; ctx.stroke(); ctx.lineWidth = w; ctx.strokeStyle = nm('#6b5a66'); ctx.stroke(); if (d > 0) { br(x1, y1, len * 0.7, a - 0.5, w * 0.65, d - 1); br(x1, y1, len * 0.62, a + 0.42, w * 0.6, d - 1); } };
+  ctx.fillStyle = 'rgba(30,24,36,.22)'; ctx.beginPath(); ctx.ellipse(4, 2, 22, 5, 0, 0, TAU); ctx.fill();
+  br(0, 0, 58, -Math.PI / 2 - 0.08, 9, 3);
+  // la grosse branche qui porte les suspensions
+  const bx0 = -2, by0 = -52, bx1 = -64, by1 = -92;
+  ctx.beginPath(); ctx.moveTo(bx0, by0); ctx.quadraticCurveTo(-30, -96, bx1, by1); ctx.lineWidth = 7.4; ctx.strokeStyle = C.line; ctx.stroke(); ctx.lineWidth = 5; ctx.strokeStyle = nm('#6b5a66'); ctx.stroke();
+  // creux dans le tronc : en cauchemar, deux yeux s'y allument
+  ctx.beginPath(); ctx.ellipse(2, -26, 4.5, 6.5, 0, 0, TAU); ctx.fillStyle = '#2a2230'; ctx.fill();
+  if (N) { ell(0.5, -27, 1.3, 1.6, 0, '#f4f0d8', 1); ell(4, -27, 1.3, 1.6, 0, '#f4f0d8', 1); }
+  for (const [hx, len, kind, i] of hangs) {
+    const ax = qbz(bx0, -30, bx1, hx), ay = qbz(by0, -96, by1, hx) + 2, sw = Math.sin(t * 1.3 + i) * 0.06;
+    const ex = ax + Math.sin(sw) * len, ey = ay + Math.cos(sw) * len;
+    ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(ex, ey); ctx.lineWidth = 0.9; ctx.strokeStyle = 'rgba(61,51,71,.7)'; ctx.stroke();
+    ctx.save(); ctx.translate(ex, ey); ctx.scale(flip ? -1 : 1, 1);
+    if (kind === 'moon') {
+      if (!N) softSpot(0, 6, 24, 22, 0, '255,226,140', 0.5);
+      crescent(0, 8, 9, 4, -2.5, 7.4, N ? '#bdb7a2' : '#ffe9a0', 0.7);
+      ctx.beginPath(); if (N) { ctx.moveTo(-6.5, 10); ctx.quadraticCurveTo(-4.5, 8, -2.5, 10); } else ctx.arc(-4.6, 7.5, 1.3, 0.2, Math.PI - 0.2);
+      ctx.lineWidth = 0.9; ctx.strokeStyle = C.line; ctx.stroke();
+    } else if (N) {
+      ell(0, 3, 4.2, 3, 0, '#f1ecd9', 1); ctx.beginPath(); ctx.ellipse(0, 3, 4.2, 3, 0, 0, TAU); ctx.lineWidth = 1; ctx.strokeStyle = C.line; ctx.stroke(); ell(0.6, 3.2, 1.6, 1.9, 0, '#2a2230', 1);
+    } else {
+      star(0, 4, 6, '#3d3347'); star(0, 4, 5, '#fff0a6');
+    }
+    ctx.restore();
+  }
+  ctx.restore();
+}
+function variantA(layer) {
+  const RX = 182, RY = 84, n = 28, cols = ['#f28b8b', '#f7c66b', '#8fc7f2', '#9fd88f', '#c8a2e8', '#f5a8cf'];
+  const fence = (front) => {
+    for (let i = 0; i < n; i++) {
+      const a = i / n * TAU; const sy = Math.sin(a);
+      if (Math.abs(a - Math.PI / 2) < 0.28) continue;   // l'entrée, devant
+      if (front !== (sy > 0)) continue;
+      crayon(Math.cos(a) * RX, sy * RY, 40 + yrand(i, 3) * 10, cols[i % cols.length], Math.cos(a) * 0.06 + (yrand(i, 4) - 0.5) * 0.08, i);
+    }
+  };
+  if (layer === 'back') {
+    dreamGround(RX + 14, RY + 10);
+    chalkHopscotch(-74, 52); chalkSun(126, 30);
+    fence(false);
+    dreamTree(128, -38, 1, false, [[0.55, 26, 'moon', 0], [0.82, 18, 'star', 1], [0.3, 14, 'star', 2]]);
+    popsicleCross(-132, -14, 1, 0); popsicleCross(-112, 18, 0.85, 1);
+    toyBlock(-80, -40, 1, 'A', '#e46f86'); toyBlock(40, -56, 0.8, 'B', '#5f93d8');
+    // sa tombe : une ardoise d'écolier, le prénom à la craie
+    ctx.save(); ctx.translate(0, -6);
+    ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(-28, -70, 56, 58, 4); else ctx.rect(-28, -70, 56, 58);
+    ctx.fillStyle = nm('#b98a5c'); ctx.fill(); ctx.lineWidth = 1.8; ctx.strokeStyle = C.line; ctx.stroke();
+    ctx.beginPath(); ctx.rect(-22, -64, 44, 46); ctx.fillStyle = refugeNight ? '#3a3540' : '#3f4a47'; ctx.fill(); ctx.lineWidth = 1.2; ctx.stroke();
+    ctx.save(); ctx.beginPath(); ctx.rect(-22, -64, 44, 46); ctx.clip();
+    softSpot(-8, -58, 22, 10, -0.3, '255,255,255', 0.08);
+    scribble('ICI DORT', 0, -52, 9, refugeNight ? 'rgba(220,214,235,.7)' : 'rgba(255,255,250,.9)', refugeNight);
+    lostName(0, -36, 9, refugeNight ? 'rgba(220,214,235,.75)' : 'rgba(255,255,250,.9)', refugeNight ? 0 : 3);
+    if (refugeNight) { ctx.beginPath(); ctx.moveTo(10, -64); ctx.lineTo(4, -48); ctx.lineTo(9, -40); ctx.lineTo(2, -22); ctx.lineWidth = 1.2; ctx.strokeStyle = 'rgba(15,10,20,.9)'; ctx.stroke(); }
+    ctx.restore(); ctx.restore();
+    graveMound(36, 13, () => { if (!spawnHole) for (const [fx, c2] of [[-20, '#f28b8b'], [-6, '#8fc7f2'], [12, '#f7c66b'], [24, '#c8a2e8']]) crayon(fx, -2 + Math.abs(fx) * 0.05, 14, c2, fx * 0.012, 7); });
+    if (!refugeNight) { drawRelicIcon('boite', -74, -71, 1.3, 0); drawRelicIcon('doudou', -44, 4, 1.35, -0.12); }
+  } else {
+    fence(true);
+  }
+}
+
+// ---------- B : le lit-tombe ----------
+function picket(x, y, h, i) {
+  const N = refugeNight;
+  if (N && i % 4 === 1) return;   // planche arrachée
+  ctx.save(); ctx.translate(x, y); ctx.rotate(N ? Math.sin(i * 1.7) * 0.18 : Math.sin(i * 1.7) * 0.03);
+  ctx.beginPath(); ctx.moveTo(-4.5, 0); ctx.lineTo(-4.5, -h); ctx.lineTo(0, -h - 6); ctx.lineTo(4.5, -h); ctx.lineTo(4.5, 0); ctx.closePath();
+  ctx.fillStyle = nm('#f4efe6'); ctx.fill(); ctx.lineWidth = 1.3; ctx.strokeStyle = C.line; ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(1.5, -h + 2); ctx.lineTo(1.5, -3); ctx.lineWidth = 0.8; ctx.strokeStyle = 'rgba(61,51,71,.25)'; ctx.stroke();
+  ctx.restore();
+}
+function teddy(x, y, s) {
+  const N = refugeNight;
+  ctx.save(); ctx.translate(x, y); ctx.scale(s, s);
+  const fur = nm('#c99a6b'), furD = nm('#a87a50');
+  for (const [ex, ey, r] of [[-7, -27, 4.2], [7, -27, 4.2]]) { ctx.beginPath(); ctx.arc(ex, ey, r, 0, TAU); ctx.fillStyle = fur; ctx.fill(); ctx.lineWidth = 1.3; ctx.strokeStyle = C.line; ctx.stroke(); }
+  if (N) { ctx.beginPath(); ctx.arc(7, -27, 4.6, 0, TAU); ctx.fillStyle = '#f2efe6'; ctx.fill(); }   // une oreille décousue : du rembourrage
+  ctx.beginPath(); ctx.ellipse(0, -7, 10, 9.5, 0, 0, TAU); ctx.fillStyle = fur; ctx.fill(); ctx.lineWidth = 1.4; ctx.strokeStyle = C.line; ctx.stroke();
+  ctx.beginPath(); ctx.arc(0, -21, 8.5, 0, TAU); ctx.fillStyle = fur; ctx.fill(); ctx.stroke();
+  ell(0, -18.5, 3.6, 2.6, 0, nm('#e8cfa8'), 1); ell(0, -19.5, 1.2, 0.9, 0, '#3d3347', 1);
+  ell(-3.2, -23, 1.1, 1.1, 0, '#3d3347', 1);
+  if (N) { ctx.beginPath(); ctx.moveTo(1.8, -24.2); ctx.lineTo(4.4, -21.8); ctx.moveTo(4.4, -24.2); ctx.lineTo(1.8, -21.8); ctx.lineWidth = 1; ctx.strokeStyle = C.line; ctx.stroke(); }
+  else ell(3.2, -23, 1.1, 1.1, 0, '#3d3347', 1);
+  ell(-8, -2, 3.5, 3, -0.4, furD, 1); ell(8, -2, 3.5, 3, 0.4, furD, 1);
+  ctx.restore();
+}
+function variantB(layer) {
+  const RX = 176, RY = 80, n = 34;
+  const fence = (front) => { for (let i = 0; i < n; i++) { const a = i / n * TAU, sy = Math.sin(a); if (Math.abs(a - Math.PI / 2) < 0.22) continue; if (front !== (sy > 0)) continue; picket(Math.cos(a) * RX, sy * RY, 26 + (i % 2) * 3, i); } };
+  if (layer === 'back') {
+    dreamGround(RX + 14, RY + 10);
+    fence(false);
+    // arbre penché dont la branche porte un mobile d'étoiles au-dessus du lit
+    dreamTree(-120, -34, 1.05, true, [[0.86, 22, 'moon', 0], [0.66, 30, 'star', 1], [0.98, 30, 'star', 2], [0.5, 20, 'star', 3]]);
+    // tête de lit en bois (la stèle), découpes de lune et d'étoile, prénom au crayon
+    ctx.save(); ctx.translate(0, -16);
+    const hb = new Path2D(); hb.moveTo(-38, 0); hb.lineTo(-38, -46); hb.quadraticCurveTo(-38, -70, 0, -72); hb.quadraticCurveTo(38, -70, 38, -46); hb.lineTo(38, 0); hb.closePath();
+    ctx.fillStyle = radial(-14, -60, 2, 0, -36, 60, [[0, nm('#c79a6c')], [1, nm('#8f6644')]]); ctx.fill(hb); ctx.lineWidth = 1.8; ctx.strokeStyle = C.line; ctx.stroke(hb);
+    crescent(-20, -54, 6.5, 3, -2, 5.4, refugeNight ? '#2a2230' : '#3a2e3a', 0.6); star(20, -54, 6, '#3a2e3a');
+    if (refugeNight) { ctx.beginPath(); ctx.moveTo(4, -72); ctx.lineTo(-2, -58); ctx.lineTo(5, -50); ctx.lineTo(0, -38); ctx.lineWidth = 1.4; ctx.strokeStyle = '#1a1420'; ctx.stroke(); }
+    scribble('ICI DORT', 0, -36, 8.5, nm('#5b3fa0'), refugeNight); lostName(0, -21, 8.5, nm('#5b3fa0'), refugeNight ? 0 : 3);
+    ctx.restore();
+    // le lit : la butte couverte d'une courtepointe en patchwork, un oreiller de pierre
+    graveMound(44, 15, () => {
+      if (spawnHole) return;
+      const q = new Path2D(); q.ellipse(0, 2, 40, 12, 0, 0, TAU);
+      ctx.save(); ctx.clip(q);
+      const cols = ['#f6b8cf', '#c9b3ef', '#fff1a8', '#a9d8f2', '#bfe3b4'];
+      for (let gx = -44; gx < 44; gx += 11) for (let gy = -12; gy < 16; gy += 8) { const col = cols[(((gx + 44) / 11 + (gy + 12) / 8) | 0) % 5]; ctx.fillStyle = refugeNight ? nm(col) : col; ctx.fillRect(gx, gy, 11, 8); }
+      ctx.strokeStyle = 'rgba(61,51,71,.35)'; ctx.lineWidth = 0.8; ctx.setLineDash([2, 2]);
+      for (let gx = -44; gx < 44; gx += 11) { ctx.beginPath(); ctx.moveTo(gx, -12); ctx.lineTo(gx, 16); ctx.stroke(); }
+      ctx.setLineDash([]); ctx.restore();
+      ctx.lineWidth = 1.6; ctx.strokeStyle = C.line; ctx.stroke(q);
+      ctx.beginPath(); ctx.ellipse(0, -10, 20, 7, 0, 0, TAU); ctx.fillStyle = radial(-6, -13, 1, 0, -10, 20, [[0, nm('#ffffff')], [1, nm('#d9d4e2')]]); ctx.fill(); ctx.lineWidth = 1.5; ctx.stroke();
+    });
+    // cauchemar : de longs doigts d'ombre sortent de sous le lit
+    if (refugeNight) for (let i = 0; i < 4; i++) { const x0 = -30 + i * 18; ctx.beginPath(); ctx.moveTo(x0, 12); ctx.quadraticCurveTo(x0 + 6, 22, x0 + 4 + Math.sin(t * 2 + i) * 2, 30); ctx.lineWidth = 3; ctx.strokeStyle = 'rgba(20,14,28,.75)'; ctx.stroke(); }
+    if (!refugeNight) drawRelicIcon('doudou', -12, -14, 1.2, -0.1);
+    teddy(-78, 22, 1);
+    if (!refugeNight) drawRelicIcon('boite', 78, 8, 1.3, 0.05);
+  } else {
+    fence(true);
+  }
+}
+
+// ---------- C : la chambre à ciel ouvert ----------
+function doorFrame(x, y, s) {
+  const N = refugeNight;
+  ctx.save(); ctx.translate(x, y); ctx.scale(s, s);
+  ctx.fillStyle = 'rgba(30,24,36,.22)'; ctx.beginPath(); ctx.ellipse(6, 2, 30, 5, 0, 0, TAU); ctx.fill();
+  // l'ouverture : la lumière d'une chambre… ou le noir avec deux yeux
+  ctx.beginPath(); ctx.rect(-20, -90, 40, 90);
+  ctx.fillStyle = N ? '#17121c' : radial(0, -40, 4, 0, -45, 60, [[0, '#fff3c8'], [0.6, '#f6c98a'], [1, '#d99a62']]); ctx.fill();
+  if (N) { ell(-6, -54, 2.4, 1.6, 0, '#efe9cf', 1); ell(6, -54, 2.4, 1.6, 0, '#efe9cf', 1); }
+  else softSpot(0, -40, 50, 60, 0, '255,220,150', 0.25);
+  // la porte entrouverte
+  ctx.beginPath(); ctx.moveTo(20, 0); ctx.lineTo(20, -90); ctx.lineTo(36, -84); ctx.lineTo(36, 4); ctx.closePath(); ctx.fillStyle = nm('#a8c4d8'); ctx.fill(); ctx.lineWidth = 1.5; ctx.strokeStyle = C.line; ctx.stroke();
+  ell(31, -42, 1.8, 2.2, 0, nm('#e8c36a'), 1);
+  // chambranle
+  ctx.beginPath(); ctx.moveTo(-24, 0); ctx.lineTo(-24, -94); ctx.lineTo(24, -94); ctx.lineTo(24, 0); ctx.lineTo(20, 0); ctx.lineTo(20, -90); ctx.lineTo(-20, -90); ctx.lineTo(-20, 0); ctx.closePath();
+  ctx.fillStyle = nm('#f4efe6'); ctx.fill(); ctx.lineWidth = 1.6; ctx.stroke();
+  ctx.restore();
+}
+function windowPost(x, y, s) {
+  const N = refugeNight;
+  ctx.save(); ctx.translate(x, y); ctx.scale(s, s);
+  ctx.fillStyle = 'rgba(30,24,36,.22)'; ctx.beginPath(); ctx.ellipse(4, 2, 16, 4, 0, 0, TAU); ctx.fill();
+  ctx.beginPath(); ctx.rect(-3, -60, 6, 60); ctx.fillStyle = nm('#8f7a6a'); ctx.fill(); ctx.lineWidth = 1.3; ctx.strokeStyle = C.line; ctx.stroke();
+  ctx.beginPath(); ctx.rect(-24, -104, 48, 44); ctx.fillStyle = N ? '#1b1622' : radial(-6, -92, 2, 0, -82, 40, [[0, '#4f5a9a'], [1, '#262a55']]); ctx.fill();
+  if (!N) for (let i = 0; i < 7; i++) star(-18 + yrand(i, 9) * 36, -100 + yrand(i, 8) * 36, 1.8, '#fff3b0');
+  else { ctx.beginPath(); ctx.ellipse(6, -78, 9, 14, 0.2, 0, TAU); ctx.fillStyle = '#0d0a12'; ctx.fill(); ell(3, -84, 1.6, 1.1, 0, '#efe9cf', 1); ell(9, -84, 1.6, 1.1, 0, '#efe9cf', 1); }
+  ctx.beginPath(); ctx.rect(-24, -104, 48, 44); ctx.moveTo(0, -104); ctx.lineTo(0, -60); ctx.moveTo(-24, -82); ctx.lineTo(24, -82);
+  ctx.lineWidth = 4.4; ctx.strokeStyle = C.line; ctx.stroke(); ctx.lineWidth = 2.6; ctx.strokeStyle = nm('#f4efe6'); ctx.stroke();
+  ctx.restore();
+}
+function wallStone(x, y, s, i) {
+  const N = refugeNight;
+  ctx.save(); ctx.translate(x, y); ctx.scale(s, s);
+  ctx.fillStyle = 'rgba(30,24,36,.22)'; ctx.beginPath(); ctx.ellipse(4, 1, 20, 5, 0, 0, TAU); ctx.fill();
+  const p = new Path2D(); p.moveTo(-16, 0); p.lineTo(-16, -36); p.arc(0, -36, 16, Math.PI, 0); p.lineTo(16, 0); p.closePath();
+  ctx.fillStyle = nm('#b3adc2'); ctx.fill(p);
+  // papier peint rayé et étoilé collé dessus (qui se décolle en cauchemar)
+  ctx.save(); ctx.clip(p);
+  for (let k = -16; k < 16; k += 6) { ctx.fillStyle = k % 12 === 0 ? nm('#f6d7e3') : nm('#fbeef2'); ctx.fillRect(k, -54, 6, 54); }
+  for (let k = 0; k < 4; k++) star(-9 + (k % 2) * 16, -40 + k * 9, 2.2, nm('#c9a7e6'));
+  if (N) { ctx.beginPath(); ctx.moveTo(-16, -26); ctx.quadraticCurveTo(-2, -30, 4, -16); ctx.quadraticCurveTo(-6, -8, -16, -10); ctx.closePath(); ctx.fillStyle = '#8e88a0'; ctx.fill(); }
+  ctx.restore();
+  ctx.lineWidth = 1.6; ctx.strokeStyle = C.line; ctx.stroke(p);
+  if (N) { ctx.beginPath(); ctx.moveTo(4, -16); ctx.quadraticCurveTo(10, -24, 6, -30); ctx.lineWidth = 1.2; ctx.stroke(); }
+  ctx.restore();
+}
+function variantC(layer) {
+  const RX = 170, RY = 76;
+  if (layer === 'back') {
+    dreamGround(RX + 18, RY + 12);
+    // grand tapis rond (frangé et terni en cauchemar)
+    ctx.save(); ctx.scale(1, 0.44);
+    const rings = refugeNight ? ['#6d667e', '#5d5670', '#776f88', '#5a536b'] : ['#f2b8c9', '#c9b3ef', '#fff1b8', '#b8dcef'];
+    rings.forEach((col, i) => { const r = 132 - i * 30; ctx.beginPath(); ctx.arc(0, 20, r, 0, TAU); ctx.fillStyle = col; ctx.fill(); ctx.lineWidth = i ? 1 : 2; ctx.strokeStyle = 'rgba(61,51,71,.45)'; ctx.stroke(); });
+    if (refugeNight) { ctx.beginPath(); for (let i = 0; i <= 60; i++) { const a = i / 60 * TAU, r = 132 + (i % 2 ? 7 : -2); ctx.lineTo(Math.cos(a) * r, 20 + Math.sin(a) * r); } ctx.lineWidth = 1.4; ctx.strokeStyle = 'rgba(40,32,50,.6)'; ctx.stroke(); }
+    ctx.restore();
+    doorFrame(-112, -30, 1);
+    windowPost(112, -38, 1);
+    wallStone(-52, -40, 0.95, 0); wallStone(64, -46, 0.85, 1);
+    // table de chevet avec la veilleuse-lune
+    ctx.save(); ctx.translate(46, -14);
+    ctx.beginPath(); ctx.rect(-12, -22, 24, 22); ctx.fillStyle = nm('#c79a6c'); ctx.fill(); ctx.lineWidth = 1.5; ctx.strokeStyle = C.line; ctx.stroke();
+    ctx.beginPath(); ctx.rect(-9, -16, 18, 7); ctx.stroke(); ell(0, -12.5, 1.4, 1.4, 0, nm('#e8c36a'), 1);
+    if (!refugeNight) drawRelicIcon('lune', 0, -22, 1.2, 0); else { ctx.save(); ctx.translate(0, -22); ctx.scale(1.2, 1.2); drawMoonShape(false); ctx.restore(); }
+    ctx.restore();
+    // sa tombe : stèle tapissée, prénom au crayon ; oreiller sur la butte
+    ctx.save(); ctx.translate(0, -8);
+    const st = new Path2D(); st.moveTo(-24, 0); st.lineTo(-24, -44); st.arc(0, -44, 24, Math.PI, 0); st.lineTo(24, 0); st.closePath();
+    ctx.fillStyle = nm('#cfc9dc'); ctx.fill(st); ctx.save(); ctx.clip(st);
+    for (let k = -24; k < 24; k += 8) { ctx.fillStyle = (k / 8) % 2 ? nm('#d9e8f6') : nm('#eef5fb'); ctx.fillRect(k, -70, 8, 70); }
+    ctx.restore(); ctx.lineWidth = 1.8; ctx.strokeStyle = C.line; ctx.stroke(st);
+    scribble('ICI DORT', 0, -46, 8.5, nm('#3f6fb8'), refugeNight); lostName(0, -30, 8.5, nm('#3f6fb8'), refugeNight ? 0 : 3);
+    ctx.restore();
+    graveMound(38, 13, () => { if (spawnHole) return; ctx.beginPath(); ctx.ellipse(0, -6, 17, 6, 0, 0, TAU); ctx.fillStyle = radial(-5, -9, 1, 0, -6, 18, [[0, nm('#ffffff')], [1, nm('#d9d4e2')]]); ctx.fill(); ctx.lineWidth = 1.4; ctx.strokeStyle = C.line; ctx.stroke(); });
+    if (!refugeNight) { drawRelicIcon('doudou', -34, 10, 1.3, -0.1); drawRelicIcon('boite', -88, 30, 1.25, 0.05); }
+  }
+}
+
+function drawYard(v, layer) {
+  ctx.save(); ctx.translate(cab.x, cab.y);
+  ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+  if (v === 1) variantA(layer); else if (v === 2) variantB(layer); else if (v === 3) variantC(layer); else variantD(layer);
+  ctx.restore();
+}
+// teinte d'ensemble : chaude en rêve, froide et sombre en cauchemar (dessinée par-dessus la scène)
+function drawYardMood() {
+  if (!refugeVariant) return;
+  ctx.save();
+  if (refugeNight) {
+    const g = ctx.createRadialGradient(cab.x, cab.y - 30, 40, cab.x, cab.y - 30, 360);
+    g.addColorStop(0, 'rgba(40,30,70,.10)'); g.addColorStop(1, 'rgba(20,14,40,.45)');
+    ctx.fillStyle = g; ctx.fillRect(-1e4, -1e4, 2e4, 2e4);
+  } else {
+    ctx.globalCompositeOperation = 'soft-light';
+    softSpot(cab.x, cab.y - 30, 230, 150, 0, '255,214,150', 0.55);
+  }
+  ctx.restore();
+}
+
+// ---------- D : la recommandation (A + le lit de B + la porte de C), palissade de crayons petits et gros, et la tente de draps ----------
+const PCOLS = ['#f28b8b', '#f7c66b', '#8fc7f2', '#9fd88f', '#c8a2e8', '#f5a8cf', '#f4a46a', '#7fd1c4'];
+function palisadeItems() {
+  const it = [];
+  if (refugeFence === 1) {          // serrée : crayons collés, petits et gros mélangés, attachés par un brin de laine
+    const n = 66;
+    for (let i = 0; i < n; i++) { const big = yrand(i, 5) > 0.58; it.push({ a: i / n * TAU, w: big ? 13 : 8 + yrand(i, 6) * 2, h: (big ? 52 : 30) + yrand(i, 7) * 12, i }); }
+  } else if (refugeFence === 2) {   // gros crayons-poteaux, petits crayons entre eux, guirlande de fanions
+    const n = 72;
+    for (let i = 0; i < n; i++) { const post = i % 6 === 0; it.push({ a: i / n * TAU, w: post ? 17 : 7.5, h: post ? 62 : 24 + yrand(i, 7) * 7, i, post }); }
+  } else {                          // usée : bouts de crayons de toutes les tailles, copeaux au pied
+    const n = 60;
+    for (let i = 0; i < n; i++) { const stub = yrand(i, 8) > 0.45; it.push({ a: i / n * TAU, w: 8 + yrand(i, 6) * 6, h: stub ? 12 + yrand(i, 7) * 12 : 30 + yrand(i, 7) * 26, i, stub }); }
+  }
+  return it;
+}
+function palisade(front, RX, RY) {
+  const gate = Math.PI / 2, gapA = 0.2;
+  const its = palisadeItems().filter((o) => Math.abs(o.a - gate) > gapA && (front === (Math.sin(o.a) > 0)));
+  // profondeur : grands crayons au fond, plus petits devant (on voit l'intérieur du jardin)
+  const pos = its.map((o) => { const sy = Math.sin(o.a), dk = 1.12 - 0.42 * (sy + 1) / 2; return { ...o, x: Math.cos(o.a) * RX, y: sy * RY, h: o.h * dk, w: o.w * (0.9 + 0.1 * dk) }; }).sort((p, q) => p.y - q.y);
+  // fanions (palissade 2) : derrière les crayons du fond, devant ceux de devant
+  const bunting = () => {
+    const posts = pos.filter((o) => o.post);
+    for (let k = 0; k + 1 < posts.length; k++) {
+      const p0 = posts[k], p1 = posts[k + 1]; if (Math.abs(p1.a - p0.a) > 0.6) continue;
+      const x0 = p0.x, y0 = p0.y - p0.h - 6, x1 = p1.x, y1 = p1.y - p1.h - 6, mx = (x0 + x1) / 2, my = (y0 + y1) / 2 + 9;
+      ctx.beginPath(); ctx.moveTo(x0, y0); ctx.quadraticCurveTo(mx, my, x1, y1); ctx.lineWidth = 1; ctx.strokeStyle = 'rgba(61,51,71,.7)'; ctx.stroke();
+      for (let f = 1; f < 5; f++) {
+        const u = f / 5, fx = qbz(x0, mx, x1, u), fy = qbz(y0, my, y1, u);
+        ctx.beginPath(); ctx.moveTo(fx - 3.2, fy); ctx.lineTo(fx + 3.2, fy); ctx.lineTo(fx, fy + 7); ctx.closePath();
+        ctx.fillStyle = refugeNight ? nm(PCOLS[(k + f) % 8]) : (refugeNight ? '#555' : nm(PCOLS[(k + f) % 8])); ctx.fill(); ctx.lineWidth = 0.8; ctx.strokeStyle = C.line; ctx.stroke();
+      }
+    }
+  };
+  if (refugeFence === 2 && !front) bunting();
+  for (const o of pos) crayon(o.x, o.y, o.h, PCOLS[o.i % PCOLS.length], Math.cos(o.a) * 0.05 + (yrand(o.i, 4) - 0.5) * (refugeFence === 3 ? 0.18 : 0.07), o.i, o.w, o.post);
+  // brin de laine qui attache la palissade serrée
+  if (refugeFence === 1 && pos.length > 1) {
+    // un brin continu d'un crayon à son voisin, coupé à l'entrée et là où la palissade passe de l'avant au fond
+    const step = TAU / 66, ord = pos.slice().sort((p, q) => p.a - q.a);
+    ctx.beginPath();
+    ord.forEach((o, k) => { const yy = o.y - Math.min(o.h * 0.42, 20); if (k && o.a - ord[k - 1].a < step * 1.6) ctx.lineTo(o.x, yy); else ctx.moveTo(o.x, yy); });
+    ctx.lineWidth = 2.4; ctx.strokeStyle = C.line; ctx.stroke(); ctx.lineWidth = 1.4; ctx.strokeStyle = nm('#e0707f'); ctx.stroke();
+  }
+  if (refugeFence === 2 && front) bunting();
+  // l'entrée : deux crayons géants en piliers, une guirlande de fanions entre eux
+  if (front) {
+    const gp = [-1, 1].map((sg) => { const a = gate + sg * (gapA + 0.02); return [Math.cos(a) * RX, Math.sin(a) * RY]; });
+    gp.forEach(([x, y], k) => crayon(x, y, 66, k ? '#8fc7f2' : '#f28b8b', (k ? 1 : -1) * 0.04, 3, 19, true));
+    if (refugeFence === 1) {
+      const x0 = gp[0][0] + 2, x1 = gp[1][0] - 2, y0 = gp[0][1] - 58, y1 = gp[1][1] - 58, mx = (x0 + x1) / 2, my = (y0 + y1) / 2 + 16;
+      ctx.beginPath(); ctx.moveTo(x0, y0); ctx.quadraticCurveTo(mx, my, x1, y1); ctx.lineWidth = 1.1; ctx.strokeStyle = 'rgba(61,51,71,.75)'; ctx.stroke();
+      for (let f = 1; f < 8; f++) {
+        const u = f / 8, fx = qbz(x0, mx, x1, u), fy = qbz(y0, my, y1, u), sw = refugeNight ? Math.sin(f * 2.3) * 0.25 : Math.sin(t * 2 + f) * 0.06;
+        ctx.save(); ctx.translate(fx, fy); ctx.rotate(sw);
+        ctx.beginPath(); ctx.moveTo(-3.6, 0); ctx.lineTo(3.6, 0); ctx.lineTo(0, refugeNight && f % 3 === 0 ? 4.5 : 8.5); ctx.closePath();
+        ctx.fillStyle = nm(PCOLS[(f * 3) % 8]); ctx.fill(); ctx.lineWidth = 0.8; ctx.strokeStyle = C.line; ctx.stroke(); ctx.restore();
+      }
+    }
+  }
+}
+function shavings(RX, RY) {
+  for (let i = 0; i < 26; i++) {
+    const a = yrand(i, 11) * TAU, r = 0.92 + yrand(i, 12) * 0.16, x = Math.cos(a) * RX * r, y = Math.sin(a) * RY * r;
+    ctx.save(); ctx.translate(x, y); ctx.rotate(yrand(i, 13) * TAU); ctx.scale(1, 0.55);
+    ctx.beginPath(); ctx.arc(0, 0, 4.5, 0, Math.PI * 1.5); ctx.arc(1.5, -1, 2.5, Math.PI * 1.5, 0, true); ctx.closePath();
+    ctx.fillStyle = nm('#efd3a8'); ctx.fill(); ctx.lineWidth = 1.2; ctx.strokeStyle = nm(PCOLS[i % 8]); ctx.stroke();
+    ctx.restore();
+  }
+}
+// la porte vers la zone suivante : fermée tant que les reliques de la zone ne sont pas toutes rapportées
+function nextDoor(x, y, open) {
+  if (open || refugeNight) { doorFrame(x, y, 1); return; }
+  ctx.save(); ctx.translate(x, y);
+  ctx.fillStyle = 'rgba(30,24,36,.22)'; ctx.beginPath(); ctx.ellipse(6, 2, 30, 5, 0, 0, TAU); ctx.fill();
+  ctx.beginPath(); ctx.rect(-20, -90, 40, 90); ctx.fillStyle = nm('#a8c4d8'); ctx.fill(); ctx.lineWidth = 1.5; ctx.strokeStyle = C.line; ctx.stroke();
+  ctx.beginPath(); ctx.rect(-14, -82, 28, 30); ctx.rect(-14, -44, 28, 36); ctx.lineWidth = 1.1; ctx.strokeStyle = 'rgba(61,51,71,.4)'; ctx.stroke();
+  ell(12, -44, 1.8, 2.2, 0, nm('#e8c36a'), 1);
+  softSpot(12, -38, 5, 5, 0, '255,220,150', 0.8); ctx.beginPath(); ctx.moveTo(12, -40); ctx.lineTo(12, -36); ctx.lineWidth = 1.6; ctx.strokeStyle = '#2a2230'; ctx.stroke();   // un peu de lumière par le trou de serrure
+  ctx.beginPath(); ctx.moveTo(-24, 0); ctx.lineTo(-24, -94); ctx.lineTo(24, -94); ctx.lineTo(24, 0); ctx.lineTo(20, 0); ctx.lineTo(20, -90); ctx.lineTo(-20, -90); ctx.lineTo(-20, 0); ctx.closePath();
+  ctx.fillStyle = nm('#f4efe6'); ctx.fill(); ctx.lineWidth = 1.6; ctx.strokeStyle = C.line; ctx.stroke();
+  ctx.restore();
+}
+// ---------- la tente de draps : la cabane d'avant, plantée sur sa tombe ----------
+// Il s'y cache pour dormir. Deux croix de tombe, une règle d'écolier posée en travers, le drap de son lit jeté dessus.
+// C'est aussi la lumière du refuge (les Terreurs n'entrent pas dans la lumière) : en cauchemar, c'est la seule chose qui reste chaude.
+function tentPost(x, y, rot) {
+  const h = 108;
+  ctx.save(); ctx.translate(x, y); ctx.rotate(rot + (refugeNight ? 0.04 * Math.sign(x) : 0));
+  const wood = ctx.createLinearGradient(-5, 0, 5, 0); wood.addColorStop(0, nm('#9e876b')); wood.addColorStop(1, nm('#6d5944'));
+  ctx.fillStyle = wood; ctx.strokeStyle = C.line; ctx.lineWidth = 1.6;
+  ctx.beginPath(); ctx.rect(-4.5, -h, 9, h); ctx.fill(); ctx.stroke();
+  ctx.beginPath(); ctx.rect(-17, -h + 16, 34, 8); ctx.fill(); ctx.stroke();
+  ctx.strokeStyle = 'rgba(61,51,71,.35)'; ctx.lineWidth = 0.9;
+  ctx.beginPath(); ctx.moveTo(-1.5, -h + 4); ctx.lineTo(-1, -h + 14); ctx.moveTo(1.8, -h + 30); ctx.lineTo(2, -h + 56); ctx.stroke();
+  ctx.restore();
+}
+function tentRuler() {
+  // la règle en bois, graduée, posée sur les bras des deux croix
+  ctx.save(); ctx.translate(0, -101.5); ctx.rotate(-0.006);
+  ctx.beginPath(); ctx.rect(-91, -4.2, 182, 8.4); ctx.fillStyle = nm('#ecd08c'); ctx.fill(); ctx.lineWidth = 1.5; ctx.strokeStyle = C.line; ctx.stroke();
+  ctx.beginPath();
+  for (let i = 0; i <= 34; i++) { const x = -85 + i * 5; ctx.moveTo(x, -4.2); ctx.lineTo(x, i % 5 ? -1.6 : 0.6); }
+  ctx.lineWidth = 0.8; ctx.strokeStyle = 'rgba(61,51,71,.55)'; ctx.stroke();
+  ctx.restore();
+  // les brins de ficelle qui l'attachent aux croix
+  for (const x of [-69, 68]) { ctx.beginPath(); ctx.moveTo(x - 4, -105.5); ctx.lineTo(x + 4, -97.5); ctx.moveTo(x + 4, -105.5); ctx.lineTo(x - 4, -97.5); ctx.lineWidth = 1.8; ctx.strokeStyle = nm('#e2d2a8'); ctx.stroke(); }
+}
+// un pan du drap ; op = 1 noué ouvert, 0 fermé (les deux pans se croisent au milieu)
+function tentCurtain(sg, op, glow) {
+  const fl = cab.flap * 3 * sg * op, L = (a, b) => a + (b - a) * op, X = (x) => x * sg;
+  const p = new Path2D();
+  p.moveTo(X(76), -99); p.quadraticCurveTo(X(38), -95.5, X(L(-2, 0)), -95.5);
+  p.bezierCurveTo(X(L(-2, 6)), -74, X(L(-2.5, 24 + fl)), -52, X(L(-2.5, 31 + fl)), -42);
+  p.quadraticCurveTo(X(L(-3, 36 + fl)), -22, X(L(-3, 41 + fl * 0.6)), 0);
+  p.lineTo(X(L(22, 41)), -0.8); p.lineTo(X(52), -1.6); p.lineTo(X(63), 0.4); p.lineTo(X(74), -1.4); p.lineTo(X(90), -0.4);
+  p.quadraticCurveTo(X(86), -52, X(76), -99); p.closePath();
+  const g = ctx.createLinearGradient(0, -100, 0, 0);
+  g.addColorStop(0, nm(sg < 0 ? '#f4eadb' : '#ebdfca', 0.8)); g.addColorStop(1, nm(sg < 0 ? '#dccbb0' : '#d0bea2', 0.8));
+  ctx.fillStyle = g; ctx.fill(p);
+  ctx.save(); ctx.clip(p);
+  // le drap de son lit : petites étoiles et points pâles, comme son pyjama
+  for (let j = 0; j < 7; j++) for (let i = -1; i < 7; i++) {
+    const px = (6 + i * 14 + (j % 2) * 7) * sg, py = -90 + j * 14;
+    if ((i + j) % 2) star(px, py, 2.4, 'rgba(140,155,205,.55)'); else ell(px, py, 1.2, 1.2, 0, 'rgba(140,155,205,.5)', 1);
+  }
+  ctx.strokeStyle = 'rgba(120,96,72,.32)'; ctx.lineWidth = 1.4;
+  ctx.beginPath(); ctx.moveTo(50 * sg, -97); ctx.quadraticCurveTo(54 * sg, -50, 60 * sg, -2); ctx.moveTo(68 * sg, -98); ctx.quadraticCurveTo(74 * sg, -50, 80 * sg, -2); ctx.stroke();
+  if (op > 0.5) softSpot((30 + fl) * sg, -52, 16, 46, 0, '90,60,50', 0.16);
+  softSpot(16 * sg, -46, 44, 54, 0, '255,200,120', 0.1 + 0.08 * glow);
+  ctx.restore();
+  ctx.lineWidth = 2; ctx.strokeStyle = C.line; ctx.stroke(p);
+  // noué sur le côté par un ruban rose quand c'est ouvert
+  if (op > 0.5) {
+    const tx = (31 + fl) * sg, ty = -42, rib = nm('#e07a8b');
+    ctx.beginPath(); ctx.ellipse(tx + 1.5 * sg, ty, 7.5, 5.5, 0.4 * sg, 0, TAU); ctx.fillStyle = nm('#e4d6bc', 0.8); ctx.fill(); ctx.lineWidth = 1.6; ctx.strokeStyle = C.line; ctx.stroke();
+    for (const s2 of [-1, 1]) { ctx.beginPath(); ctx.ellipse(tx + s2 * 4.2, ty - 1, 4, 2.4, s2 * 0.5, 0, TAU); ctx.fillStyle = rib; ctx.fill(); ctx.lineWidth = 1.2; ctx.stroke(); }
+    ctx.beginPath(); ctx.moveTo(tx - 1, ty + 1); ctx.lineTo(tx - 3, ty + 7); ctx.moveTo(tx + 1, ty + 1); ctx.lineTo(tx + 3.5, ty + 6.5); ctx.lineWidth = 2.2; ctx.strokeStyle = rib; ctx.stroke();
+  }
+  if (sg > 0) oldPatch(60, -62, 0.12, 1.3);
+  return p;
+}
+// l'intérieur, vu par l'ouverture : la lueur chaude, son lit sur la terre de sa tombe, la veilleuse, le doudou
+function tentInside(Rn, glow) {
+  const lune = rel('lune', 2);
+  const open = new Path2D();
+  open.moveTo(0, -95); open.bezierCurveTo(-6, -74, -24, -52, -31, -42); open.quadraticCurveTo(-36, -22, -41, 0);
+  open.lineTo(41, 0); open.quadraticCurveTo(36, -22, 31, -42); open.bezierCurveTo(24, -52, 6, -74, 0, -95); open.closePath();
+  ctx.save(); ctx.clip(open);
+  const warm = lune ? [[0, '#fff0b8'], [0.45, '#f2b866'], [1, '#7a4a35']] : [[0, '#f0c27a'], [0.4, '#a8693f'], [1, '#3a2832']];
+  ctx.fillStyle = radial(lune ? -14 : -22, -22, 2, 0, -30, 70, warm); ctx.fillRect(-50, -100, 100, 104);
+  ctx.strokeStyle = 'rgba(80,50,40,.3)'; ctx.lineWidth = 1.2;
+  ctx.beginPath(); ctx.moveTo(0, -95); ctx.lineTo(-26, -16); ctx.moveTo(0, -95); ctx.lineTo(26, -16); ctx.stroke();
+  // la terre de sa tombe (ou le trou, s'il vient d'en ressortir)
+  ctx.beginPath(); ctx.ellipse(0, -3, 46, 10, 0, 0, TAU); ctx.fillStyle = 'rgba(74,52,42,.55)'; ctx.fill();
+  if (spawnHole) {
+    ctx.beginPath(); ctx.ellipse(0, -5, 24, 6.5, 0, 0, TAU); ctx.fillStyle = '#2a1f26'; ctx.fill(); ctx.lineWidth = 1.3; ctx.strokeStyle = C.line; ctx.stroke();
+    for (let i = 0; i < 7; i++) ell(-26 + i * 9, -1 + (i % 2) * 2, 3.2, 2.2, i, '#8a6b52', 1);
+  } else {
+    // l'oreiller
+    ctx.beginPath(); ctx.ellipse(8, -17, 15, 5.5, -0.05, 0, TAU); ctx.fillStyle = radial(3, -20, 1, 8, -17, 16, [[0, '#ffffff'], [1, '#ddd6e6']]); ctx.fill(); ctx.lineWidth = 1.3; ctx.strokeStyle = C.line; ctx.stroke();
+  }
+  if (lune) drawRelicIcon('lune', -25, -11, 0.95, 0); else drawCandle(-25, -12);
+  if (cab.peek > 0.02) drawPeek(-1, -38, cab.peek);
+  if (!spawnHole) {
+    // la courtepointe en patchwork, roulée devant
+    const q = new Path2D(); q.ellipse(0, -8, 41, 8, 0, 0, TAU);
+    ctx.save(); ctx.clip(q);
+    const cols = ['#f6b8cf', '#c9b3ef', '#fff1a8', '#a9d8f2', '#bfe3b4'];
+    for (let gx = -44; gx < 44; gx += 11) for (let gy = -16; gy < 0; gy += 6) { ctx.fillStyle = nm(cols[(((gx + 44) / 11 + (gy + 16) / 6) | 0) % 5], 0.7); ctx.fillRect(gx, gy, 11, 6); }
+    ctx.strokeStyle = 'rgba(61,51,71,.35)'; ctx.lineWidth = 0.8; ctx.setLineDash([2, 2]);
+    for (let gx = -44; gx < 44; gx += 11) { ctx.beginPath(); ctx.moveTo(gx, -16); ctx.lineTo(gx, 0); ctx.stroke(); }
+    ctx.setLineDash([]); ctx.restore();
+    ctx.lineWidth = 1.6; ctx.strokeStyle = C.line; ctx.stroke(q);
+    ctx.beginPath(); ctx.moveTo(-34, -8); ctx.quadraticCurveTo(0, -3, 34, -8); ctx.lineWidth = 1; ctx.strokeStyle = 'rgba(61,51,71,.4)'; ctx.stroke();
+  }
+  if (rel('doudou', 1)) drawRelicIcon('doudou', 27, -21, 0.95, -0.15);
+  softSpot(0, -40, 40, 44, 0, '255,220,150', 0.12 * glow);
+  ctx.restore();
+}
+// l'ardoise d'écolier, pendue au drap par deux brins de laine : « ICI DORT » et le prénom qui revient lettre après lettre
+function tentSign(Rn) {
+  const N = refugeNight, w = 54, h = 40, cx = -53, cy = -70;
+  const rot = N ? 0.42 : -0.035, piv = [cx + w / 2 - 6, cy - h / 2];
+  const at = (dx, dy) => { const x0 = cx + dx - piv[0], y0 = cy + dy - piv[1]; return [piv[0] + x0 * Math.cos(rot) - y0 * Math.sin(rot), piv[1] + x0 * Math.sin(rot) + y0 * Math.cos(rot)]; };
+  const tl = at(-w / 2 + 6, -h / 2), tr = at(w / 2 - 6, -h / 2);
+  ctx.beginPath();
+  if (N) { ctx.moveTo(-74, -98); ctx.quadraticCurveTo(-77, -86, -71, -79); } else { ctx.moveTo(-74, -98); ctx.lineTo(tl[0], tl[1]); }
+  ctx.moveTo(-34, -98); ctx.lineTo(tr[0], tr[1]);
+  ctx.lineWidth = 1.7; ctx.strokeStyle = nm('#e0707f'); ctx.stroke();
+  ctx.save(); ctx.translate(piv[0], piv[1]); ctx.rotate(rot); ctx.translate(cx - piv[0], cy - piv[1]);
+  ctx.fillStyle = 'rgba(30,24,36,.18)'; ctx.fillRect(-w / 2 + 2, -h / 2 + 3, w, h);
+  ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(-w / 2, -h / 2, w, h, 3.5); else ctx.rect(-w / 2, -h / 2, w, h);
+  ctx.fillStyle = nm('#b98a5c'); ctx.fill(); ctx.lineWidth = 1.6; ctx.strokeStyle = C.line; ctx.stroke();
+  ctx.beginPath(); ctx.rect(-w / 2 + 4, -h / 2 + 4, w - 8, h - 8); ctx.fillStyle = N ? '#3a3540' : '#3f4a47'; ctx.fill(); ctx.lineWidth = 1.1; ctx.stroke();
+  ctx.save(); ctx.beginPath(); ctx.rect(-w / 2 + 4, -h / 2 + 4, w - 8, h - 8); ctx.clip();
+  const col = N ? 'rgba(220,214,235,.72)' : 'rgba(255,255,250,.92)';
+  scribble('ICI DORT', 0, -6.5, 8, col, N);
+  lostName(0, 5.5, 7.6, col, N ? 0 : Rn);
+  if (N) { ctx.beginPath(); ctx.moveTo(9, -16); ctx.lineTo(4, -6); ctx.lineTo(8, 1); ctx.lineTo(2, 16); ctx.lineWidth = 1.2; ctx.strokeStyle = 'rgba(15,10,20,.9)'; ctx.stroke(); }
+  ctx.restore();
+  // les deux nœuds de laine
+  for (const dx of [-w / 2 + 6, w / 2 - 6]) { if (N && dx < 0) continue; ell(dx, -h / 2 + 1, 2.2, 1.8, 0, nm('#e0707f'), 1); }
+  ctx.restore();
+}
+// guirlande de petites lumières le long de la règle (avec la boîte à musique) ; éteinte en cauchemar
+function tentGarland(on) {
+  const pts = [];
+  for (let i = 0; i <= 10; i++) pts.push([-72 + i * 14.4, -97 + 9 * Math.sin(Math.PI * i / 10)]);
+  ctx.beginPath(); pts.forEach(([x, y], i) => (i ? ctx.lineTo(x, y) : ctx.moveTo(x, y)));
+  ctx.lineWidth = 1.2; ctx.strokeStyle = C.line; ctx.stroke();
+  const cols = ['255,215,106', '255,159,178', '168,224,255', '198,241,154'];
+  pts.forEach(([x, y], i) => {
+    if (i === 0 || i === 10) return;
+    const a = 0.6 + 0.4 * Math.sin(t * 3 + i * 1.7), col = cols[i % 4];
+    if (on) softSpot(x, y + 3, 8, 8, 0, col, 0.4 * a);
+    ctx.beginPath(); ctx.arc(x, y + 3, 2.6, 0, TAU); ctx.fillStyle = on ? 'rgba(' + col + ',' + (0.75 + 0.25 * a).toFixed(3) + ')' : 'rgba(120,114,134,.85)'; ctx.fill();
+    ctx.lineWidth = 0.9; ctx.strokeStyle = C.line; ctx.stroke();
+  });
+}
+// la pince à linge qui tient le drap fermé quand il dort
+function clothesPin(x, y) {
+  ctx.save(); ctx.translate(x, y); ctx.rotate(0.12);
+  for (const dx of [-2.2, 2.2]) { ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(dx - 2.1, -9, 4.2, 18, 1.6); else ctx.rect(dx - 2.1, -9, 4.2, 18); ctx.fillStyle = nm('#e8c98f'); ctx.fill(); ctx.lineWidth = 1.1; ctx.strokeStyle = C.line; ctx.stroke(); }
+  ctx.beginPath(); ctx.rect(-4.6, -2.2, 9.2, 3); ctx.fillStyle = nm('#9aa3b5'); ctx.fill(); ctx.lineWidth = 1; ctx.stroke();
+  ctx.restore();
+}
+function sheetTent(x, y, s, Rn) {
+  const N = refugeNight, sleep = refugeSleep, op = sleep ? 0 : 1;
+  const glow = clamp(0.4 + Rn * 0.2, 0, 1) * (1 + cab.pulse * 0.6);
+  ctx.save(); ctx.translate(x, y); ctx.scale(s, s);
+  ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+  ctx.fillStyle = 'rgba(30,24,36,.2)'; ctx.beginPath(); ctx.ellipse(4, 4, 100, 15, 0, 0, TAU); ctx.fill();
+  // la butte de terre de sa tombe dépasse sous le drap
+  const m = new Path2D(); m.ellipse(0, 1, 74, 12, 0, 0, TAU);
+  ctx.fillStyle = radial(-20, -4, 1, 0, 1, 74, [[0, nm('#9a7b62')], [0.6, nm('#7a5d48')], [1, nm('#5a4334')]]); ctx.fill(m);
+  ctx.lineWidth = 1.6; ctx.strokeStyle = C.line; ctx.stroke(m);
+  softSpot(0, 4, 54, 11, 0, '255,210,140', 0.42 * glow);
+  tentPost(-62, -10, -0.07); tentPost(62, -10, 0.06);
+  tentRuler();
+  if (op > 0) tentInside(Rn, glow);
+  const pl = tentCurtain(-1, op, glow), pr = tentCurtain(1, op, glow);
+  if (sleep) {
+    // la veilleuse à travers le drap, et l'ombre du petit zombie qui dort contre son doudou
+    const u = new Path2D(); u.addPath(pl); u.addPath(pr);
+    ctx.save(); ctx.clip(u);
+    softSpot(-14, -36, 70, 58, 0, '255,190,100', 0.85 * glow);
+    softSpot(-14, -36, 40, 36, 0, '255,214,140', 0.5 * glow);
+    softSpot(-24, -14, 18, 14, 0, '255,230,170', 0.5);
+    const sh = 'rgba(84,54,46,.38)';
+    ctx.save(); ctx.translate(6, -40); ctx.rotate(0.24); ctx.scale(0.7, 0.7); ctx.translate(-68, -60); ctx.fillStyle = sh; ctx.fill(HEADP); ctx.restore();
+    ctx.beginPath(); ctx.ellipse(4, -10, 27, 15, 0, Math.PI, 0); ctx.closePath(); ctx.fillStyle = sh; ctx.fill();
+    for (const [ex, ey, r] of [[31, -46, 0.25], [37, -45, -0.2]]) { ctx.beginPath(); ctx.ellipse(ex, ey, 3, 9, r, 0, TAU); ctx.fillStyle = sh; ctx.fill(); }
+    ctx.beginPath(); ctx.arc(34, -32, 7.5, 0, TAU); ctx.ellipse(34, -16, 9, 9, 0, 0, TAU); ctx.fillStyle = sh; ctx.fill();
+    ctx.restore();
+    clothesPin(0, -66);
+  }
+  if (rel('boite', 3)) tentGarland(!N);
+  tentSign(Rn);
+  // les pierres qui tiennent le drap
+  for (const [px, rx] of [[-90, 9], [91, 8]]) shadedEll(px, -2, rx, 6, 0, nm('#d2cede'), nm('#aaa4ba'), nm('#857f96'), 1.4);
+  if (sleep) {
+    // des z qui sortent par le haut du drap
+    ctx.save(); ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.lineJoin = 'round';
+    for (let k = 0; k < 3; k++) {
+      const u = (t * 0.3 + k / 3) % 1, sz = 13 + k * 5;
+      ctx.globalAlpha = 0.35 + 0.65 * Math.sin(u * Math.PI);
+      ctx.font = '900 ' + sz + 'px "Zen Maru Gothic", sans-serif';
+      const zx = 34 + k * 13 + Math.sin(u * 6 + k) * 3, zy = -114 - k * 17 - u * 5;
+      ctx.save(); ctx.translate(zx, zy); ctx.rotate(-0.15 + k * 0.08);
+      ctx.lineWidth = 4; ctx.strokeStyle = 'rgba(255,252,240,.95)'; ctx.strokeText('z', 0, 0);
+      ctx.fillStyle = '#6f62a0'; ctx.fillText('z', 0, 0); ctx.restore();
+    }
+    ctx.restore();
+  }
+  ctx.restore();
+}
+
+// la variante D assemblée : la tente de draps au milieu du jardin aux crayons
+function variantD(layer) {
+  const RX = 188, RY = 88, Rn = refugeRelics;
+  if (layer === 'back') {
+    dreamGround(RX + 14, RY + 10);
+    // à gauche : la marelle à la craie ; à droite, devant l'arbre aux étoiles pendues : les reliques
+    chalkHopscotch(-78, 44); chalkSun(62, 30);
+    if (refugeFence === 3) shavings(RX, RY);
+    palisade(false, RX, RY);
+    popsicleCross(-128, -40, 0.85, 0); popsicleCross(-104, -52, 0.8, 1);
+    dreamTree(134, -44, 1, false, [[0.82, 18, 'star', 1], [0.3, 14, 'star', 2], [0.56, 24, 'star', 0]]);
+    // la tente de draps plantée sur sa tombe : il s'y cache, il y dort (dormir = sauvegarder)
+    sheetTent(0, -18, 0.84, Rn);
+    if (refugeNight) for (let i = 0; i < 4; i++) { const x0 = -36 + i * 22; ctx.beginPath(); ctx.moveTo(x0, -6); ctx.quadraticCurveTo(x0 + 6, 4, x0 + 4 + Math.sin(t * 2 + i) * 2, 13); ctx.lineWidth = 3; ctx.strokeStyle = 'rgba(20,14,28,.75)'; ctx.stroke(); }
+    toyBlock(150, 2, 0.8, 'B', '#5f93d8');
+    toyBlock(108, 22, 1, 'A', '#e46f86');
+    if (rel('boite', 3) && !refugeNight) drawRelicIcon('boite', 114, -9, 1.3, 0);
+  } else {
+    palisade(true, RX, RY);
+  }
+}
+// ---------- jardin retenu : chaque élément est trié à sa propre profondeur (z-index) ----------
+// Chaque crayon de la palissade, l'arbre, les croix, la tente, les cubes ont leur « y » : le zombie et
+// l'Aveugle passent devant ou derrière au bon endroit, dedans comme dehors.
+function yardLayers() {
+  const RX = 188, RY = 88, Rn = refugeRelics, gate = Math.PI / 2, gapA = 0.2, X = cab.x, Y = cab.y;
+  const L = [];
+  const at = (y, fn) => L.push({ y: Y + y, d: () => { ctx.save(); ctx.translate(X, Y); ctx.lineJoin = 'round'; ctx.lineCap = 'round'; fn(); ctx.restore(); } });
+  // le sol (toujours dessous)
+  at(-1e5, () => { dreamGround(RX + 14, RY + 10); chalkHopscotch(-78, 44); chalkSun(62, 30); if (refugeFence === 3) shavings(RX, RY); });
+  // la palissade, crayon par crayon
+  const pos = palisadeItems().filter((o) => Math.abs(o.a - gate) > gapA).map((o) => {
+    const sy = Math.sin(o.a), dk = 1.12 - 0.42 * (sy + 1) / 2;
+    return { ...o, x: Math.cos(o.a) * RX, y: sy * RY, h: o.h * dk, w: o.w * (0.9 + 0.1 * dk) };
+  }).sort((p, q) => p.a - q.a);
+  const step = TAU / 66;
+  pos.forEach((o, k) => {
+    const prev = k ? pos[k - 1] : null;
+    at(o.y, () => {
+      crayon(o.x, o.y, o.h, PCOLS[o.i % PCOLS.length], Math.cos(o.a) * 0.05 + (yrand(o.i, 4) - 0.5) * (refugeFence === 3 ? 0.18 : 0.07), o.i, o.w, o.post);
+      // le brin de laine jusqu'au crayon voisin (palissade serrée)
+      if (refugeFence === 1 && prev && o.a - prev.a < step * 1.6) {
+        const ya = prev.y - Math.min(prev.h * 0.42, 20), yb = o.y - Math.min(o.h * 0.42, 20);
+        ctx.beginPath(); ctx.moveTo(prev.x, ya); ctx.lineTo(o.x, yb);
+        ctx.lineWidth = 2.4; ctx.strokeStyle = C.line; ctx.stroke(); ctx.lineWidth = 1.4; ctx.strokeStyle = nm('#e0707f'); ctx.stroke();
+      }
+      // fanions de poteau en poteau (palissade 2)
+      if (refugeFence === 2 && o.post) {
+        const p0 = pos.slice(0, k).reverse().find((q) => q.post);
+        if (p0 && o.a - p0.a < 0.6) {
+          const x0 = p0.x, y0 = p0.y - p0.h - 6, x1 = o.x, y1 = o.y - o.h - 6, mx = (x0 + x1) / 2, my = (y0 + y1) / 2 + 9;
+          ctx.beginPath(); ctx.moveTo(x0, y0); ctx.quadraticCurveTo(mx, my, x1, y1); ctx.lineWidth = 1; ctx.strokeStyle = 'rgba(61,51,71,.7)'; ctx.stroke();
+          for (let f = 1; f < 5; f++) {
+            const u = f / 5, fx = qbz(x0, mx, x1, u), fy = qbz(y0, my, y1, u);
+            ctx.beginPath(); ctx.moveTo(fx - 3.2, fy); ctx.lineTo(fx + 3.2, fy); ctx.lineTo(fx, fy + 7); ctx.closePath();
+            ctx.fillStyle = nm(PCOLS[(k + f) % 8]); ctx.fill(); ctx.lineWidth = 0.8; ctx.strokeStyle = C.line; ctx.stroke();
+          }
+        }
+      }
+    });
+  });
+  // l'entrée : deux crayons géants, la guirlande de fanions avec le second
+  const gp = [-1, 1].map((sg) => { const a = gate + sg * (gapA + 0.02); return [Math.cos(a) * RX, Math.sin(a) * RY]; });
+  gp.forEach(([x, y], k) => at(y + k * 0.01, () => {
+    crayon(x, y, 66, k ? '#8fc7f2' : '#f28b8b', (k ? 1 : -1) * 0.04, 3, 19, true);
+    if (k === 1 && refugeFence === 1) {
+      const x0 = gp[0][0] + 2, x1 = gp[1][0] - 2, y0 = gp[0][1] - 58, y1 = gp[1][1] - 58, mx = (x0 + x1) / 2, my = (y0 + y1) / 2 + 16;
+      ctx.beginPath(); ctx.moveTo(x0, y0); ctx.quadraticCurveTo(mx, my, x1, y1); ctx.lineWidth = 1.1; ctx.strokeStyle = 'rgba(61,51,71,.75)'; ctx.stroke();
+      for (let f = 1; f < 8; f++) {
+        const u = f / 8, fx = qbz(x0, mx, x1, u), fy = qbz(y0, my, y1, u), sw = refugeNight ? Math.sin(f * 2.3) * 0.25 : Math.sin(t * 2 + f) * 0.06;
+        ctx.save(); ctx.translate(fx, fy); ctx.rotate(sw);
+        ctx.beginPath(); ctx.moveTo(-3.6, 0); ctx.lineTo(3.6, 0); ctx.lineTo(0, refugeNight && f % 3 === 0 ? 4.5 : 8.5); ctx.closePath();
+        ctx.fillStyle = nm(PCOLS[(f * 3) % 8]); ctx.fill(); ctx.lineWidth = 0.8; ctx.strokeStyle = C.line; ctx.stroke(); ctx.restore();
+      }
+    }
+  }));
+  // le décor du jardin
+  at(-52, () => popsicleCross(-104, -52, 0.8, 1));
+  at(-40, () => popsicleCross(-128, -40, 0.85, 0));
+  at(-44, () => dreamTree(134, -44, 1, false, [[0.82, 18, 'star', 1], [0.3, 14, 'star', 2], [0.56, 24, 'star', 0]]));
+  at(-18, () => {
+    sheetTent(0, -18, 0.84, Rn);
+    if (refugeNight) for (let i = 0; i < 4; i++) { const x0 = -36 + i * 22; ctx.beginPath(); ctx.moveTo(x0, -6); ctx.quadraticCurveTo(x0 + 6, 4, x0 + 4 + Math.sin(t * 2 + i) * 2, 13); ctx.lineWidth = 3; ctx.strokeStyle = 'rgba(20,14,28,.75)'; ctx.stroke(); }
+  });
+  at(2, () => toyBlock(150, 2, 0.8, 'B', '#5f93d8'));
+  at(22, () => { toyBlock(108, 22, 1, 'A', '#e46f86'); if (rel('boite', 3) && !refugeNight) drawRelicIcon('boite', 114, -9, 1.3, 0); });
+  return L;
+}
+let refugeSleep = 0;
+
+/* ---------- Le chiot de l'enfer, version boule de poils (façon yak) ----------
+   Une seule masse ronde de longs poils qui tombent jusqu'au sol : la fourrure fait tout le travail.
+   On ne voit dessous que quatre petits pieds ronds. Frange sur les yeux braise, cornes, plumet de queue avec une braise.
+   Règles du jeu : 3/4 (le visage glisse sur la boule au demi-tour), côté lointain plus sombre et dessiné avant,
+   pieds collés au sol, ressorts sur tout ce qui pend (frange, poils du bas, queue, grelot), encre plus épaisse en bas
+   et à l'arrière, mèches en formes pleines fixes, raccommodages attachés au corps.
+   Origine : au sol sous lui. ~48 de haut sans les cornes. */
+const BL_PAL = {
+  lilas:   { l: '#e6d8f2', m: '#b49ad0', d: '#6f5892', tip: '#f4ecfa', horn: ['#f6ead6', '#d8c3a2', '#a88d6a'], hornT: 'yak' },
+  // charbon (retenu) : pointes de poils braise, cornes de diable ; liserés et museau clair pour rester lisible la nuit
+  charbon: { l: '#8d8399', m: '#5b5268', d: '#2f2a38', tip: '#ff9a6a', horn: ['#f1e6d0', '#cdb894', '#3a3442'], hornT: 'diable', rim: '#b7a6cf', muzzle: ['#b1a7bd', '#7a7088'] },
+  creme:   { l: '#fffaf0', m: '#efe0c6', d: '#bfa483', tip: '#ffffff', horn: ['#8b74a6', '#65507f', '#3f3157'], hornT: 'petites' },
+  // noir avec des touches de rouge : pointes de poils braise, bas de la frange rouge, cornes à bout rouge, collier rouge.
+  // Pour rester lisible la nuit : un liseré lilas froid sur le côté éclairé et un museau plus clair.
+  // le bébé yak de l'enfer (retenu) : le charbon, avec des sabots, un museau de veau, des oreilles sur les côtés, de petites cornes de bébé et une cloche
+  yak:     { l: '#8d8399', m: '#5b5268', d: '#2f2a38', tip: '#ff9a6a', horn: ['#fbf3e4', '#e3d3b6', '#b59c78'], hornT: 'bebe', rim: '#b7a6cf', muzzle: ['#b9afc4', '#837891'], yak: true },
+  noir:    { l: '#5e566c', m: '#332e3d', d: '#16131c', tip: '#ff9a6a', horn: ['#f4e8d4', '#d9c3a3', '#b8323f'], hornT: 'yak', red: true, rim: '#a993c6', muzzle: ['#8a7f98', '#5c5368'] }
+};
+const BL_STRIDE = 30;
+const BL = { ink: '#3d3347', wool: '#f0d58a', patch: '#d6b26e', cheek: '214,140,170', emA: '#fff1a8', emB: '#ffb347', emC: '#e2553a' };
+function bouleNew(x, y, face, pal) {
+  return { x, y, vx: 0, face: face || 1, faceS: face || 1, t: 0, ph: 0, pal: pal || 'lilas',
+    lag: 0, lagV: 0, fr: 0, frV: 0, tail: 0, tailV: 0, bell: 0, bellV: 0, sq: 0, sqV: 0,
+    fear: 0, fearS: 0, joy: 0, joyS: 0, ball: 0, ballS: 0, sleep: 0, look: 0,
+    sniff: 0, sniffS: 0, bark: 0, barkS: 0, bone: 0, shake: 0,
+    // animation des poils : ondulation du bas, sautillement du dessus, poils hérissés, sauts, ébrouement
+    mvS: 0, jig: 0, jigV: 0, flo: 0, floV: 0, brisS: 0, hop: 0, hopT: 0, hz: 0, shakeT: 0, shk: 0 };
+}
+function blSpring(g, k, target, stiff, damp, dt) { g[k + 'V'] += ((target - g[k]) * stiff - g[k + 'V'] * damp) * dt; g[k] += g[k + 'V'] * dt; }
+function bouleUpdate(g, dt) {
+  dt = Math.max(dt, 1e-4);
+  g.t += dt; g.x += g.vx * dt;
+  if (Math.abs(g.vx) > 4) g.face = g.vx > 0 ? 1 : -1;
+  const fs0 = g.faceS;
+  g.faceS += (g.face - g.faceS) * (1 - Math.exp(-dt * 11));
+  const turnV = (g.faceS - fs0) / dt;
+  const sp = g.spd !== undefined ? g.spd : Math.abs(g.vx), acc = clamp(g.vx / 80, -1.3, 1.3);
+  g.mvS = (g.mvS || 0) + ((sp > 5 && !g.ball && !g.sleep ? 1 : 0) - (g.mvS || 0)) * (1 - Math.exp(-dt * 6));
+  // pieds collés au sol : un cycle (deux pas) = 2 × 15 de distance ; le pied posé recule exactement à la vitesse du corps
+  g.ph += sp * dt / BL_STRIDE * TAU;
+  // les poils du bas traînent derrière, repartent devant à l'arrêt ; au demi-tour, la jupe de poils tourne en retard (comme une jupe qui virevolte)
+  blSpring(g, 'lag', -acc * 6 - turnV * 0.3, 34, 4.5, dt);
+  blSpring(g, 'fr', 0, 55, 5, dt);                    // la frange rebondit à chaque pas
+  blSpring(g, 'tail', -acc * 0.5, 30, 4, dt);
+  blSpring(g, 'bell', -acc * 0.7, 45, 3.5, dt);
+  blSpring(g, 'sq', 0, 80, 9, dt);                    // il se tasse un peu sur l'appui
+  g.jigV = g.jigV || 0; g.floV = g.floV || 0; g.jig = g.jig || 0; g.flo = g.flo || 0;
+  blSpring(g, 'jig', 0, 150, 7, dt);                  // les bosses de poils du dessus tremblotent à chaque pas
+  const step = Math.floor(g.ph / Math.PI);
+  if (sp > 5 && step !== g._step) { g._step = step; g.frV += 7; g.sqV += 5; g.bellV += 4 * (step % 2 ? 1 : -1); g.jigV += 18 * (step % 2 ? 1 : -1); }
+  // il sautille (ballon dans la gueule, joie) : en l'air la jupe de poils flotte, à l'atterrissage elle s'écrase et rebondit
+  const HOP = 0.42; let z = 0;
+  if (g.hop || g.hz > 0.01) {
+    g.hopT = (g.hopT || 0) + dt;
+    if (g.hopT >= HOP) { g.hopT = g.hop ? g.hopT - HOP : 0; g.sqV += 11; g.jigV += 34; g.frV += 7; g.bellV += 5; g.floV -= 30; }
+    z = g.hopT > 0 ? Math.sin(g.hopT / HOP * Math.PI) * 7 : 0;
+  } else g.hopT = 0;
+  const vz = (z - (g.hz || 0)) / dt; g.hz = z;
+  blSpring(g, 'flo', -vz * 0.05, 70, 6.5, dt);
+  // poils hérissés : il s'inquiète (l'Aveugle approche) ou grogne
+  g.brisS = (g.brisS || 0) + (clamp(Math.max(g.warn || 0, (g.barkS || 0) * 0.9), 0, 1) * (1 - (g.ballS || 0)) - (g.brisS || 0)) * (1 - Math.exp(-dt * 5));
+  // il s'ébroue : en sortant de sa boule de peur, ou quand on le lui demande (g.shakeT)
+  if ((g._ballS || 0) > 0.6 && (g.ballS || 0) < 0.6 && !g.sleep) g.shakeT = 0.95;
+  g._ballS = g.ballS || 0;
+  if (g.shakeT > 0) { g.shakeT = Math.max(0, g.shakeT - dt); const u = 0.95 - g.shakeT; g.shk = Math.min(1, u / 0.12) * Math.min(1, g.shakeT / 0.4); if (g.shakeT === 0) { g.shk = 0; g.jigV += 25; g.frV += 6; } }
+  else g.shk = 0;
+  g.fearS += (g.fear - g.fearS) * (1 - Math.exp(-dt * 6));
+  g.joyS += (g.joy - g.joyS) * (1 - Math.exp(-dt * 5));
+  g.ballS += (g.ball - g.ballS) * (1 - Math.exp(-dt * 7));
+  g.sniffS += (g.sniff - g.sniffS) * (1 - Math.exp(-dt * 6));
+  g.barkS += (g.bark - g.barkS) * (1 - Math.exp(-dt * 14));
+}
+// une mèche : forme pleine effilée, de (x0,y0) à (x1,y1), courbée de « bend » sur le côté
+function blLock(x0, y0, x1, y1, bend, w, col, ink) {
+  const dx = x1 - x0, dy = y1 - y0, L = Math.hypot(dx, dy) || 1, nx = -dy / L, ny = dx / L;
+  const mx = (x0 + x1) / 2 + nx * bend, my = (y0 + y1) / 2 + ny * bend;
+  ctx.beginPath(); ctx.moveTo(x0 + nx * w, y0 + ny * w);
+  ctx.quadraticCurveTo(mx + nx * w * 0.7, my + ny * w * 0.7, x1, y1);
+  ctx.quadraticCurveTo(mx - nx * w * 0.7, my - ny * w * 0.7, x0 - nx * w, y0 - ny * w); ctx.closePath();
+  if (col) { ctx.fillStyle = col; ctx.fill(); }
+  if (ink) { ctx.lineWidth = ink; ctx.strokeStyle = BL.ink; ctx.stroke(); }
+}
+// petit hasard fixe (les mèches gardent leur forme d'une image à l'autre)
+const blr = (i, k) => { const s = Math.sin(i * 127.1 + k * 311.7) * 43758.5453; return s - Math.floor(s); };
+// les cornes : yak (vers l'extérieur puis vers le haut, la pointe revient), diable (grandes, vers l'avant), petites (deux boutons)
+function blHorn(bx, by, s, type, cols, near, sc) {
+  const [c1, c2, c3] = cols;
+  ctx.save(); ctx.translate(bx, by); ctx.scale(s * sc, sc);
+  const p = new Path2D();
+  if (type === 'bebe') { p.moveTo(-3.4, 1.2); p.quadraticCurveTo(-2.8, -5, 1.5, -8.5); p.quadraticCurveTo(4.2, -9.5, 4.4, -8); p.quadraticCurveTo(1.8, -6.5, 3.2, 1.2); p.closePath(); }
+  else if (type === 'petites') { p.moveTo(-3.2, 1); p.quadraticCurveTo(-3, -5, 0.5, -6.5); p.quadraticCurveTo(3.5, -4.5, 3.2, 1); p.closePath(); }
+  else if (type === 'diable') { p.moveTo(-3.6, 1); p.bezierCurveTo(4, -2, 9, -8, 7, -17); p.quadraticCurveTo(10, -9, 3.8, 1.5); p.closePath(); }
+  else { p.moveTo(-3.6, 1.5); p.bezierCurveTo(6, 0, 12, -4, 11, -11); p.quadraticCurveTo(10.5, -15, 7.5, -15.5); p.quadraticCurveTo(10, -11, 7, -6.5); p.quadraticCurveTo(3, -3, -2.6, -3.4); p.closePath(); }
+  const g = ctx.createLinearGradient(-4, 0, 10, -14); g.addColorStop(0, near ? c1 : c2); g.addColorStop(0.6, c2); g.addColorStop(1, c3);
+  ctx.fillStyle = g; ctx.fill(p);
+  // anneaux (cornes cerclées)
+  if (type !== 'petites' && type !== 'bebe') { ctx.save(); ctx.clip(p); ctx.strokeStyle = 'rgba(61,51,71,.35)'; ctx.lineWidth = 0.9; ctx.beginPath();
+    const rings = type === 'diable' ? [[0, -1, 4, -5], [2, -6, 7, -8], [4, -11, 8.5, -11.5]] : [[1, -3.2, 2.6, 1.4], [4.5, -3, 6, 1], [7.5, -6, 10.5, -4.5]];
+    for (const [a, b2, c, d] of rings) { ctx.moveTo(a, b2); ctx.lineTo(c, d); } ctx.stroke(); ctx.restore(); }
+  ctx.lineWidth = (near ? 1.6 : 1.3) / sc; ctx.strokeStyle = BL.ink; ctx.stroke(p);
+  ctx.restore();
+}
+function blEye(x, y, k, g, closed) {
+  const r = 5.2;
+  if (closed || g.joyS > 0.65) { ctx.beginPath(); ctx.moveTo(x - r * k, y + 0.6); ctx.quadraticCurveTo(x, y + (closed ? 3.2 : -4.2), x + r * k, y + 0.6); ctx.lineWidth = 1.9; ctx.strokeStyle = '#2a1a22'; ctx.stroke(); return; }
+  ctx.save(); ctx.translate(x, y);
+  ctx.beginPath(); ctx.ellipse(0, 0, r * k, r * 1.05, 0, 0, TAU); ctx.fillStyle = '#2a1a22'; ctx.fill();
+  const ir = r * 0.66, lx = g.look * 1.1 * k;
+  ctx.beginPath(); ctx.ellipse(lx, r * 0.14, ir * k, ir, 0, 0, TAU);
+  ctx.fillStyle = radial(lx, r * 0.35, 0.3, lx, r * 0.12, ir * 1.2, [[0, BL.emA], [0.45, BL.emB], [1, BL.emC]]); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(lx, r * 0.14, ir * 0.42 * k, ir * 0.52, 0, 0, TAU); ctx.fillStyle = '#2a1a22'; ctx.fill();
+  ell(-r * 0.34 * k, -r * 0.36, r * 0.36 * k, r * 0.3, -0.3, '#ffffff', 1);
+  ell(r * 0.3 * k, r * 0.38, r * 0.14, r * 0.14, 0, 'rgba(255,255,255,.9)', 1);
+  ctx.restore();
+}
+// la sacoche d'enfant que le zombie a attachée sur le dos du yak : toile moutarde, rabat framboise, boucle crème,
+// une pièce bleue raccommodée en croix de laine ; origine = milieu du bas
+function blBag(sq) {
+  const k = sq || 1;
+  ctx.save(); ctx.scale(1 / Math.sqrt(k), k); ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+  // poignée
+  ctx.beginPath(); ctx.moveTo(-4.2, -13); ctx.quadraticCurveTo(0, -19.5, 4.2, -13); ctx.lineWidth = 3.4; ctx.strokeStyle = BL.ink; ctx.stroke(); ctx.lineWidth = 1.6; ctx.strokeStyle = '#c94f63'; ctx.stroke();
+  // corps
+  const body = new Path2D(); body.moveTo(-9, -13); body.lineTo(9, -13); body.quadraticCurveTo(10.5, -13, 10.4, -10); body.lineTo(9.8, -3); body.quadraticCurveTo(9.6, 0.2, 6.5, 0.2);
+  body.lineTo(-6.5, 0.2); body.quadraticCurveTo(-9.6, 0.2, -9.8, -3); body.lineTo(-10.4, -10); body.quadraticCurveTo(-10.5, -13, -9, -13); body.closePath();
+  ctx.fillStyle = radial(-4, -10, 1, 0, -6, 14, [[0, '#f7d57c'], [1, '#d39a35']]); ctx.fill(body); ctx.lineWidth = 1.5; ctx.strokeStyle = BL.ink; ctx.stroke(body);
+  // couture du bas
+  ctx.save(); ctx.setLineDash([1.4, 1.6]); ctx.beginPath(); ctx.moveTo(-7.4, -2.2); ctx.lineTo(7.4, -2.2); ctx.lineWidth = 0.8; ctx.strokeStyle = 'rgba(90,60,30,.6)'; ctx.stroke(); ctx.restore();
+  // pièce raccommodée
+  ctx.save(); ctx.translate(-5.6, -5.4); ctx.rotate(-0.12); ctx.beginPath(); ctx.rect(-2.6, -2.4, 5.2, 4.8); ctx.fillStyle = '#8cc0e8'; ctx.fill(); ctx.lineWidth = 0.9; ctx.strokeStyle = BL.ink; ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(-1.3, -1.2); ctx.lineTo(1.3, 1.2); ctx.moveTo(1.3, -1.2); ctx.lineTo(-1.3, 1.2); ctx.lineWidth = 0.9; ctx.strokeStyle = BL.wool; ctx.stroke(); ctx.restore();
+  // rabat
+  const flap = new Path2D(); flap.moveTo(-10.2, -13.4); flap.lineTo(10.2, -13.4); flap.lineTo(9.6, -8.6); flap.quadraticCurveTo(0, -4.6, -9.6, -8.6); flap.closePath();
+  ctx.fillStyle = radial(-3, -12, 0.5, 0, -10, 12, [[0, '#f08a9b'], [1, '#c94f63']]); ctx.fill(flap); ctx.lineWidth = 1.4; ctx.strokeStyle = BL.ink; ctx.stroke(flap);
+  ell(-5, -11.6, 3, 0.8, -0.1, 'rgba(255,255,255,.4)', 1);
+  // boucle
+  ctx.beginPath(); ctx.rect(-1.9, -7.6, 3.8, 3.2); ctx.fillStyle = '#fff3d6'; ctx.fill(); ctx.lineWidth = 1.1; ctx.strokeStyle = BL.ink; ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(0, -7.6); ctx.lineTo(0, -4.4); ctx.lineWidth = 0.8; ctx.stroke();
+  ctx.restore();
+}
+function bouleDraw(g) {
+  const P = BL_PAL[g.pal] || BL_PAL.lilas, t = g.t, f = g.faceS, fd = g.face, af = Math.abs(f);
+  const fear = g.fearS, joy = g.joyS, ball = g.ballS, sleep = g.sleep ? 1 : 0, curl = Math.max(ball, sleep);
+  const moving = (g.spd !== undefined ? g.spd : Math.abs(g.vx)) > 5 && curl < 0.5, ph = g.ph;
+  ctx.save(); ctx.translate(g.x, g.y); ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+  const trem = (fear * (1 - sleep)) * Math.sin(t * 40) * 0.8;
+  // animation des poils
+  const mvK = g.mvS || 0, hz = g.hz || 0, flo = g.flo || 0, jig = g.jig || 0, bris = g.brisS || 0;
+  const shk = g.shakeT > 0 ? (g.shk || 0) : (g.shake || 0);
+  const bob = Math.abs(Math.sin(g.ph)) * 1.5 * mvK;           // le corps monte à chaque foulée, le bas des poils suit en retard
+  { const zs = 1 / (1 + hz / 18); ell(0, 0.5, 27 * zs, 5 * zs, 0, 'rgba(30,24,36,.25)', 1); }
+  ctx.translate(trem, -hz - bob);
+  // il s'ébroue : la tête et le corps tournent vite d'un côté à l'autre
+  if (shk > 0) { ctx.translate(0, -20); ctx.rotate(shk * 0.09 * Math.sin(t * 34)); ctx.translate(0, 20); }
+  // il renifle : penché vers l'avant, le nez au sol ; il aboie : il se redresse un peu
+  const sn = g.sniffS || 0, bk = g.barkS || 0;
+  ctx.rotate(fd * (0.14 * sn - 0.07 * bk));
+  // proportions : roulé en boule (peur, dodo) = plus bas, plus rond, plus de pieds
+  const R = 25 + curl * 1.5, cy = -27 + curl * 7 + g.sq * 0.5, ry = 21 - curl * 3 - g.sq * 0.4, bot = -8 + curl * 7;
+  const breathe = Math.sin(t * (sleep ? 1.5 : 2.2)) * (sleep ? 0.8 : 0.4);
+  const th = f * 0.75, proj = (u, r) => ({ x: Math.sin(th + u) * r, k: Math.cos(th + u) });
+  const lag = g.lag;
+  // décalage des poils : le bas traîne (ressort), le haut reste ; plus une ondulation qui parcourt le bas de la jupe à chaque foulée,
+  // une petite brise au repos, le fouet de l'ébrouement, le frisson des poils hérissés ; le bas reste plus bas quand le corps monte
+  const W = (y) => clamp((y - (cy - ry)) / (bot - (cy - ry)), 0, 1);
+  const ripple = (x) => Math.sin(ph - x * 0.16) * 2.3 * mvK + Math.sin(t * 1.7 - x * 0.11) * 0.6 * (1 - mvK) * (1 - curl);
+  const whip = shk * 7.5 * Math.sin(t * 34 - 0.6) + bris * 0.5 * Math.sin(t * 47);
+  const S = (x, y) => { const w = W(y), w2 = w * w; return [x + lag * w2 + ripple(x) * w2 * w + whip * (0.15 + 0.85 * w), y + (bob * 0.7 - flo) * w2]; };
+  // ---- côté lointain : queue, corne lointaine, pieds lointains ----
+  const tailOn = af > 0.2 || curl > 0.5;
+  const tb = [-fd * (R * 0.66), cy - ry * 0.6];
+  const drawTail = () => {
+    const wag = Math.sin(t * (4 + joy * 12)) * (0.12 + joy * 0.4) * (1 - fear * 0.7) + g.tail;
+    const up = curl > 0.5 ? 0.2 : 1 - fear * 0.6;
+    const base = -Math.PI / 2 - fd * (0.55 - up * 0.2) + wag;
+    const L = 19 * (0.6 + 0.4 * up);
+    const tip = [tb[0] + Math.cos(base) * L, tb[1] + Math.sin(base) * L];
+    for (let i = 0; i < 6; i++) {
+      const a = base + (i - 2.5) * 0.22, l = L * (0.85 + blr(i, 3) * 0.3), bend = fd * (3 + i * 0.4);
+      blLock(tb[0], tb[1], tb[0] + Math.cos(a) * l, tb[1] + Math.sin(a) * l, bend, 3.6, i % 2 ? P.m : P.l, 1.4);
+    }
+    const glow = clamp(0.45 + joy * 0.55 - fear * 0.35 + (sleep ? 0.1 : 0), 0.12, 1) * (0.88 + 0.12 * Math.sin(t * 11));
+    softSpot(tip[0], tip[1] - 2, 12 * glow + 4, 12 * glow + 4, 0, '255,170,80', 0.5 * glow);
+    const ex = tip[0], ey = tip[1], fl = Math.sin(t * 13) * 1.2;
+    ctx.beginPath(); ctx.moveTo(ex - 3.6, ey + 1); ctx.quadraticCurveTo(ex - 4, ey - 4.5, ex + fl, ey - 9 - glow * 3); ctx.quadraticCurveTo(ex + 4, ey - 4, ex + 3.6, ey + 1); ctx.quadraticCurveTo(ex, ey + 3.5, ex - 3.6, ey + 1); ctx.closePath();
+    ctx.fillStyle = radial(ex, ey - 1, 0.5, ex, ey - 3, 8, [[0, BL.emA], [0.5, BL.emB], [1, BL.emC]]); ctx.fill(); ctx.lineWidth = 1.2; ctx.strokeStyle = BL.ink; ctx.stroke();
+  };
+  if (tailOn) drawTail();
+  const horns = [{ u: -1.05 }, { u: 1.05 }].map((h) => ({ ...h, p: proj(h.u, R * 0.78) })).sort((a, b) => a.p.k - b.p.k);
+  const hornY = cy - ry * 0.62, hsc = P.hornT === 'diable' ? 1.15 : 1;
+  const hornAt = (h, near) => blHorn(h.p.x, hornY + (near ? 0 : -1), h.p.x < 0 ? -1 : 1, P.hornT, P.horn, near, hsc);
+  hornAt(horns[0], false);
+  // oreilles de bébé yak : à l'horizontale sur les côtés, sous les cornes, intérieur rose ; elles tombent quand il a peur
+  const earsY = cy - ry * 0.3;
+  const earAt = (u, near) => {
+    const q = proj(u, R * 0.98); const sd = q.x < 0 ? -1 : 1; if (!near && q.k > 0.6) return;
+    const droop = 0.25 + fear * 0.6 - joy * 0.15 + Math.sin(t * 2.2 + u) * 0.04, x0 = q.x * (near ? 0.96 : 1), L = 11;
+    const a = sd > 0 ? droop : Math.PI - droop, ex = x0 + Math.cos(a) * L, ey = earsY + Math.sin(a) * L;
+    const nx2 = -Math.sin(a), ny2 = Math.cos(a);
+    const e = new Path2D(); e.moveTo(x0 + nx2 * 3.6, earsY + ny2 * 3.6); e.quadraticCurveTo(x0 + Math.cos(a) * L * 0.6 + nx2 * 5, earsY + Math.sin(a) * L * 0.6 + ny2 * 5, ex, ey);
+    e.quadraticCurveTo(x0 + Math.cos(a) * L * 0.6 - nx2 * 4.5, earsY + Math.sin(a) * L * 0.6 - ny2 * 4.5, x0 - nx2 * 3.6, earsY - ny2 * 3.6); e.closePath();
+    ctx.fillStyle = near ? P.m : P.d; ctx.fill(e); ctx.lineWidth = near ? 1.5 : 1.3; ctx.strokeStyle = BL.ink; ctx.stroke(e);
+    if (near) { ctx.beginPath(); ctx.moveTo(x0 + Math.cos(a) * 2.5, earsY + Math.sin(a) * 2.5); ctx.quadraticCurveTo(x0 + Math.cos(a) * 6 + nx2 * 1.6, earsY + Math.sin(a) * 6 + ny2 * 1.6, ex - Math.cos(a) * 2, ey - Math.sin(a) * 2); ctx.lineWidth = 2.6; ctx.strokeStyle = 'rgba(232,150,175,.75)'; ctx.stroke(); }
+  };
+  const earsU = [-1.25, 1.25].map((u) => ({ u, k: proj(u, 1).k })).sort((a, b) => a.k - b.k);
+  if (P.yak) earAt(earsU[0].u, false);
+  // pieds : quatre petits ronds qui dépassent ; trot en diagonale, pied posé immobile
+  const feet = [{ x: fd * 11, near: false, phs: Math.PI }, { x: -fd * 11, near: false, phs: 0 }, { x: fd * 11, near: true, phs: 0 }, { x: -fd * 11, near: true, phs: Math.PI }];
+  const sep = (1 - af) * 7;
+  const footAt = (F) => {
+    // appui (première moitié) : le pied recule de +L/2 à -L/2 à la vitesse du corps ; envol : il revient vite, un peu levé
+    let sw = 0, lift = 0;
+    if (moving) {
+      const L = BL_STRIDE / 2, u = (((ph + F.phs) / TAU) % 1 + 1) % 1;
+      if (u < 0.5) sw = (L / 2 - (u / 0.5) * L) * fd;
+      else { const q = (u - 0.5) / 0.5, e = q * q * (3 - 2 * q); sw = (-L / 2 + e * L) * fd; lift = Math.sin(q * Math.PI) * 3.2; }
+    }
+    return { x: F.x * (0.45 + 0.55 * af) + (F.near ? -sep : sep) + sw, y: (F.near ? 0 : -1.8 * af) - lift, lift };
+  };
+  const drawFoot = (F) => {
+    const a = footAt(F), col = F.near ? P.m : P.d;
+    if (a.lift < 0.5) ell(a.x + fd, a.y + 0.6, 5, 1.3, 0, 'rgba(30,24,36,.28)', 1);
+    if (P.yak) {
+      // un petit sabot fendu, sombre et brillant, sous une touffe de poils
+      const hx = a.x + fd * 0.6, hy = a.y;
+      ctx.beginPath(); ctx.moveTo(hx - 4.4, hy); ctx.lineTo(hx - 3.6, hy - 6); ctx.quadraticCurveTo(hx, hy - 7, hx + 3.6, hy - 6); ctx.lineTo(hx + 4.4, hy); ctx.closePath();
+      ctx.fillStyle = F.near ? radial(hx - 1.5, hy - 5, 0.4, hx, hy - 2.5, 6.5, [[0, '#a497b0'], [1, '#4a4152']]) : '#3a3340'; ctx.fill();
+      ctx.lineWidth = F.near ? 1.5 : 1.2; ctx.strokeStyle = BL.ink; ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(hx + fd * 0.6, hy); ctx.lineTo(hx + fd * 0.4, hy - 3); ctx.lineWidth = 1; ctx.stroke();
+      if (F.near) ell(hx - 1.8, hy - 3.6, 1.1, 0.6, -0.3, 'rgba(255,255,255,.5)', 1);
+    } else {
+    ctx.beginPath(); ctx.ellipse(a.x + fd * 0.8, a.y - 2.6, 5.2, 3.6, 0, 0, TAU);
+    ctx.fillStyle = F.near ? radial(a.x - 1.5, a.y - 4, 0.5, a.x, a.y - 2.6, 6, [[0, P.l], [1, P.m]]) : col; ctx.fill();
+    ctx.lineWidth = F.near ? 1.6 : 1.3; ctx.strokeStyle = BL.ink; ctx.stroke();
+    ctx.beginPath(); for (const o of [-1.4, 1.4]) { ctx.moveTo(a.x + fd * 2.2 + o, a.y - 0.4); ctx.lineTo(a.x + fd * 2.2 + o, a.y - 2); } ctx.lineWidth = 0.8; ctx.strokeStyle = 'rgba(61,51,71,.6)'; ctx.stroke();
+    }
+  };
+  if (curl < 0.6) { ctx.save(); ctx.translate(0, bob + (hz > 0.5 ? -1.5 : 0)); for (const F of feet.filter((q) => !q.near)) drawFoot(F); for (const F of feet.filter((q) => q.near)) drawFoot(F); ctx.restore(); }
+  // ---- la sacoche (si le zombie la lui a attachée) ----
+  const bagK = g.bag || 0, bagPop = g.bagPop || 0;
+  const bagBehind = bagK > 0 && !sleep && af < 0.35;   // de face : elle dépasse derrière le dos
+  // sur l'arrière du dos, derrière l'oreille et la corne (elles passent devant) ; de face, elle dépasse au-dessus
+  const bagX = -fd * 20 * af, bagY = (bagBehind ? cy - ry - 3 : cy - ry * 0.62 - 1) + curl * 4 - (moving ? Math.abs(Math.sin(ph)) * 1.6 : 0) - bagPop * 3;
+  const drawBagOn = () => {
+    ctx.save(); const p = S(bagX, bagY); ctx.translate(p[0], p[1]); ctx.rotate(-fd * 0.32 * af + lag * 0.012 + Math.sin(t * 20) * bagPop * 0.12);
+    const sc = bagK * 1.12 * (1 + bagPop * 0.18); ctx.scale(sc, sc);
+    // les attaches de la sangle, qui disparaissent dans la fourrure
+    for (const sx of [-6.5, 6.5]) { ctx.beginPath(); ctx.moveTo(sx, -2); ctx.lineTo(sx + sx * 0.05, 3); ctx.lineWidth = 4; ctx.strokeStyle = BL.ink; ctx.stroke(); ctx.lineWidth = 2.4; ctx.strokeStyle = '#a8455a'; ctx.stroke(); }
+    blBag(curl > 0.5 ? 0.78 : 1);
+    ctx.restore();
+  };
+  // au dodo : posée par terre à côté de lui
+  if (bagK > 0 && sleep) { ctx.save(); ctx.translate(-fd * (R + 9), 1); ctx.rotate(-fd * 0.08); ctx.scale(bagK, bagK); blBag(0.92); ctx.restore(); }
+  if (bagBehind) drawBagOn();
+  // ---- la masse de poils ----
+  const body = new Path2D();
+  const mv = (x, y) => { const p = S(x, y); body.moveTo(p[0], p[1]); }, qd = (a, b, c, d) => { const p1 = S(a, b), p2 = S(c, d); body.quadraticCurveTo(p1[0], p1[1], p2[0], p2[1]); };
+  // côté gauche, de bas en haut, en mèches
+  // une boule : les flancs s'arrondissent et rentrent vers le bas
+  mv(-R + 4, bot);
+  qd(-R - 2.5, bot - 1, -R - 2.5, (bot + cy) / 2 + 1);
+  qd(-R - 4, cy - 1, -R + 0.5, cy - 5);
+  // le dessus, en bosses douces
+  const n = 8;
+  for (let k = 0; k < n; k++) {
+    const a0 = Math.PI + 0.2 + (Math.PI - 0.4) * k / n, a1 = Math.PI + 0.2 + (Math.PI - 0.4) * (k + 1) / n, am = (a0 + a1) / 2;
+    const bump = (4.2 + blr(k, 1) * 1.5 + breathe * (sleep ? 1 : 0.4) + jig * (k % 2 ? 0.5 : -0.4) + shk * 2) * (1 - 0.3 * fear * (1 - curl));
+    const C0 = [Math.cos(am) * (R + bump), cy + Math.sin(am) * (ry + bump) - 1], P1 = [Math.cos(a1) * R, cy + Math.sin(a1) * ry - 1];
+    const spike = bris * (3.2 + blr(k, 41) * 2.2) + shk * 1.4 * blr(k, 42);
+    if (spike < 0.05) { qd(C0[0], C0[1], P1[0], P1[1]); continue; }
+    // la bosse coupée en deux (identique à spike = 0), le milieu poussé vers l'extérieur : une pointe de poils
+    const P0 = [Math.cos(a0) * R, cy + Math.sin(a0) * ry - 1], dx = Math.cos(am), dy = Math.sin(am);
+    const M = [(P0[0] + 2 * C0[0] + P1[0]) / 4 + dx * spike, (P0[1] + 2 * C0[1] + P1[1]) / 4 + dy * spike];
+    qd((P0[0] + C0[0]) / 2 - dx * spike * 0.3, (P0[1] + C0[1]) / 2 - dy * spike * 0.3, M[0], M[1]);
+    qd((C0[0] + P1[0]) / 2 - dx * spike * 0.3, (C0[1] + P1[1]) / 2 - dy * spike * 0.3, P1[0], P1[1]);
+  }
+  qd(R + 4, cy - 1, R + 2.5, (bot + cy) / 2 + 1);
+  qd(R + 2.5, bot - 1, R - 4, bot);
+  // la frange du bas : pointes de mèches au-dessus des petits pieds
+  const m = 8;
+  for (let k = 0; k < m; k++) {
+    const x0 = R - 4 - (2 * R - 8) * k / m, x1 = R - 4 - (2 * R - 8) * (k + 1) / m, xm = (x0 + x1) / 2;
+    const tipY = bot + 3.2 + blr(k, 2) * 1.4 - curl * 1.5 + bris * (k % 2 ? 1.6 : 0.6), notch = bot - 1.5;
+    qd(x0 - (x0 - xm) * 0.3, tipY, xm, tipY + 0.4);
+    qd(xm - 1, notch + 1.5, x1, notch);
+  }
+  body.closePath();
+  ctx.fillStyle = radial(-9, cy - ry * 0.7, 2, 0, cy, R + 12, [[0, P.l], [0.5, P.m], [1, P.d]]); ctx.fill(body);
+  ctx.save(); ctx.clip(body);
+  // ombre du bas et de l'arrière
+  softSpot(0, bot - 2, R + 4, 9, 0, '30,20,45', 0.3);
+  softSpot(-fd * R * 0.6, cy + 4, 14, 18, 0, '30,20,45', 0.18);
+  // les longues mèches : sombres en dessous, claires sur le dessus (formes pleines, fixes)
+  for (let i = 0; i < 14; i++) {
+    const a = Math.PI + 0.15 + (Math.PI - 0.3) * blr(i, 5), r0 = 0.25 + blr(i, 6) * 0.35;
+    const x0 = Math.cos(a) * R * r0, y0 = cy - ry * 0.35 + Math.sin(a) * ry * r0 * 0.8;
+    const x1 = Math.cos(a) * R * (0.95 + blr(i, 7) * 0.15) * 1.02, y1 = bot + 2 - blr(i, 8) * 8;
+    const p0 = S(x0, y0), p1 = S(x1, y1);
+    blLock(p0[0], p0[1], p1[0], p1[1], (x1 > 0 ? 1 : -1) * (2 + blr(i, 9) * 3), 2 + blr(i, 4), i % 3 ? 'rgba(40,28,58,.12)' : 'rgba(255,255,255,.1)');
+  }
+  for (let i = 0; i < 3; i++) {
+    const a = Math.PI + 0.35 + 0.5 * blr(i, 11), x0 = Math.cos(a) * R * 0.3, y0 = cy - ry * 0.8;
+    const p0 = S(x0 - 5, y0), p1 = S(Math.cos(a) * R * 0.75, cy - ry * 0.1 + blr(i, 12) * 6);
+    blLock(p0[0], p0[1], p1[0], p1[1], -3, 2.2, 'rgba(255,255,255,' + (0.2 + blr(i, 13) * 0.12).toFixed(3) + ')');
+  }
+  // traits d'encre fins dans les creux (bas et arrière)
+  ctx.strokeStyle = 'rgba(21,17,28,.32)'; ctx.lineWidth = 0.9; ctx.beginPath();
+  for (let i = 0; i < 7; i++) { const x = -R + 6 + i * (2 * R - 12) / 6, p0 = S(x, bot - 10 - blr(i, 14) * 5), p1 = S(x + (x > 0 ? 1.5 : -1.5), bot - 1); ctx.moveTo(p0[0], p0[1]); ctx.quadraticCurveTo(p0[0] + 1.5, (p0[1] + p1[1]) / 2, p1[0], p1[1]); }
+  ctx.stroke();
+  // pointes colorées (charbon : pointes braise)
+  // pointes de poils braise : elles rougeoient plus fort quand il est content, et juste avant d'aboyer (un avertissement)
+  if (g.pal === 'charbon' || P.red) { const hot = clamp(0.45 + joy * 0.2 + bk * 0.5 + (g.warn || 0) * 0.5 * (0.6 + 0.4 * Math.sin(t * 9)), 0, 1); for (let k = 0; k < 9; k++) { const x = R - (2 * R) * (k + 0.5) / 9, p = S(x, bot + 2); softSpot(p[0], p[1], 4 + hot * 2, 4 + hot * 2, 0, '255,140,90', hot); } }
+  // pièce ocre cousue dans le pelage, sur son flanc droit (on la voit quand il regarde à gauche)
+  { const a = proj(-1.15, R * 0.86); if (a.k > 0.2) { const p = S(a.x, cy + 6); ctx.save(); ctx.translate(p[0], p[1]); ctx.rotate(-0.12); ctx.scale(a.k, 1);
+      ctx.beginPath(); ctx.rect(-4.5, -3.8, 9, 7.6); ctx.fillStyle = BL.patch; ctx.fill(); ctx.lineWidth = 1.1; ctx.strokeStyle = BL.ink; ctx.stroke();
+      ctx.lineWidth = 0.9; ctx.beginPath(); for (const [a1, b1, a2, b2] of [[-5.6, -2, -3.6, -2], [-5.6, 1.6, -3.6, 1.6], [3.6, -2, 5.6, -2], [3.6, 1.6, 5.6, 1.6]]) { ctx.moveTo(a1, b1); ctx.lineTo(a2, b2); } ctx.stroke(); ctx.restore(); } }
+  ctx.restore();
+  // contour : fin partout, plus épais en bas et à l'arrière
+  if (P.rim) {
+    // liseré froid à l'intérieur du contour, en haut à gauche (côté lumière), pour le détacher du fond la nuit
+    ctx.save(); ctx.clip(body);
+    const gr = ctx.createLinearGradient(-R, cy - ry, R * 0.6, bot); gr.addColorStop(0, P.rim); gr.addColorStop(0.45, 'rgba(169,147,198,0)'); gr.addColorStop(1, 'rgba(169,147,198,0)');
+    ctx.lineWidth = 5; ctx.strokeStyle = gr; ctx.stroke(body);
+    ctx.restore();
+  }
+  ctx.lineWidth = 2; ctx.strokeStyle = BL.ink; ctx.stroke(body);
+  ctx.save(); ctx.beginPath(); ctx.rect(-60, bot - 6, 120, 20); ctx.rect(fd > 0 ? -60 : 2, -90, 58, 100); ctx.clip(); ctx.lineWidth = 3; ctx.stroke(body); ctx.restore();
+  if (!tailOn) drawTail();
+  if (bagK > 0 && !sleep && !bagBehind) drawBagOn();
+  // ---- le visage ----
+  const fc = proj(0, R * 0.92), fx = fc.x, eyeY = cy + 1.5 + curl * 1.5 + sn * 3;
+  const eyes = [0.42, -0.42].map((u) => proj(u, R * 0.9));
+  const hide = curl > 0.5 ? 1 : 0;
+  for (const e of eyes) if (e.k > 0.12) blEye(e.x, eyeY, 0.4 + 0.6 * e.k, g, sleep);
+  for (const u of [0.78, -0.78]) { const e = proj(u, R * 0.88); if (e.k > 0.2 && !hide) softSpot(e.x, eyeY + 7.5, 4.6 * e.k + 1, 2.6, 0, BL.cheek, 0.55 + joy * 0.2); }
+  if (!hide) {
+    // truffe
+    const nx = fx * 1.04, ny = eyeY + 7.5;
+    // sur le pelage noir, un museau un peu plus clair pour que la truffe et le sourire se lisent
+    if (P.yak) {
+      // museau de veau : large et rond, deux narines
+      // museau de veau : un coussinet large et doux, un peu plus large en bas, rose-gris et légèrement humide
+      const mk = 0.75 + 0.25 * fc.k, w = 7.6 * mk, mx = nx, my = ny + 1.6;
+      const mz = new Path2D();
+      mz.moveTo(mx - w * 0.78, my - 4.6);
+      mz.bezierCurveTo(mx - w * 0.35, my - 6.6, mx + w * 0.35, my - 6.6, mx + w * 0.78, my - 4.6);
+      mz.bezierCurveTo(mx + w * 1.12, my - 2.4, mx + w * 1.08, my + 4.2, mx + w * 0.6, my + 5.6);
+      mz.bezierCurveTo(mx + w * 0.25, my + 6.6, mx - w * 0.25, my + 6.6, mx - w * 0.6, my + 5.6);
+      mz.bezierCurveTo(mx - w * 1.08, my + 4.2, mx - w * 1.12, my - 2.4, mx - w * 0.78, my - 4.6); mz.closePath();
+      ctx.fillStyle = radial(mx - 2.5, my - 3, 0.5, mx, my, w * 1.2, [[0, '#a898a8'], [0.55, '#837185'], [1, '#5a4c60']]); ctx.fill(mz);
+      ctx.save(); ctx.clip(mz); softSpot(mx, my + 5, w * 0.9, 3, 0, '40,28,45', 0.3); ctx.restore();
+      // contour fin, seulement en bas (le haut se fond dans la fourrure)
+      ctx.save(); ctx.beginPath(); ctx.rect(mx - 20, my - 1, 40, 20); ctx.clip(); ctx.lineWidth = 1.1; ctx.strokeStyle = BL.ink; ctx.stroke(mz); ctx.restore();
+      // le reflet humide du nez, et le petit sillon au milieu
+      ell(mx - 2.4 * mk, my - 3, 1.6 * mk, 0.6, -0.15, 'rgba(255,255,255,.35)', 1);
+      ctx.beginPath(); ctx.moveTo(mx, my - 0.6); ctx.lineTo(mx, my + 2.4); ctx.lineWidth = 0.8; ctx.strokeStyle = 'rgba(40,26,38,.6)'; ctx.stroke();
+      // le haut du museau se fond dans la fourrure (dégradé couleur pelage)
+      ctx.save(); ctx.clip(mz); const gf = ctx.createLinearGradient(0, my - 6.6, 0, my - 1.5); gf.addColorStop(0, P.m); gf.addColorStop(1, 'rgba(91,82,104,0)'); ctx.fillStyle = gf; ctx.fillRect(mx - 20, my - 8, 40, 7); ctx.restore();
+      for (const sx of [-1, 1]) { ctx.save(); ctx.translate(mx + sx * 3.3 * mk, my - 1.8); ctx.beginPath(); ctx.ellipse(0, 0, 0.8, 1.5, -sx * 0.5, 0, TAU); ctx.fillStyle = '#2e1c28'; ctx.fill(); ctx.restore(); }
+    } else {
+    if (P.muzzle) { ctx.beginPath(); ctx.ellipse(nx, ny + 2.2, 7.5, 5.6, 0, 0, TAU); ctx.fillStyle = radial(nx - 2, ny, 0.5, nx, ny + 2, 8, [[0, P.muzzle[0]], [1, P.muzzle[1]]]); ctx.fill(); ctx.lineWidth = 1; ctx.strokeStyle = 'rgba(21,17,28,.6)'; ctx.stroke(); }
+    ctx.beginPath(); ctx.moveTo(nx - 3.2, ny - 1.4); ctx.quadraticCurveTo(nx, ny - 3, nx + 3.2, ny - 1.4); ctx.quadraticCurveTo(nx + 1.6, ny + 2.4, nx, ny + 2.4); ctx.quadraticCurveTo(nx - 1.6, ny + 2.4, nx - 3.2, ny - 1.4);
+    ctx.fillStyle = '#2a1a22'; ctx.fill(); ell(nx - 1, ny - 1, 1, 0.6, 0, 'rgba(255,255,255,.8)', 1);
+    }
+    // bouche, langue
+    if (P.yak) {
+      // la bouche : un petit sourire doux sous le sillon (pas de « w » de chat)
+      const my = ny + 1.4;
+      ctx.beginPath();
+      if (bk > 0.3) { ctx.ellipse(nx, my + 3.4, 2.6, 2.2 * bk, 0, 0, TAU); ctx.fillStyle = '#5a2236'; ctx.fill(); ctx.lineWidth = 1.1; ctx.strokeStyle = BL.ink; ctx.stroke(); ell(nx, my + 4.6, 1.8, 0.9, 0, '#e98aa6', 1); }
+      else if (fear > 0.4) { ctx.moveTo(nx - 2, my + 4); ctx.quadraticCurveTo(nx, my + 2.7, nx + 2, my + 4); ctx.lineWidth = 1.2; ctx.strokeStyle = '#3a2030'; ctx.stroke(); }
+      else { ctx.moveTo(nx - 2.2, my + 2.6); ctx.quadraticCurveTo(nx, my + 4.2, nx + 2.2, my + 2.6); ctx.lineWidth = 1.2; ctx.strokeStyle = '#3a2030'; ctx.stroke(); }
+      if (g.toy) { /* le ballon, dessiné par-dessus à la fin */ }
+      else if (g.apple) { ctx.save(); ctx.translate(nx + fd * 1, ny + 6.5); ctx.beginPath(); ctx.arc(-1.6, 0, 4.2, 0, TAU); ctx.arc(1.6, 0, 4.2, 0, TAU); ctx.fillStyle = radial(-2, -2, 0.5, 0, 0, 6, [[0, '#ff8a8a'], [1, '#c8323f']]); ctx.fill(); ctx.lineWidth = 1.2; ctx.strokeStyle = BL.ink; ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(0, -3.5); ctx.lineTo(0.6, -6.5); ctx.stroke(); ctx.beginPath(); ctx.ellipse(2.4, -5.8, 2.2, 1.1, -0.4, 0, TAU); ctx.fillStyle = '#8fbf6a'; ctx.fill(); ctx.stroke(); ell(-3, -1.5, 1.1, 0.7, -0.5, 'rgba(255,255,255,.6)', 1); ctx.restore(); }
+      else if (joy > 0.5 && bk < 0.3) { ctx.beginPath(); ctx.moveTo(nx - 1.8, my + 3.4); ctx.quadraticCurveTo(nx - 2, my + 7.6, nx + 0.2, my + 7.6); ctx.quadraticCurveTo(nx + 2, my + 7.6, nx + 1.8, my + 3.4); ctx.closePath(); ctx.fillStyle = '#f08aa4'; ctx.fill(); ctx.lineWidth = 1; ctx.strokeStyle = BL.ink; ctx.stroke(); }
+    } else {
+    ctx.beginPath(); ctx.moveTo(nx, ny + 2.4); ctx.lineTo(nx, ny + 3.6);
+    if (bk > 0.3) { ctx.stroke(); ctx.beginPath(); ctx.ellipse(nx, ny + 6.2, 4, 3.8 * bk, 0, 0, TAU); ctx.fillStyle = '#5a2236'; ctx.fill(); ctx.lineWidth = 1.2; ctx.strokeStyle = BL.ink; ctx.stroke(); ell(nx, ny + 7.8, 2.2, 1.3, 0, '#e98aa6', 1); ctx.beginPath(); }
+    else if (fear > 0.4) { ctx.moveTo(nx - 3, ny + 5.2); ctx.quadraticCurveTo(nx, ny + 3.6, nx + 3, ny + 5.2); }
+    else { ctx.moveTo(nx - 3.6, ny + 3.2); ctx.quadraticCurveTo(nx - 1.8, ny + 5.2, nx, ny + 3.6); ctx.quadraticCurveTo(nx + 1.8, ny + 5.2, nx + 3.6, ny + 3.2); }
+    ctx.lineWidth = 1.3; ctx.strokeStyle = '#2a1a22'; ctx.stroke();
+    if (g.apple) { ctx.save(); ctx.translate(nx + fd * 1, ny + 6.5); ctx.beginPath(); ctx.arc(-1.6, 0, 4.2, 0, TAU); ctx.arc(1.6, 0, 4.2, 0, TAU); ctx.fillStyle = radial(-2, -2, 0.5, 0, 0, 6, [[0, '#ff8a8a'], [1, '#c8323f']]); ctx.fill(); ctx.lineWidth = 1.2; ctx.strokeStyle = BL.ink; ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(0, -3.5); ctx.lineTo(0.6, -6.5); ctx.stroke(); ctx.beginPath(); ctx.ellipse(2.4, -5.8, 2.2, 1.1, -0.4, 0, TAU); ctx.fillStyle = '#8fbf6a'; ctx.fill(); ctx.stroke(); ell(-3, -1.5, 1.1, 0.7, -0.5, 'rgba(255,255,255,.6)', 1); ctx.restore(); }
+    else if (g.bone) { ctx.save(); ctx.translate(nx, ny + 4.5); ctx.rotate(0.08 * fd); solBone(-12, 0, 12, 0, 3.6); ctx.restore(); }
+    else if (joy > 0.5 && bk < 0.3) { ctx.beginPath(); ctx.moveTo(nx - 1.9, ny + 4.4); ctx.quadraticCurveTo(nx - 2.1, ny + 9.5, nx + 0.2, ny + 9.5); ctx.quadraticCurveTo(nx + 2.1, ny + 9.5, nx + 1.9, ny + 4.4); ctx.closePath(); ctx.fillStyle = '#f08aa4'; ctx.fill(); ctx.lineWidth = 1; ctx.strokeStyle = BL.ink; ctx.stroke(); }
+    }
+    // le grelot, à moitié caché dans les poils sous le menton
+    if (P.yak) {
+      // une petite cloche de vache, en laiton, sur une sangle rouge
+      ctx.save(); ctx.translate(fx * 0.9, ny + 8.5); ctx.rotate(g.bell * 0.6);
+      ctx.beginPath(); ctx.moveTo(-2.6, 0); ctx.lineTo(2.6, 0); ctx.lineTo(4.2, 7.5); ctx.quadraticCurveTo(0, 8.8, -4.2, 7.5); ctx.closePath();
+      ctx.fillStyle = radial(-1.5, 2, 0.3, 0, 4, 6, [[0, '#fff1b8'], [1, '#c99a3c']]); ctx.fill(); ctx.lineWidth = 1.2; ctx.strokeStyle = BL.ink; ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(-3.3, 5.2); ctx.lineTo(3.3, 5.2); ctx.lineWidth = 0.8; ctx.stroke();
+      ell(0, 8.6, 1.3, 1.3, 0, '#5a4630', 1); ctx.restore();
+    } else {
+    ctx.save(); ctx.translate(fx * 0.9, ny + 9.5); ctx.rotate(g.bell * 0.6);
+    ctx.beginPath(); ctx.arc(0, 2.6, 3.3, 0, TAU); ctx.fillStyle = radial(-1.2, 1.4, 0.3, 0, 2.6, 4, [[0, '#fff6c8'], [1, '#d6ae4a']]); ctx.fill(); ctx.lineWidth = 1.2; ctx.strokeStyle = BL.ink; ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(-1.5, 3.9); ctx.lineTo(1.5, 3.9); ctx.lineWidth = 0.8; ctx.stroke(); ctx.restore();
+    }
+    for (const dx of [-5, 4]) { const p0 = [fx + dx, ny + 7], p1 = [fx + dx * 1.3, ny + 14]; blLock(p0[0], p0[1], p1[0], p1[1], dx > 0 ? 1.5 : -1.5, 2, P.m, 0); }
+  }
+  // oreille et corne proches
+  if (P.yak) earAt(earsU[1].u, true);
+  hornAt(horns[1], true);
+  // ---- la frange : elle cache le haut des yeux ; content, elle se soulève ; peur, elle tombe dessus ----
+  const lift = joy * 4 - fear * 3 - curl * 3 + g.fr * 0.35 + bk * 5;
+  const fr0 = cy - ry * 0.82;
+  // une frange d'un seul tenant (comme des cheveux de manga) : le haut épouse la tête, le bas en pointes douces
+  const tipY = eyeY - 2.2 - lift;
+  const us = [0.95, 0.55, 0.18, -0.18, -0.55, -0.95];
+  const pts = us.map((u) => proj(u, R * 0.95)).map((q) => q.k > -0.1 ? q.x : null);
+  const vis = us.map((u, k) => ({ u, x: pts[k], k: proj(u, 1).k })).filter((q) => q.x !== null && q.k > 0.02);
+  if (vis.length >= 2) {
+    const fp = new Path2D(), L0 = vis[0], L1 = vis[vis.length - 1];
+    fp.moveTo(L0.x, fr0 + 4);
+    const topC = proj((L0.u + L1.u) / 2, R * 0.5);
+    fp.quadraticCurveTo(topC.x, fr0 - 9, L1.x, fr0 + 4);
+    // le bord du bas, en pointes (de gauche à droite à l'écran : on suit vis à l'envers)
+    const order = vis.slice().reverse();
+    let prev = [L1.x, fr0 + 4];
+    order.forEach((q, k) => {
+      const ty = tipY + (k % 2 ? 1.6 : 0) + blr(k, 23) * 1.2 - Math.abs(q.u) * 2.5;
+      if (k === 0) { fp.quadraticCurveTo(q.x - 1, (prev[1] + ty) / 2, q.x, ty); prev = [q.x, ty]; return; }
+      const nx = (prev[0] + q.x) / 2, ny = Math.min(prev[1], ty) - 5;
+      fp.quadraticCurveTo(nx - (q.x - prev[0]) * 0.1, ny + 1, nx, ny);
+      fp.quadraticCurveTo(nx + (q.x - prev[0]) * 0.15, ny + 1, q.x, ty); prev = [q.x, ty];
+    });
+    fp.quadraticCurveTo(L0.x + 1, (prev[1] + fr0 + 4) / 2, L0.x, fr0 + 4); fp.closePath();
+    ctx.fillStyle = radial(-6, fr0 - 4, 1, 0, fr0 + 4, R, [[0, P.tip === '#ff9a6a' ? P.l : P.tip], [0.5, P.l], [1, P.m]]); ctx.fill(fp);
+    if (P.red) { const gf = ctx.createLinearGradient(0, tipY - 9, 0, tipY + 1); gf.addColorStop(0, 'rgba(200,60,70,0)'); gf.addColorStop(1, 'rgba(225,75,80,' + (0.75 + joy * 0.25).toFixed(2) + ')'); ctx.fillStyle = gf; ctx.fill(fp); }
+    ctx.save(); ctx.clip(fp);
+    ctx.strokeStyle = 'rgba(40,28,58,.25)'; ctx.lineWidth = 1; ctx.beginPath();
+    for (let k = 1; k < order.length; k++) { const a = (order[k - 1].x + order[k].x) / 2; ctx.moveTo(a * 0.6, fr0 - 2); ctx.quadraticCurveTo(a * 0.85, (fr0 + tipY) / 2, a, tipY - 4); }
+    ctx.stroke(); softSpot(-8, fr0, 14, 6, 0, '255,255,255', 0.3); ctx.restore();
+    // contour seulement sur les pointes : le haut de la frange se fond dans la fourrure
+    ctx.save(); ctx.beginPath(); ctx.rect(-80, fr0 + 3, 160, 60); ctx.clip(); ctx.lineWidth = 1.5; ctx.strokeStyle = BL.ink; ctx.stroke(fp); ctx.restore();
+    // une mèche de la frange nouée d'une croix de laine (raccommodage), toujours la même
+    const wq = vis.find((q) => q.u === -0.55) || null;
+    if (wq) { const cxw = wq.x, cyw = tipY - 5, h = 2.3; ctx.beginPath(); ctx.moveTo(cxw - h, cyw - h); ctx.lineTo(cxw + h, cyw + h); ctx.moveTo(cxw + h, cyw - h); ctx.lineTo(cxw - h, cyw + h); ctx.lineWidth = 2.6; ctx.strokeStyle = BL.ink; ctx.stroke(); ctx.lineWidth = 1.5; ctx.strokeStyle = BL.wool; ctx.stroke(); }
+  }
+  // roulé en boule : on ne voit plus que deux lueurs sous la frange
+  if (hide && !sleep) for (const e of eyes) if (e.k > 0.2) { softSpot(e.x, eyeY + 2, 3.5, 2.5, 0, '255,170,80', 0.8); ell(e.x, eyeY + 2, 1.3, 0.9, 0, '#fff1a8', 1); }
+  // frissons
+  if (fear > 0.4 && !sleep) { ctx.strokeStyle = 'rgba(61,51,71,.55)'; ctx.lineWidth = 1.2; ctx.beginPath(); for (const sx of [-1, 1]) for (let k = 0; k < 3; k++) { const yy = cy - 12 + k * 9 + Math.sin(t * 30 + k) * 1; ctx.moveTo(sx * (R + 7), yy); ctx.lineTo(sx * (R + 12), yy - 2); } ctx.stroke(); }
+  if (sn > 0.4) for (let k = 0; k < 3; k++) { const u = (t * 1.6 + k / 3) % 1; ctx.globalAlpha = Math.sin(u * Math.PI) * 0.7; ell(fx + fd * (14 + u * 12), -2 - u * 6, 2.5 + u * 2, 1.6 + u, 0, 'rgba(240,236,250,.9)', 1); ctx.globalAlpha = 1; }
+  if (shk > 0.15) {
+    // traits de mouvement de part et d'autre, chaque arc tracé à part (pas de trait parasite entre eux)
+    ctx.strokeStyle = 'rgba(61,51,71,' + (0.55 * Math.min(1, shk * 1.5)).toFixed(3) + ')'; ctx.lineWidth = 1.3; ctx.beginPath();
+    for (const sx of [-1, 1]) for (let k = 0; k < 2; k++) { const cx0 = sx * (R + 5 + k * 6), yy = cy - 2, a0 = sx > 0 ? -0.55 : Math.PI - 0.55, a1 = a0 + 1.1; ctx.moveTo(cx0 + Math.cos(a0) * 8, yy + Math.sin(a0) * 8); ctx.arc(cx0, yy, 8, a0, a1); }
+    ctx.stroke();
+    for (let k = 0; k < 6; k++) { const a = k * 1.05 + 0.3 + (g.shakeT > 0 ? (0.95 - g.shakeT) * 2 : 0), r = R + 10 + (k % 2) * 6 + (g.shakeT > 0 ? (0.95 - g.shakeT) * 16 : 0); ell(Math.cos(a) * r, cy + Math.sin(a) * r * 0.7, 1.6, 1.6, 0, P.m, Math.min(1, shk * 1.5)); } }
+  // le ballon dans la gueule : même taille que partout ailleurs, il le pousse devant son museau
+  if (g.toy && !hide && typeof drawBall === 'function') {
+    const br = typeof BALL_R !== 'undefined' ? BALL_R : 15, fx2 = proj(0, R * 0.92).x;
+    drawBall(fx2 * 1.04 + fd * (br * 0.55 + 3), -br - 0.5, br, 0.4 + fd * 0.2);
+  }
+  if (sleep) { ctx.save(); ctx.textAlign = 'center'; ctx.lineJoin = 'round';
+    for (let k = 0; k < 3; k++) { const u = (t * 0.3 + k / 3) % 1, sz = 8 + k * 3; ctx.globalAlpha = 0.35 + 0.65 * Math.sin(u * Math.PI); ctx.font = '900 ' + sz + 'px "Zen Maru Gothic", sans-serif';
+      ctx.lineWidth = 3; ctx.strokeStyle = 'rgba(255,252,240,.95)'; ctx.strokeText('z', fd * (20 + k * 7), cy - ry - 8 - k * 9 - u * 4); ctx.fillStyle = '#6f62a0'; ctx.fillText('z', fd * (20 + k * 7), cy - ry - 8 - k * 9 - u * 4); }
+    ctx.restore(); }
+  ctx.restore();
+}
+
+/* ---------- Le compagnon : le bébé yak de l'enfer ----------
+   Au début, il erre tout seul dans son coin du cimetière, farouche : il s'enfuit dès que le zombie approche.
+   Quelque part traîne un ballon gonflable d'enfant. Le zombie le porte à deux mains (comme la cervelle),
+   le lance près du yak (R) :
+   le yak court le chercher, joue, le rapporte… et devient son ami : le zombie lui attache son sac à dos,
+   le ballon y entre. Le contenu du sac s'affiche dans une barre de 4 cases (1-4, molette ou clic pour choisir,
+   R ou le bouton Action pour utiliser) ; on ne peut s'en servir que si le yak est à côté. Ensuite :
+   - il suit le zombie en trottinant (il ne passe la palissade que par l'entrée) ;
+   - quand l'Aveugle approche, les pointes de ses poils rougeoient ; si on ne le calme pas (C), il grogne ;
+   - ballon choisi, R : le ballon sort du sac du yak, saute dans les mains du zombie qui le lance aussitôt ;
+     le yak court le chercher, grogne de joie là-bas (diversion), le rapporte et le range dans son sac ;
+   - il dort devant la tente quand le zombie y dort. */
+const yak = { g: null, x: 0, y: 0, vy: 0, mode: 'wild', friend: false, warnK: 0, calmT: 0, gruntT: 0, barkT: 0, tipT: 0, playT: 0,
+  wx: 0, wy: 0, wT: 0, homeX: 0, homeY: 0, flee: false };
+const ball = { state: 'ground', x: 0, y: 0, z: 0, vz: 0, z0: 0, t: 0, dur: 0.95, x0: 0, y0: 0, x1: 0, y1: 0, hx: 0, hy: 0, spin: 0 };
+const YAK_WARN = 1.8, YAK_NEAR = 250, YAK_FLEE = 150, YAK_FLEE_BALL = 105, YAK_FLEE_SPD = 82;
+// hauteur des mains du zombie (unités du monde) : d'où part le ballon lancé
+const BALL_HAND_Z = 16;
+// le zombie porte le ballon (bras devant, comme la cervelle)
+const HOLD_OK = { free: 1, air: 1, getup: 1 };
+function zHoldBall() { return ball.state === 'held' && !c.inHut && !!HOLD_OK[c.state]; }
+// fuite : on teste 12 directions et on prend celle qui éloigne le plus du zombie
+// sans sortir du terrain ni franchir la palissade
+function yakFleeTo() {
+  let best = null, bs = -1e9;
+  const ax = yak.x - c.x, ay = (yak.y - c.y) * 1.3, a0 = Math.atan2(ay, ax);
+  for (let i = 0; i < 12; i++) {
+    const a = a0 + (i - 6) / 12 * TAU * 0.999 + 0.01, px = yak.x + Math.cos(a) * 90, py = yak.y + Math.sin(a) * 60;
+    let sc = Math.hypot(px - c.x, (py - c.y) * 1.3);
+    if (px < 40 || px > WW - 40 || py < 120 || py > WH - 30) sc -= 200;
+    if (isYard() && yakIn(px, py) !== yakIn(yak.x, yak.y)) sc -= 300;
+    if (inSafe(px, py) && !inSafe(yak.x, yak.y)) sc -= 80;
+    if (sc > bs) { bs = sc; best = [px, py]; }
+  }
+  return best;
+}
+function yakHome() { return [clamp(WW * 0.2, 90, WW - 90), clamp(WH * 0.5, 180, WH - 120)]; }
+function yakReset() {
+  [yak.homeX, yak.homeY] = yakHome();
+  yak.g = bouleNew(yak.homeX, yak.homeY, -1, 'yak'); yak.x = yak.homeX; yak.y = yak.homeY; yak.vy = 0;
+  yak.mode = 'wild'; yak.friend = false; yak.hopFor = 0; yak.idleT = 0; yak.warnK = 0; yak.calmT = 0; yak.gruntT = 0; yak.barkT = 0; yak.playT = 0; yak.wT = 0; yak.flee = false;
+  yak.wx = yak.x; yak.wy = yak.y;
+  // la balle : dans l'herbe, assez loin du yak pour qu'on doive la chercher
+  ball.hx = clamp(WW * 0.12, 60, WW - 120); ball.hy = clamp(WH * 0.22, 110, WH - 30);
+  ball.state = 'ground'; ball.x = ball.hx; ball.y = ball.hy; ball.z = 0; ball.vz = 0; ball.sc = 1;
+  yak.g.bag = 0; yak.g.bagV = 0; yak.g.bagPop = 0; yak.scared = false;
+  inv.items = [null, null, null, null]; inv.sel = 0; inv.msgT = 0;
+}
+/* ---------- le sac à dos (porté par le yak) ---------- */
+const inv = { items: [null, null, null, null], sel: 0, k: 0, msg: '', msgT: 0, last: '' };
+const INV_NAMES = { ball: 'Ballon' };
+// le yak est à côté, éveillé, pas roulé en boule : on peut fouiller dans son sac
+function yakNear() {
+  return yak.friend && !c.inHut && !yak.scared && yak.mode !== 'sleep' && yak.mode !== 'tosleep' && yak.g && yak.g.bag > 0.9
+    && Math.hypot(yak.x - c.x, (yak.y - c.y) * 1.3) < 95;
+}
+function invCanUse() {
+  if (ball.state === 'held') return !c.inHut && !!HOLD_OK[c.state];
+  return inv.items[inv.sel] === 'ball' && ball.state === 'bag' && yakNear() && !!HOLD_OK[c.state];
+}
+function invSay(m) { inv.msg = m; inv.msgT = 1.8; }
+function invSelect(i) { if (!yak.friend) return; inv.sel = (i + 4) % 4; snd.pop && snd.pop(); }
+// R / bouton Action : utiliser l'objet choisi
+function invUse() {
+  if (ball.state === 'held') { yakThrow(); return; }
+  const it = inv.items[inv.sel];
+  if (!it) { if (yak.friend) invSay('case vide'); return; }
+  if (it === 'ball') {
+    if (ball.state !== 'bag') { invSay('le ballon n’est pas dans le sac'); return; }
+    if (!yakNear()) { invSay(yak.scared ? 'le yak a trop peur' : 'le yak est trop loin'); return; }
+    if (!HOLD_OK[c.state] || wipe.on) return;
+    // le ballon sort du sac du yak et saute dans les mains du zombie
+    const [bx, bz] = yakBagPt();
+    ball.state = 'pass'; ball.t = 0; ball.x0 = bx; ball.y0 = yak.y; ball.z0 = bz; ball.x = bx; ball.y = yak.y; ball.z = bz; ball.sc = 1;
+    yak.g.bagPop = 1; snd.pop();
+  }
+}
+// le sac sur le dos du yak, en coordonnées du monde : [x, hauteur du centre du ballon]
+function yakBagPt() { const g = yak.g, af = Math.abs(g.faceS || 0); return [yak.x - (g.face || 1) * 13 * af, 46 - BALL_R]; }
+function yakMouthPt() { const g = yak.g; return [yak.x + Math.sin((g.faceS || 0) * 0.75) * 24 + (g.face || 1) * (BALL_R * 0.55 + 3), 0.5]; }
+const yakIn = (x, y) => Math.hypot((x - cab.x) / YARD_RX, (y - cab.y) / YARD_RY) < 1;
+function yakRoute(tx, ty) {
+  if (!isYard()) return [tx, ty];
+  const a = yakIn(yak.x, yak.y), b = yakIn(tx, ty);
+  if (a === b) return [tx, ty];
+  const gx = cab.x, gOut = cab.y + YARD_RY + 34, gIn = cab.y + YARD_RY - 30;
+  if (a) return Math.abs(yak.x - gx) > 10 || yak.y < gIn - 6 ? [gx, gIn + 4] : [gx, gOut + 6];
+  return Math.abs(yak.x - gx) > 10 || yak.y > gOut + 6 ? [gx, gOut] : [gx, gIn - 6];
+}
+function yakGrunt(happy) {
+  yak.barkT = 0.7; yak.g.bark = 1; yak.warnK = 0; yak.gruntT = happy ? 1.5 : 5;
+  noise(yak.x, yak.y - 20, happy ? 220 : 230);
+  if (happy) snd.yakHappy(); else snd.yakGrunt();
+  parts.push({ k: 'label', x: yak.x, y: yak.y - 70, vy: -12, life: 1.2, max: 1.2, s: happy ? 'Grmmh !' : 'GRRMH !' });
+}
+function yakCalm() {
+  if (!yak.friend || yak.mode === 'sleep') return;
+  const was = yak.warnK > 0.15;
+  yak.warnK = 0; yak.calmT = 4; yak.g.joy = 1; yak.g.joyT = 1.2;
+  if (was) parts.push({ k: 'label', x: yak.x, y: yak.y - 62, vy: -10, life: 1, max: 1, s: '♥' });
+  snd.pop();
+}
+// lancer la balle devant soi
+function yakThrow() {
+  if (ball.state !== 'held' || c.inHut || wipe.on || c.state === 'caught' || c.state === 'dead') return;
+  const f = c.face || 1, dist = 170;
+  ball.state = 'air'; ball.t = 0;
+  ball.x0 = c.x + f * 14; ball.y0 = c.y - 2;
+  ball.x1 = clamp(c.x + f * dist, 30, WW - 30); ball.y1 = clamp(c.y + 6, 80, WH - 20);
+  if (isYard() && yakIn(ball.x1, ball.y1) !== yakIn(c.x, c.y)) ball.x1 = c.x + (ball.x1 - c.x) * 0.45;
+  ball.z0 = BALL_HAND_Z; ball.x = ball.x0; ball.y = ball.y0; ball.z = ball.z0; ball.spin = 0;
+  c.jv += 0.8; snd.swish();
+}
+function updateBall(dt) {
+  ball.noPick = Math.max(0, (ball.noPick || 0) - dt);
+  if (ball.state === 'pass') {
+    ball.t += dt; const u = Math.min(1, ball.t / 0.32), e = u * u * (3 - 2 * u);
+    ball.x = ball.x0 + (c.x - ball.x0) * e; ball.y = ball.y0 + (c.y + 1 - ball.y0) * e;
+    ball.z = ball.z0 + (BALL_HAND_Z - ball.z0) * e + Math.sin(u * Math.PI) * 26; ball.spin += dt * 6;
+    if (u >= 1) { ball.state = 'held'; ball.autoT = 0.2; snd.pop(); c.jv += 0.4; }
+    return;
+  }
+  if (ball.state === 'stow') {
+    // dans la gueule du yak → dans son sac
+    ball.t += dt; const u = Math.min(1, ball.t / 0.3), e = u * u * (3 - 2 * u), [bx, bz] = yakBagPt(), [mx, mz] = yakMouthPt();
+    ball.x = mx + (bx - mx) * e; ball.y = yak.y + 0.5; ball.z = mz + (bz - mz) * e + Math.sin(u * Math.PI) * 18; ball.sc = 1 - 0.75 * e;
+    if (u >= 1) { ball.state = 'bag'; ball.sc = 1; yak.g.bagPop = 1; snd.pop(); }
+    return;
+  }
+  if (ball.state === 'bag') { ball.x = yak.x; ball.y = yak.y; return; }
+  if (ball.state === 'held') {
+    if (ball.autoT > 0) { ball.autoT -= dt; if (ball.autoT <= 0 && HOLD_OK[c.state]) { yakThrow(); return; } }
+    ball.x = c.x + (c.face || 1) * 6; ball.y = c.y + 1;
+    // il trébuche, tombe, se fait attraper, mange… : le ballon lui échappe des mains
+    if (!c.inHut && !HOLD_OK[c.state]) { ball.state = 'ground'; ball.x = clamp(c.x + (c.face || 1) * 22, 30, WW - 30); ball.y = c.y + 4; ball.z = BALL_HAND_Z * 0.6; ball.vz = 60; ball.noPick = 1.2; }
+    return;
+  }
+  if (ball.state === 'air') {
+    ball.t += dt; const u = Math.min(1, ball.t / ball.dur);
+    ball.x = ball.x0 + (ball.x1 - ball.x0) * u; ball.y = ball.y0 + (ball.y1 - ball.y0) * u;
+    // un ballon gonflable : il flotte, monte haut et retombe doucement
+    ball.z = ball.z0 * (1 - u) + Math.sin(u * Math.PI) * 85 * (1 - u * 0.15); ball.spin += dt * 7 * (ball.x1 >= ball.x0 ? 1 : -1);
+    if (u >= 1) {
+      ball.state = 'ground'; ball.z = 0; ball.vz = 135; snd.flop(); noise(ball.x, ball.y, 60);
+      // assez près du yak (ou c'est déjà notre ami) : il court la chercher
+      if (yak.friend || Math.hypot(ball.x - yak.x, ball.y - yak.y) < 130) { yak.mode = 'fetch'; yak.g.joy = 1; yak.g.joyT = 1.5; }
+    }
+    return;
+  }
+  // petits rebonds mous après l'atterrissage
+  if (ball.state === 'ground' && (ball.vz > 0 || ball.z > 0)) {
+    ball.vz -= 520 * dt; ball.z += ball.vz * dt; ball.spin += dt * 3;
+    if (ball.z <= 0) { ball.z = 0; ball.vz = ball.vz < -45 ? -ball.vz * 0.45 : 0; }
+  }
+  if (ball.state === 'ground' && !ball.noPick && ball.z < 4 && HOLD_OK[c.state] && yak.mode !== 'fetch' && !c.inHut && c.state !== 'caught' && Math.hypot(ball.x - c.x, (ball.y - c.y) * 1.35) < 32) {
+    ball.state = 'held'; snd.pop(); c.jv += 0.6;
+    if (!yak.friend) parts.push({ k: 'label', x: c.x, y: c.y - 130, vy: -10, life: 2.4, max: 2.4, s: 'un ballon !' });
+  }
+}
+function updateYak(dt) {
+  if (!yak.g) yakReset();
+  const g = yak.g;
+  updateBall(dt);
+  yak.calmT = Math.max(0, yak.calmT - dt); yak.gruntT = Math.max(0, yak.gruntT - dt); yak.barkT = Math.max(0, yak.barkT - dt);
+  if (yak.barkT <= 0) g.bark = 0;
+  if (g.joyT !== undefined) { g.joyT -= dt; if (g.joyT <= 0) { g.joy = 0; g.joyT = undefined; } }
+  // la sacoche apparaît d'un coup (ressort) ; elle rebondit quand on y range ou sort quelque chose
+  { const v0 = g.bagV || 0, b0 = g.bag || 0; g.bagV = v0 + (((yak.friend ? 1 : 0) - b0) * 160 - v0 * 10) * dt; g.bag = Math.max(0, b0 + g.bagV * dt); }
+  if (!yak.friend) { g.bag = 0; g.bagV = 0; }
+  g.bagPop = Math.max(0, (g.bagPop || 0) - dt * 3.5);
+  inv.msgT = Math.max(0, inv.msgT - dt);
+  // un ballon qui traîne par terre : notre ami va le chercher tout seul
+  if (yak.friend && ball.state === 'ground' && ball.z < 1 && yak.mode === 'follow' && !c.inHut) yak.mode = 'fetch';
+  const asleep = c.inHut && cab.sleep;
+  if (yak.friend) {
+    if (yak.mode === 'sleep' && !asleep) { yak.mode = 'follow'; g.sleep = 0; g.shakeT = 0.95; }   // au réveil, il s'ébroue
+    if (asleep && yak.mode !== 'fetch' && yak.mode !== 'bring') yak.mode = 'tosleep';
+  }
+  let tx = yak.x, ty = yak.y, spd = 0, want = true;
+  const Bd = Math.hypot(B.x - yak.x, (B.y - yak.y) * 1.35), safe = inSafe(yak.x, yak.y), zd = Math.hypot(c.x - yak.x, c.y - yak.y);
+  if (yak.mode === 'wild') {
+    // il erre dans son coin : petits trajets lents, des pauses, il broute
+    yak.wT -= dt;
+    if (yak.wT <= 0) { const a = Math.random() * TAU, r = 30 + Math.random() * 70; yak.wx = clamp(yak.homeX + Math.cos(a) * r, 40, WW - 40); yak.wy = clamp(yak.homeY + Math.sin(a) * r * 0.6, 120, WH - 30); yak.wT = 3 + Math.random() * 3; }
+    tx = yak.wx; ty = yak.wy; spd = 24;
+    if (Math.hypot(tx - yak.x, ty - yak.y) < 6) want = false;
+    g.sniff = want ? 0 : 1;      // à l'arrêt, il renifle l'herbe
+    // farouche : tant qu'on n'a pas fait la quête du ballon, il s'enfuit dès que le zombie approche
+    // (un peu moins loin s'il porte le ballon : il est curieux, on peut le lui lancer)
+    const fr = ball.state === 'held' ? YAK_FLEE_BALL : YAK_FLEE;
+    const hunted = !c.inHut && c.state !== 'dead' && !wipe.on;
+    if (!yak.flee && hunted && zd < fr) { yak.flee = true; parts.push({ k: 'label', x: yak.x, y: yak.y - 66, vy: -12, life: 0.9, max: 0.9, s: '!' }); }
+    else if (yak.flee && (!hunted || zd > fr + 60)) {
+      yak.flee = false; yak.wT = 1.5 + Math.random() * 2;
+      // il s'installe là où il a fui
+      yak.homeX = clamp(yak.x, 60, WW - 60); yak.homeY = clamp(yak.y, 140, WH - 40); yak.wx = yak.x; yak.wy = yak.y;
+    }
+    if (yak.flee) { [tx, ty] = yakFleeTo(); spd = YAK_FLEE_SPD; want = true; g.sniff = 0; }
+  } else if (yak.mode === 'fetch') {
+    g.sniff = 0;
+    if (ball.state === 'ground') {
+      tx = ball.x; ty = ball.y + 2; spd = 85;
+      if (Math.hypot(tx - yak.x, ty - yak.y) < 12) {
+        ball.state = 'yak'; g.toy = 1; yak.mode = 'play'; yak.playT = 1.2;
+        if (yak.friend) yakGrunt(true);   // ami : il grogne de joie là-bas (la diversion)
+        else { snd.yakHappy(); g.joy = 1; g.joyT = 1.6; }
+      }
+    } else yak.mode = yak.friend ? 'follow' : 'wild';
+  } else if (yak.mode === 'play') {
+    // il sautille avec la balle dans la bouche
+    yak.playT -= dt; want = false; g.joy = 1;
+    if (yak.playT <= 0) yak.mode = 'bring';
+  } else if (yak.mode === 'bring') {
+    // il la rapporte du côté où il arrive
+    tx = c.inHut ? cab.x : c.x + (yak.x >= c.x ? 1 : -1) * 30; ty = c.inHut ? cab.y + 50 : c.y + 6; spd = 70;
+    if (Math.hypot(tx - yak.x, ty - yak.y) < 14 || (c.inHut && Math.hypot(tx - yak.x, ty - yak.y) < 30)) {
+      // il le rapporte… puis le ballon file dans la sacoche sur son dos
+      g.toy = 0; ball.state = 'stow'; ball.t = 0; snd.pop();
+      if (!yak.friend) {
+        // la première fois : le zombie lui attache son sac à dos, c'est un ami
+        yak.friend = true; inv.items[0] = 'ball'; inv.sel = 0;
+        parts.push({ k: 'label', x: yak.x, y: yak.y - 80, vy: -10, life: 2.8, max: 2.8, s: 'Un ami !' });
+        parts.push({ k: 'label', x: yak.x, y: yak.y - 104, vy: -10, life: 2.8, max: 2.8, s: 'il porte ton sac' });
+        for (let i = 0; i < 8; i++) parts.push({ k: 'spark', x: yak.x + rand(-24, 24), y: yak.y - rand(10, 50), vy: -22, life: 1, max: 1 });
+        snd.chime(); c.joyT = 1.2; yak.hopFor = 1.3;
+      }
+      yak.mode = 'follow'; g.joy = 1; g.joyT = 1.2;
+    }
+  } else if (yak.mode === 'tosleep' || yak.mode === 'sleep') {
+    tx = cab.x + 44; ty = cab.y + 34; spd = 45;
+    if (Math.hypot(tx - yak.x, ty - yak.y) < 8) { yak.mode = 'sleep'; g.sleep = 1; want = false; }
+  } else {
+    const f = c.inHut ? 1 : (c.face || 1);
+    if (c.inHut) { tx = cab.x + 40; ty = cab.y + 40; } else { tx = c.x - f * 48; ty = c.y + 8; if (tx < 30 || tx > WW - 30) tx = c.x + f * 48; }
+    const d = Math.hypot(tx - yak.x, ty - yak.y);
+    spd = d > 140 ? 95 : d > 50 ? 65 : d > 16 ? 38 : 0;
+    if (spd === 0) want = false;
+  }
+  if (yak.mode === 'sleep') want = false;
+  const scared = Bd < 120 && !safe && yak.mode !== 'sleep'; yak.scared = scared;
+  g.ball = scared ? 1 : 0; g.fear = (Bd < 200 && !safe) || (yak.mode === 'wild' && yak.flee) ? 1 : 0;
+  if (scared) want = false;
+  // déplacement
+  let vx = 0, vy = 0;
+  if (want && spd > 0) {
+    const [rx, ry] = yakRoute(tx, ty), dx = rx - yak.x, dy = ry - yak.y, d = Math.hypot(dx, dy) || 1;
+    vx = dx / d * spd; vy = dy / d * spd * 0.8;
+    if (d < spd * dt) { vx = dx / dt; vy = dy / dt; }
+  }
+  // animation des poils : il sautille avec le ballon (et de joie quand il devient ami) ; de temps en temps, au repos, il s'ébroue
+  yak.hopFor = Math.max(0, (yak.hopFor || 0) - dt);
+  g.hop = (yak.mode === 'play' || yak.hopFor > 0) && !scared ? 1 : 0;
+  const idle = g.spd < 5 && (yak.mode === 'follow' || yak.mode === 'wild') && !scared && !g.fear && !yak.warnK;
+  yak.idleT = idle ? (yak.idleT || 0) + dt : 0;
+  if (!yak.shakeAt) yak.shakeAt = 9 + Math.random() * 8;
+  if (yak.idleT > yak.shakeAt) { yak.idleT = 0; yak.shakeAt = 10 + Math.random() * 10; g.shakeT = 0.95; }
+  g.x = yak.x; g.y = yak.y;
+  const k = 1 - Math.exp(-dt * 8);
+  g.vx += (vx - g.vx) * k; yak.vy += (vy - yak.vy) * k;
+  g.spd = Math.hypot(g.vx, yak.vy);
+  bouleUpdate(g, dt);
+  yak.x = clamp(g.x, 20, WW - 20); yak.y = clamp(yak.y + yak.vy * dt, 70, WH - 14); g.x = yak.x; g.y = yak.y;
+  if (Math.abs(g.vx) < 4 && yak.mode === 'follow' && !c.inHut) g.face = c.x > yak.x ? 1 : -1;
+  // inquiétude (seulement quand c'est notre ami)
+  const worried = yak.friend && Bd < YAK_NEAR && !safe && yak.mode !== 'sleep' && !scared && yak.mode !== 'play' && yak.calmT <= 0 && yak.gruntT <= 0 && !wipe.on;
+  yak.warnK = worried ? yak.warnK + dt / YAK_WARN : Math.max(0, yak.warnK - dt * 0.8);
+  g.warn = clamp(yak.warnK, 0, 1);
+  if (yak.warnK >= 1) yakGrunt(false);
+  // la cloche tinte quand il court vite
+  yak.tipT -= dt;
+  if (g.spd > 70 && yak.tipT <= 0) { yak.tipT = 0.6; snd.tinkle(); noise(yak.x, yak.y - 10, 70); }
+}
+// un ballon gonflable d'enfant : quartiers de couleur, calotte blanche avec sa valve, reflet de plastique
+const BALL_COLS = ['#e8556b', '#fff6e4', '#f5c64a', '#fff6e4', '#5aa6e0', '#fff6e4'];
+// vraie sphère : pôle tourné vers nous (en haut à gauche), quartiers le long des méridiennes
+const BALL_P = (() => { const v = [-0.32, -0.5, 0.8], n = Math.hypot(...v); return v.map((a) => a / n); })();
+const BALL_U = (() => { const [a, b] = BALL_P, n = Math.hypot(a, b); return [b / n, -a / n, 0]; })();
+const BALL_V = [BALL_P[1] * BALL_U[2] - BALL_P[2] * BALL_U[1], BALL_P[2] * BALL_U[0] - BALL_P[0] * BALL_U[2], BALL_P[0] * BALL_U[1] - BALL_P[1] * BALL_U[0]];
+function ballPt(th, ph) {
+  const c = Math.cos(th), s = Math.sin(th), cp = Math.cos(ph), sp = Math.sin(ph), P = BALL_P, U = BALL_U, V = BALL_V;
+  return [c * P[0] + s * (cp * U[0] + sp * V[0]), c * P[1] + s * (cp * U[1] + sp * V[1]), c * P[2] + s * (cp * U[2] + sp * V[2])];
+}
+// méridienne visible : du pôle jusqu'au bord (z = 0)
+function ballMeridian(ph, r) {
+  const out = [];
+  for (let k = 0; k <= 24; k++) { const q = ballPt(k / 24 * Math.PI, ph); if (q[2] < 0) break; out.push([q[0] * r, q[1] * r]); }
+  return out;
+}
+function drawBall(x, y, r, spin) {
+  ctx.save(); ctx.translate(x, y);
+  ctx.beginPath(); ctx.arc(0, 0, r, 0, TAU);
+  ctx.save(); ctx.clip();
+  ctx.fillStyle = BALL_COLS[1]; ctx.fillRect(-r, -r, r * 2, r * 2);
+  const n = BALL_COLS.length, rot = spin || 0;
+  for (let k = 0; k < n; k += 2) {
+    const m1 = ballMeridian(rot + k / n * TAU, r), m2 = ballMeridian(rot + (k + 1) / n * TAU, r);
+    const e1 = m1[m1.length - 1], e2 = m2[m2.length - 1], a1 = Math.atan2(e1[1], e1[0]);
+    let a2 = Math.atan2(e2[1], e2[0]);
+    ctx.beginPath(); m1.forEach(([px, py], i) => i ? ctx.lineTo(px, py) : ctx.moveTo(px, py));
+    // on referme par l'extérieur du disque (le clip coupe le reste), dans le sens du quartier
+    const mid = ballPt(Math.PI / 2, rot + (k + 0.5) / n * TAU), am = Math.atan2(mid[1], mid[0]);
+    const ccw = Math.sin(am - a1) < 0;
+    ctx.lineTo(e1[0] * 1.8, e1[1] * 1.8); ctx.arc(0, 0, r * 1.8, a1, a2, ccw); ctx.lineTo(e2[0], e2[1]);
+    for (let i = m2.length - 1; i >= 0; i--) ctx.lineTo(m2[i][0], m2[i][1]);
+    ctx.closePath(); ctx.fillStyle = BALL_COLS[k]; ctx.fill();
+  }
+  // coutures fines entre les quartiers
+  ctx.strokeStyle = 'rgba(78,59,44,.22)'; ctx.lineWidth = Math.max(0.5, r * 0.035);
+  for (let k = 0; k < n; k++) { const m = ballMeridian(rot + k / n * TAU, r); ctx.beginPath(); m.forEach(([px, py], i) => i ? ctx.lineTo(px, py) : ctx.moveTo(px, py)); ctx.stroke(); }
+  // ombrage de sphère
+  ctx.fillStyle = radial(-r * 0.35, -r * 0.4, r * 0.1, 0, 0, r * 1.05, [[0, 'rgba(255,255,255,.15)'], [0.6, 'rgba(255,255,255,0)'], [1, 'rgba(60,30,50,.3)']]);
+  ctx.fillRect(-r, -r, r * 2, r * 2);
+  // calotte blanche autour du pôle + valve
+  ctx.beginPath();
+  for (let k = 0; k <= 20; k++) { const q = ballPt(0.3, k / 20 * TAU); k ? ctx.lineTo(q[0] * r, q[1] * r) : ctx.moveTo(q[0] * r, q[1] * r); }
+  ctx.closePath(); ctx.fillStyle = '#fffaf0'; ctx.fill(); ctx.strokeStyle = 'rgba(78,59,44,.3)'; ctx.stroke();
+  ell(BALL_P[0] * r, BALL_P[1] * r, r * 0.07, r * 0.06, 0, '#e8b6c0', 1);
+  ctx.restore();
+  ctx.lineWidth = Math.max(1, r * 0.09); ctx.strokeStyle = C.line; ctx.beginPath(); ctx.arc(0, 0, r, 0, TAU); ctx.stroke();
+  // reflets de plastique
+  ell(-r * 0.45, -r * 0.15, r * 0.12, r * 0.24, 0.35, 'rgba(255,255,255,.7)', 1);
+  ell(r * 0.5, r * 0.45, r * 0.12, r * 0.05, -0.7, 'rgba(255,255,255,.35)', 1);
+  ctx.restore();
+}
+// le ballon tenu à deux mains devant la poitrine (repère du dessin du zombie, comme la cervelle)
+function drawHeldBall(A, mX) {
+  const sq = 1 + Math.sin(t * 9) * 0.02, r = BALL_R;
+  ctx.save(); ctx.translate(mX - 0.5, 102); ctx.scale(1 / sq, sq);
+  drawBall(0, 0, r, 0.5 + Math.sin(t * 1.3) * 0.08);
+  // les deux petites mains agrippent les côtés du ballon
+  for (const sx of [-1, 1]) {
+    ctx.beginPath(); ctx.ellipse(sx * r * 0.9, r * 0.28, 4, 4.6, sx * 0.3, 0, TAU);
+    ctx.fillStyle = SKIN.front[1]; ctx.fill(); ctx.lineWidth = 1.6; ctx.strokeStyle = C.line; ctx.stroke();
+  }
+  ctx.restore();
+}
+const BALL_R = 15;
+function drawBallWorld() {
+  if (ball.state === 'yak' || ball.state === 'held' || ball.state === 'bag') return;
+  const x = ball.x, y = ball.y - ball.z - BALL_R, bsc = ball.sc || 1;
+  const sh = 1 / (1 + ball.z / 60);
+  if (ball.state !== 'stow') ell(ball.x, ball.y + 1, BALL_R * 0.9 * sh, 2.6 * sh, 0, 'rgba(30,24,36,.25)', 1);
+  if (ball.state === 'ground' && !yak.friend) softSpot(x, y, 22, 18, 0, '255,230,170', 0.35 + 0.15 * Math.sin(t * 3));
+  // il s'écrase un peu en touchant le sol
+  const sq = ball.state === 'ground' && ball.z < 2 && ball.vz !== 0 ? 0.88 : 1;
+  ctx.save(); ctx.translate(x, y + BALL_R * (1 - sq)); ctx.scale(bsc / Math.sqrt(sq), bsc * sq);
+  drawBall(0, 0, BALL_R, ball.spin + 0.3);
+  ctx.restore();
+}
+function yakLayers() {
+  if (!yak.g) return [];
+  const L = [{ y: yak.y, d: () => bouleDraw(yak.g) }];
+  if (ball.state === 'air' || ball.state === 'ground' || ball.state === 'pass') L.push({ y: ball.y, d: drawBallWorld });
+  if (ball.state === 'stow') L.push({ y: yak.y + 0.5, d: drawBallWorld });
+  return L;
+}
+
+/* ---------- la barre du sac (en bas à gauche) ---------- */
+let invEls = null;
+function invInit() {
+  const el = document.getElementById('inv'); if (!el) return;
+  invEls = { el, slots: [...el.querySelectorAll('.islot')], act: document.getElementById('tApple') };
+  invEls.slots.forEach((b, i) => b.addEventListener('pointerdown', (e) => {
+    e.preventDefault(); e.stopPropagation(); if (typeof wake === 'function') wake();
+    if (inv.sel === i) invUse(); else invSelect(i);
+  }));
+  window.addEventListener('keydown', (e) => {
+    const m = /^(?:Digit|Numpad)([1-4])$/.exec(e.code);
+    if (m && !e.repeat) invSelect(+m[1] - 1);
+  });
+  cv.addEventListener('wheel', (e) => { if (!yak.friend) return; e.preventDefault(); invSelect(inv.sel + (e.deltaY > 0 ? 1 : -1)); }, { passive: false });
+}
+function rrect(x, y, w, h, r) { ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(x, y, w, h, r); else ctx.rect(x, y, w, h); }
+function drawInv() {
+  if (!invEls) invInit(); if (!invEls) return;
+  const on = yak.friend && !gallery;
+  invEls.el.classList.toggle('on', on);
+  inv.k += ((on ? 1 : 0) - inv.k) * 0.18;
+  // bouton Action (mobile)
+  const use = invCanUse(), label = yak.friend ? 'Action' : 'Ballon';
+  if (invEls.act) {
+    invEls.act.classList.toggle('off', !use);
+    const key = label + (yak.friend ? inv.items[inv.sel] || '' : '');
+    if (inv.last !== key) { inv.last = key; invEls.act.innerHTML = (!yak.friend || inv.items[inv.sel] === 'ball' ? BALL_SVG : '') + '<span>' + label + '</span>'; }
+  }
+  if (inv.k < 0.02) return;
+  const rs = invEls.slots.map((b) => b.getBoundingClientRect());
+  if (!rs[0].width) return;
+  ctx.save(); ctx.setTransform(DPR, 0, 0, DPR, 0, 0); ctx.globalAlpha = Math.min(1, inv.k);
+  const lift = (1 - inv.k) * 30;
+  ctx.translate(0, lift);
+  const x0 = rs[0].left - 54, y0 = rs[0].top - 7, w = rs[3].right + 7 - x0, h = rs[0].height + 14;
+  ctx.fillStyle = 'rgba(252,250,241,.93)'; rrect(x0, y0, w, h, 18); ctx.fill();
+  ctx.lineWidth = 1.5; ctx.strokeStyle = 'rgba(78,59,44,.28)'; ctx.stroke();
+  // la sacoche, à gauche
+  ctx.save(); ctx.translate(x0 + 27, y0 + h - 12); const bs = 1.45 * (1 + (yak.g ? yak.g.bagPop : 0) * 0.15); ctx.scale(bs, bs); blBag(1); ctx.restore();
+  const touch = document.body.classList.contains('touch');
+  rs.forEach((r, i) => {
+    const sel = i === inv.sel, cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+    rrect(r.left, r.top, r.width, r.height, 12); ctx.fillStyle = sel ? '#fff' : 'rgba(244,239,230,.95)'; ctx.fill();
+    ctx.lineWidth = sel ? 2.6 : 1.3; ctx.strokeStyle = sel ? '#e8556b' : 'rgba(78,59,44,.25)'; ctx.stroke();
+    if (!touch) { ctx.font = '700 10px "Zen Maru Gothic", sans-serif'; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillStyle = 'rgba(78,59,44,.55)'; ctx.fillText(String(i + 1), r.left + 5, r.top + 3); }
+    const it = inv.items[i];
+    if (it === 'ball') {
+      if (ball.state === 'bag') {
+        ctx.save(); if (!yakNear()) ctx.globalAlpha *= 0.4;
+        drawBall(cx, cy + 1, Math.min(15, r.width * 0.33), 0.5); ctx.restore();
+      } else {
+        // le ballon est dehors : sa place vide, en pointillés
+        ctx.save(); ctx.setLineDash([3, 3]); ctx.beginPath(); ctx.arc(cx, cy + 1, Math.min(15, r.width * 0.33), 0, TAU); ctx.lineWidth = 1.5; ctx.strokeStyle = 'rgba(78,59,44,.4)'; ctx.stroke(); ctx.restore();
+      }
+    }
+  });
+  // nom de l'objet choisi, ou un petit message
+  const sel = inv.items[inv.sel];
+  const msg = inv.msgT > 0 ? inv.msg : sel ? INV_NAMES[sel] + (sel === 'ball' && ball.state === 'bag' && !yakNear() ? ' · le yak est trop loin' : '') : '';
+  if (msg) {
+    ctx.globalAlpha = Math.min(1, inv.k) * (inv.msgT > 0 ? Math.min(1, inv.msgT * 3) : 0.85);
+    ctx.font = '700 12px "Zen Maru Gothic", sans-serif'; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
+    const tw = ctx.measureText(msg).width + 16;
+    ctx.fillStyle = 'rgba(252,250,241,.93)'; rrect(x0 + 8, y0 - 26, tw, 21, 10); ctx.fill(); ctx.lineWidth = 1.2; ctx.strokeStyle = 'rgba(78,59,44,.25)'; ctx.stroke();
+    ctx.fillStyle = inv.msgT > 0 ? '#b5374f' : 'rgba(61,51,71,.85)'; ctx.fillText(msg, x0 + 16, y0 - 9);
+  }
+  ctx.restore();
+}
+const BALL_SVG = '<svg class="ico" viewBox="-12 -12 24 24" aria-hidden="true"><circle r="10.5" fill="#fff6e4"/><path d="M-3-5L-10.2-2.5A10.5 10.5 0 0 1-4.5-9.5Z" fill="#e8556b"/><path d="M-3-5L3.6-9.9A10.5 10.5 0 0 1 10.3 1.5Z" fill="#f5c64a"/><path d="M-3-5L5 9.2A10.5 10.5 0 0 1-9.6 4.3Z" fill="#5aa6e0"/><circle cx="-3" cy="-5" r="2.4" fill="#fffaf0" stroke="#4e3b2c" stroke-opacity=".35" stroke-width=".8"/><circle r="10.5" fill="none" stroke="#3d3347" stroke-width="1.6"/><ellipse cx="-5.5" cy="-1.5" rx="1.3" ry="2.6" transform="rotate(20 -5.5 -1.5)" fill="#fff" opacity=".7"/></svg>';
 
 /* ---------- Entrées ---------- */
 const KEYMAP = { KeyW: 'up', ArrowUp: 'up', KeyS: 'down', ArrowDown: 'down', KeyA: 'left', ArrowLeft: 'left', KeyD: 'right', ArrowRight: 'right' };
@@ -3632,6 +5529,8 @@ window.addEventListener('keydown', (e) => {
   if (e.code === 'KeyE' && !e.repeat) press.eat = true;
   if (e.code === 'KeyF' && !e.repeat) press.dead = true;
   if (e.code === 'KeyG' && !e.repeat) press.groan = true;
+  if (e.code === 'KeyC' && !e.repeat) yakCalm();
+  if (e.code === 'KeyR' && !e.repeat) invUse();
 });
 window.addEventListener('keyup', (e) => { const kk = KEYMAP[e.code]; if (kk) keys[kk] = false; if (e.key === 'Shift') keys.shift = false; });
 window.addEventListener('blur', () => { for (const kk in keys) keys[kk] = false; joy.on = false; joy.id = null; });
@@ -3678,6 +5577,8 @@ document.querySelectorAll('[data-act]').forEach((b) => b.addEventListener('click
 }));
 $('tJump').addEventListener('pointerdown', (e) => { e.preventDefault(); wake(); press.jump = true; });
 $('tDead').addEventListener('pointerdown', (e) => { e.preventDefault(); wake(); press.dead = true; });
+$('tCalm').addEventListener('pointerdown', (e) => { e.preventDefault(); wake(); yakCalm(); });
+$('tApple').addEventListener('pointerdown', (e) => { e.preventDefault(); wake(); invUse(); });
 $('showNoise').addEventListener('change', (e) => { showNoise = e.target.checked; e.target.blur(); });
 const pat = $('pataud'), patV = $('pataudV');
 const readK = () => { k = parseFloat(pat.value); patV.textContent = k.toFixed(1).replace('.', ','); };
@@ -3696,9 +5597,17 @@ let first = true;
 function boot() {
   resize();
   layout(true);
-  c.x = cab.x - 80; c.y = cab.y + 110;
+  c.x = cab.x - 70; c.y = cab.y + 40;
   if (window.matchMedia && window.matchMedia('(pointer: coarse)').matches) document.body.classList.add('touch');
-  if (window.matchMedia && window.matchMedia('(min-width: 700px)').matches) $('det').open = true;
+  {
+    // le menu peut se réduire (bouton ou M) : il ne laisse alors que l'état du zombie ; l'état est mémorisé
+    const pnl = document.querySelector('.panel'), btn = $('pmin');
+    const setMini = (m) => { pnl.classList.toggle('mini', m); btn.setAttribute('aria-expanded', String(!m)); btn.setAttribute('aria-label', m ? 'Ouvrir le menu' : 'Réduire le menu'); btn.title = m ? 'Ouvrir le menu' : 'Réduire le menu'; try { localStorage.setItem('alive-menu-mini', m ? '1' : '0'); } catch (e) {} };
+    let m0 = false; try { m0 = localStorage.getItem('alive-menu-mini') === '1'; } catch (e) {}
+    setMini(m0);
+    btn.addEventListener('click', (e) => { e.preventDefault(); setMini(!pnl.classList.contains('mini')); btn.blur(); try { cv.focus({ preventScroll: true }); } catch (er) {} });
+    window.addEventListener('keydown', (e) => { if (e.code === 'KeyM' && !e.repeat && !(e.target && /INPUT|TEXTAREA|SELECT/.test(e.target.tagName))) setMini(!pnl.classList.contains('mini')); });
+  }
   readK();
   cv.tabIndex = 0; try { window.focus(); cv.focus({ preventScroll: true }); } catch (_) {}
   let last = 0;
@@ -3716,7 +5625,7 @@ const relayout = () => {
   if (ow < 60 || oh < 60) {
     // la page était cachée (taille nulle) : on recrée le décor et on recentre le zombie
     slugs.length = 0; fly = null; heartPiece.alive = false; heartPiece.respawn = 1e9;
-    layout(true); c.x = cab.x - 80; c.y = cab.y + 110; c.vx = 0; c.vy = 0; c.inHut = false;
+    layout(true); c.x = cab.x - 70; c.y = cab.y + 40; c.vx = 0; c.vy = 0; c.inHut = false; cab.sleep = false; cab.night = false;
   } else layout(false);
 };
 window.addEventListener('resize', relayout);
